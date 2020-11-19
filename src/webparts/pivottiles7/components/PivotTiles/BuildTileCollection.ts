@@ -370,6 +370,7 @@ function buildFinalTileCollection ( response: any, theseProps: any, custSearch, 
   
   let showOtherTab = false;
 
+  console.log('buildFinalTileCollection - all response items:', response );
   let tileCollection: IPivotTileItemProps[] = response.map(item => {
 
     let modifiedByTitle = null;

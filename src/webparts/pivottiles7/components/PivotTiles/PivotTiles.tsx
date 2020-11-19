@@ -23,7 +23,8 @@ import { DefaultButton, autobind } from 'office-ui-fabric-react';
 //https://pnp.github.io/pnpjs/documentation/polyfill/ -- Needed to select/extend pnpJs in IE11
 //import "@pnp/polyfill-ie11"; //Removed in Pviottiles7 -- going only modern browser
 import { sp } from '@pnp/sp';
-import { Web } from '@pnp/sp/presets/all';
+import { Web,  } from '@pnp/sp/presets/all';
+import { IWebInfo  } from '@pnp/sp/webs';
 import * as strings from 'Pivottiles7WebPartStrings';
 
 import * as ErrorMessages from './ErrorMessages';
@@ -1074,7 +1075,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
   private _getSubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData  ){
 
     if ( this.props.subsitesInclude === true ) {
-      web.webinfos.orderBy('Title',true).get()
+      web.webs.orderBy('Title',true).get()
       .then((websResponse) => {
           websResponse.map( w => { w.sourceType = this.props.subsitesCategory ; });
           this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse );
@@ -1126,8 +1127,6 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
   }
 
-
-  
   private _getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse, listLibResponse  ){
 
     if ( this.props.subsitesOnly !== true ) {
