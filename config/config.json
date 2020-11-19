@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "pivottiles-7-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/pivottiles7/Pivottiles7WebPart.js",
+          "manifest": "./src/webparts/pivottiles7/Pivottiles7WebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "Pivottiles7WebPartStrings": "lib/webparts/pivottiles7/loc/{locale}.js"
+  }
+}
