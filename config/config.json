@@ -13,6 +13,7 @@
   },
   "externals": {},
   "localizedResources": {
-    "Pivottiles7WebPartStrings": "lib/webparts/pivottiles7/loc/{locale}.js"
+    "Pivottiles7WebPartStrings": "lib/webparts/pivottiles7/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
   }
 }
