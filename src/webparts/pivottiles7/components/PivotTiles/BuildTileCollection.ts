@@ -334,7 +334,6 @@ function getStyleProp ( input: string[] , what: 'font' | 'background' | 'size' |
   let theseStyles = availableStyles.split(';');
 
   let resultStyle = '';
-  if ( what === 'icon' ) { resultStyle = 'darkgray'; }
   if ( what === 'font' ) { resultStyle = 'darkgray'; }
   if ( what === 'background' ) { resultStyle = 'white'; }
   if ( what === 'size' ) { resultStyle = '65'; }

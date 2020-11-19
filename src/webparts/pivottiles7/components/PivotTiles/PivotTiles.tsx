@@ -1074,7 +1074,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
   private _getSubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData  ){
 
     if ( this.props.subsitesInclude === true ) {
-      web.webs.orderBy('Title',true).get()
+      web.webinfos.orderBy('Title',true).get()
       .then((websResponse) => {
           websResponse.map( w => { w.sourceType = this.props.subsitesCategory ; });
           this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse );

@@ -70,7 +70,8 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
 
       } else if (tile[thisCatColumn][0] === pivotProps.otherTab) {
         //Skip because this one was assigned the "Others" category
-        if ( tileCategories.indexOf(pivotProps.otherTab) < 0 ) { tileCategories.push( pivotProps.otherTab ) ; }
+        
+        //if ( tileCategories.indexOf(pivotProps.otherTab) < 0 ) { tileCategories.push( pivotProps.otherTab ) ; }
 
       } else {
 
@@ -135,9 +136,10 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
     tileCategories = newCategorySort;
   }
 
-  //const otherIndex = tileCategories.indexOf(pivotProps.otherTab);
+
   if ( hasOther === true ) {
-    //tileCategories.splice(otherIndex,1);
+    const otherIndex = tileCategories.indexOf(pivotProps.otherTab);
+    tileCategories.splice(otherIndex,1);
     tileCategories.push(pivotProps.otherTab);
   }
 
