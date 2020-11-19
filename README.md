@@ -6,6 +6,7 @@ npm install @pnp/logging @pnp/common @pnp/odata @pnp/sp --save
 npm install @pnp/sp
 npm install @pnp/spfx-controls-react --save --save-exact
 npm install react-slick
+npm install webpack-bundle-analyzer --save-dev
 ```
 
 ## Summary
