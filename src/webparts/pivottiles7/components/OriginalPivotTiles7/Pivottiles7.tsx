@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from '../Pivottiles7.module.scss';
+import styles from './Pivottiles7.module.scss';
 import { IPivottiles7Props } from './IPivottiles7Props';
 import { escape } from '@microsoft/sp-lodash-subset';
 

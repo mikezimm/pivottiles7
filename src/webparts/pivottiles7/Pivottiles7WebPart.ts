@@ -20,7 +20,7 @@ import {
 import { sp } from '@pnp/sp';
 import { Web } from '@pnp/sp/presets/all';
 
-import { IPivottiles7WebPartProps } from './';
+import { IPivottiles7WebPartProps } from './IPivottiles7WebPartProps';
 import PivotTiles from './components/PivotTiles/PivotTiles';
 import { IPivotTilesProps, IFetchListsSettings, ICustomCategories, ICustomLogic } from './components/PivotTiles/IPivotTilesProps';
 import { IPivotTileItemProps } from './components/TileItems/IPivotTileItemProps';

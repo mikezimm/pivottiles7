@@ -21,7 +21,7 @@ import * as links from '../HelpInfo/AllLinks';
 import { Pivot, PivotItem, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 import { DefaultButton, autobind } from 'office-ui-fabric-react';
 //https://pnp.github.io/pnpjs/documentation/polyfill/ -- Needed to select/extend pnpJs in IE11
-import "@pnp/polyfill-ie11";
+//import "@pnp/polyfill-ie11"; //Removed in Pviottiles7 -- going only modern browser
 import { sp } from '@pnp/sp';
 import { Web } from '@pnp/sp/presets/all';
 import * as strings from 'Pivottiles7WebPartStrings';
