@@ -4,7 +4,8 @@
     "environment": "spo",
     "version": "1.11.0",
     "libraryName": "pivottiles-7",
-    "libraryId": "401fc644-e050-4304-be17-897e1bb5aff2",
+    "libraryId": "4a739852-424f-48a8-8454-8711f78604fd", //This is the original PivotTiles id
+    //    "libraryId": "401fc644-e050-4304-be17-897e1bb5aff2",  //This was the original from the rebuilt solution
     "packageManager": "npm",
     "isDomainIsolated": false,
     "componentType": "webpart"

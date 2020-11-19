@@ -1,0 +1,213 @@
+/**
+ * Based on Hugo Bernier's blog here:
+ * https://tahoeninjas.blog/2019/08/07/sharepoint-framework-design-series-layout-patterns-part-iii/
+ */
+
+import { css } from '@uifabric/utilities/lib/css';
+import { IconButton } from 'office-ui-fabric-react/lib/Button';
+import * as React from 'react';
+//import * as slick from 'slick-carousel';
+import Slider from 'react-slick';
+import { ICarouselLayoutProps, ICarouselLayoutState, ICarouselItem } from "./CarouselLayout.types";
+import { CarouselSlide } from './CarouselSlide';
+
+import { SPComponentLoader } from '@microsoft/sp-loader';
+import styles from "./CarouselLayout.module.scss";
+
+//const ASPECT_RATIO: number = 9 / 16;
+
+
+
+/**
+ * Carousel layout
+ * Presents the child compoments as a slick slide
+ */
+export class CarouselLayout extends React.Component<
+  ICarouselLayoutProps,
+  ICarouselLayoutState
+  > {
+
+  // Reference to the slick slider
+  private _wrapperDiv: HTMLDivElement;
+  private _slider: Slider;
+  private ASPECT_RATIO: number = this.props.heroRatio / 16;
+  constructor(props: ICarouselLayoutProps) {
+    super(props);
+  
+
+    // Load the slick CSS
+    SPComponentLoader.loadCss('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css');
+    SPComponentLoader.loadCss('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css');
+
+    // Store how many children we have -- that's the total number of slides
+    this.state = {
+      currentSlide: 0,
+      width: 0,
+      height: 0
+    };
+  }
+
+  public componentDidMount(): void {
+    this.setState({
+      width: this._wrapperDiv && this._wrapperDiv.clientWidth,
+      height: this._wrapperDiv && Math.floor(this._wrapperDiv.clientWidth * this.props.heroRatio / 16)
+    });
+  }
+
+  public componentDidUpdate(prevProps){
+    let rebuildTiles = false;
+
+    if (this.props.heroRatio !== prevProps.heroRatio) {  rebuildTiles = true ; }
+    if (rebuildTiles){
+      this.setState({
+        width: this._wrapperDiv && this._wrapperDiv.clientWidth,
+        height: this._wrapperDiv && Math.floor(this._wrapperDiv.clientWidth * this.props.heroRatio / 16)
+      });
+    }
+  }
+
+  /**
+   * Renders a slick switch, a slide for each child, and next/previous arrows
+   */
+  public render(): React.ReactElement<ICarouselLayoutProps> {
+    // slick seems to have an issue with having "infinite" mode set to true and having less items than the number of slides per page
+    // set infinite to true only if there are more than 1 children
+    // Definition of all options:  https://react-slick.neostack.com/docs/api/
+    var isInfinite: boolean = this.props.items.length > 1;
+    var settings: any = {
+      accessibility: false,
+      adaptiveHeight: false,
+      arrows: false,
+      autoplaySpeed: 0,
+      centerMode: false,
+      centerPadding: styles.centerPadding,
+      dots: true,    //was false
+      dotsClass: [styles.customDots,"slick-dots"].join(" "),
+      cssEase: "ease",
+      draggable: false, //This makes it so you can drag slide... but it will conflict with onclick events.
+      easing: "linear",
+      edgeFriction: 0.35,
+      fade: false,
+      infinite: isInfinite,
+      pauseOnDotsHover: false,
+      pauseOnFocus: false,
+      pauseOnHover: true,
+      rows: 1,
+      slide: "div",
+      slidesPerRow: 1,
+      slidesToScroll: 1,
+      slidesToShow: 1,
+      speed: 500,
+      swipe: true,
+      swipeToSlide: false,  //This didn't seem to make it click and drag.
+      touchMove: true,
+      touchThreshold: 5,
+      useCSS: true,
+      useTransform: true,
+      variableWidth: false,
+      vertical: false,
+      respondTo: "slider",
+      afterChange: (currentSlide: number) => {
+        if (this.props.onAfterChange) {
+          this.props.onAfterChange(currentSlide);
+        }
+
+        this.setState({
+          currentSlide
+        });
+      },
+      beforeChange: (currentSlide: number) => {
+        if (this.props.onBeforeChange) {
+          this.props.onBeforeChange(currentSlide);
+        }
+      }
+    };
+
+    // If a paging template was passed, use it to generate the label
+    const pagingLabel: string = this.props.pagingTemplate &&
+      this.props.pagingTemplate.replace('{0}', `${this.state.currentSlide + 1}`)
+        .replace('{1}', `${this.props.items.length}`);
+
+
+    return (
+      <div ref={(el) => { this._wrapperDiv = el; }}>
+        <div className={styles.carouselLayout} aria-label={this.props.ariaLabel}>
+          <Slider ref={c => (this._slider = c)} {...settings}>
+            {this.props.items.map((item: ICarouselItem) => {
+              return <CarouselSlide
+                title={item.title}
+                location={item.location}
+                imageSrc={item.imageSrc}
+                width={this.state.width}
+                height={this.state.height}
+                href={item.href}
+                target={item.target}
+                onClick={() => { this.props.onSlideClick(this.state.currentSlide); }}
+              />;
+            })}
+          </Slider>
+          <div
+            className={css(styles.indexButtonContainer, styles.sliderButtons, styles.sliderButtonLeft)}
+            onClick={() => this._slider.slickPrev()}
+          >
+            <IconButton
+              className={css(styles.indexButton, styles.leftPositioned)}
+              iconProps={{ iconName: "ChevronLeft", }}
+              //Added custom styles to make chevrons larger
+              styles={{
+                icon: { 
+                  fontSize: 32,
+                  fontWeight: "bolder",
+                  margin: '0px 2px',
+                },
+              }}
+            />
+          </div>
+          <div
+            className={css(styles.indexButtonContainer, styles.sliderButtons, styles.sliderButtonRight)}
+            onClick={() => this._slider.slickNext()}
+          >
+            <IconButton
+              className={css(styles.indexButton, styles.rightPositioned, styles.large32pxIcon )}
+              iconProps={{ iconName: "ChevronRight",}}
+              //Added custom styles to make chevrons larger
+              styles={{
+                icon: { 
+                  fontSize: 32,
+                  fontWeight: "bolder",
+                  margin: '0px 2px',
+                },
+              }}
+            />
+          </div>
+          {this.props.pagingTemplate &&
+            <div data-automation-id="item-count" className={styles.currentActiveItem}
+          
+            >
+              {pagingLabel}
+            </div>
+          }
+        </div>
+      </div>
+    );
+  }
+
+
+
+
+
+}
+
+/**
+ *             styles={{
+              ...props.styles,
+              root: {backgroundColor: 'white',padding:'0px !important'},
+              textContainer: { fontSize: 12 },
+              icon: { 
+                fontSize: 18,
+                fontWeight: "bolder",
+                margin: '0px 2px',
+
+             },
+            }}
+ */

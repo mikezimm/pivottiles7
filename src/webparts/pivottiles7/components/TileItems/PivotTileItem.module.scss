@@ -1,0 +1,470 @@
+@import '../../../../../node_modules/office-ui-fabric-react/dist/sass/_References';
+
+// define variables first
+$themePrimary: '[theme:themeDarker, default:#0078d7]';
+$themeWhite: '[theme:white, default:white]';
+
+
+.pivotTiles {
+  //.
+  // Are these used?
+  $wrapper-size-not-expanded: 10px;
+
+  //Styling options
+  $tileGap: 8px;
+  $tileMargin:  $tileGap $tileGap 0px 0px;
+  $titleFontSize: 16px;
+  $descFontSize: 12px;
+
+  $minHeight: 100px;
+
+  $adjust4x1: 24%;
+  $adjust3x1: 33%;
+  $adjust2x1: 49%;
+  $adjust1x1: 99%;
+
+    //100by4x1
+    $box-height: $minHeight ;
+    $tileGapPer: $tileGap/$box-height;
+    $box-width:  $adjust1x1 * (1 - $tileGapPer);
+    $panelHtVis: .4 * $box-height;
+    $panelHtHid: $box-height - $panelHtVis;
+
+    .hW { height: $box-height; width: $box-width; }
+
+  //100by4x1
+  //100by3x1
+  //100by2x1
+  //100by1x1
+  //100by1xy
+ 
+  
+  //150by4x1
+  //150by3x1
+  //150by2x1
+  //150by1x1
+  //150by1xy
+  
+  //200by4x1
+  //200by3x1
+  //200by2x1
+  //200by1x1
+  //200by1xy
+  
+  // 100 px height classes
+  //100by1xy
+  $box-height-100by1xy: $minHeight ;
+  $tileGapPer-100by1xy: $tileGap/$box-height-100by1xy;
+  $box-width-100by1xy:  $box-height-100by1xy;
+  $panelHtVis-100by1xy: .4 * $box-height-100by1xy;
+  $panelHtHid-100by1xy: $box-height-100by1xy - $panelHtVis-100by1xy;
+  .hW100by1xy { height: $box-height-100by1xy; width: $box-width-100by1xy; }
+
+  //100by4x1
+  $box-height-100by4x1: $minHeight ;
+  $tileGapPer-100by4x1: $tileGap/$box-height-100by4x1;
+  $box-width-100by4x1:  $adjust4x1 * (1 - $tileGapPer-100by4x1);
+  $panelHtVis-100by4x1: .4 * $box-height-100by4x1;
+  $panelHtHid-100by4x1: $box-height-100by4x1 - $panelHtVis-100by4x1;
+  .hW100by4x1 { height: $box-height-100by4x1; width: $box-width-100by4x1; }
+
+  //100by3x1
+  $box-height-100by3x1: $minHeight ;
+  $tileGapPer-100by3x1: $tileGap/$box-height-100by3x1;
+  $box-width-100by3x1:  $adjust3x1 * (1 - $tileGapPer-100by3x1);
+  $panelHtVis-100by3x1: .4 * $box-height-100by3x1;
+  $panelHtHid-100by3x1: $box-height-100by3x1 - $panelHtVis-100by3x1;
+  .hW100by3x1 { height: $box-height-100by3x1; width: $box-width-100by3x1; }
+
+  //100by2x1
+  $box-height-100by2x1: $minHeight ;
+  $tileGapPer-100by2x1: $tileGap/$box-height-100by2x1;
+  $box-width-100by2x1:  $adjust2x1 * (1 - $tileGapPer-100by2x1);
+  $panelHtVis-100by2x1: .4 * $box-height-100by2x1;
+  $panelHtHid-100by2x1: $box-height-100by2x1 - $panelHtVis-100by2x1;
+  .hW100by2x1 { height: $box-height-100by2x1; width: $box-width-100by2x1; }
+
+  //100by1x1
+  $box-height-100by1x1: $minHeight ;
+  //$tileGapPer-100by1x1: $tileGap/$box-height-100by1x1;
+  $tileGapPer-100by1x1: 0px;
+  //$box-width-100by1x1:  $adjust1x1 * (1 - $tileGapPer-100by1x1);
+  $box-width-100by1x1: 100%;
+  $panelHtVis-100by1x1: .4 * $box-height-100by1x1;
+  $panelHtHid-100by1x1: $box-height-100by1x1 - $panelHtVis-100by1x1;
+  .hW100by1x1 { height: $box-height-100by1x1; width: $box-width-100by1x1; }
+
+
+  // 150 px height classes
+  //150by1xy
+  $box-height-150by1xy: $minHeight * 1.5 ;
+  $tileGapPer-150by1xy: $tileGap/$box-height-150by1xy;
+  $box-width-150by1xy:  $box-height-150by1xy;
+  $panelHtVis-150by1xy: .4 * $box-height-150by1xy;
+  $panelHtHid-150by1xy: $box-height-150by1xy - $panelHtVis-150by1xy;
+  .hW150by1xy { height: $box-height-150by1xy; width: $box-width-150by1xy; }
+
+  //150by4x1
+  $box-height-150by4x1: $minHeight * 1.5 ;
+  $tileGapPer-150by4x1: $tileGap/$box-height-150by4x1;
+  $box-width-150by4x1:  $adjust4x1 * (1 - $tileGapPer-150by4x1);
+  $panelHtVis-150by4x1: .4 * $box-height-150by4x1;
+  $panelHtHid-150by4x1: $box-height-150by4x1 - $panelHtVis-150by4x1;
+  .hW150by4x1 { height: $box-height-150by4x1; width: $box-width-150by4x1; }
+
+  //150by3x1
+  $box-height-150by3x1: $minHeight * 1.5 ;
+  $tileGapPer-150by3x1: $tileGap/$box-height-150by3x1;
+  $box-width-150by3x1:  $adjust3x1 * (1 - $tileGapPer-150by3x1);
+  $panelHtVis-150by3x1: .4 * $box-height-150by3x1;
+  $panelHtHid-150by3x1: $box-height-150by3x1 - $panelHtVis-150by3x1;
+  .hW150by3x1 { height: $box-height-150by3x1; width: $box-width-150by3x1; }
+
+  //150by2x1
+  $box-height-150by2x1: $minHeight * 1.5 ;
+  $tileGapPer-150by2x1: $tileGap/$box-height-150by2x1;
+  $box-width-150by2x1:  $adjust2x1 * (1 - $tileGapPer-150by2x1);
+  $panelHtVis-150by2x1: .4 * $box-height-150by2x1;
+  $panelHtHid-150by2x1: $box-height-150by2x1 - $panelHtVis-150by2x1;
+  .hW150by2x1 { height: $box-height-150by2x1; width: $box-width-150by2x1; }
+
+  //150by1x1
+  $box-height-150by1x1: $minHeight * 1.5 ;
+//  $tileGapPer-150by1x1: $tileGap/$box-height-150by1x1;
+  $tileGapPer-150by1x1: 0px;
+//  $box-width-150by1x1:  $adjust1x1 * (1 - $tileGapPer-150by1x1);
+  $box-width-150by1x1: 100%;
+  $panelHtVis-150by1x1: .4 * $box-height-150by1x1;
+  $panelHtHid-150by1x1: $box-height-150by1x1 - $panelHtVis-150by1x1;
+  .hW150by1x1 { height: $box-height-150by1x1; width: $box-width-150by1x1; }
+
+
+
+  // 300 px height classes
+  //300by1xy
+  $box-height-300by1xy: $minHeight * 3 ;
+  $tileGapPer-300by1xy: $tileGap/$box-height-300by1xy;
+  $box-width-300by1xy:  $box-height-300by1xy;
+  $panelHtVis-300by1xy: .4 * $box-height-300by1xy;
+  $panelHtHid-300by1xy: $box-height-300by1xy - $panelHtVis-300by1xy;
+  .hW300by1xy { height: $box-height-300by1xy; width: $box-width-300by1xy; }
+
+  //300by4x1
+  $box-height-300by4x1: $minHeight * 3 ;
+  $tileGapPer-300by4x1: $tileGap/$box-height-300by4x1;
+  $box-width-300by4x1:  $adjust4x1 * (1 - $tileGapPer-300by4x1);
+  $panelHtVis-300by4x1: .4 * $box-height-300by4x1;
+  $panelHtHid-300by4x1: $box-height-300by4x1 - $panelHtVis-300by4x1;
+  .hW300by4x1 { height: $box-height-300by4x1; width: $box-width-300by4x1; }
+
+  //300by3x1
+  $box-height-300by3x1: $minHeight * 3 ;
+  $tileGapPer-300by3x1: $tileGap/$box-height-300by3x1;
+  $box-width-300by3x1:  $adjust3x1 * (1 - $tileGapPer-300by3x1);
+  $panelHtVis-300by3x1: .4 * $box-height-300by3x1;
+  $panelHtHid-300by3x1: $box-height-300by3x1 - $panelHtVis-300by3x1;
+  .hW300by3x1 { height: $box-height-300by3x1; width: $box-width-300by3x1; }
+
+  //300by2x1
+  $box-height-300by2x1: $minHeight * 3 ;
+  $tileGapPer-300by2x1: $tileGap/$box-height-300by2x1;
+  $box-width-300by2x1:  $adjust2x1 * (1 - $tileGapPer-300by2x1);
+  $panelHtVis-300by2x1: .4 * $box-height-300by2x1;
+  $panelHtHid-300by2x1: $box-height-300by2x1 - $panelHtVis-300by2x1;
+  .hW300by2x1 { height: $box-height-300by2x1; width: $box-width-300by2x1; }
+
+  //300by1x1
+  $box-height-300by1x1: $minHeight * 3 ;
+  //$tileGapPer-300by1x1: $tileGap/$box-height-300by1x1;
+  $tileGapPer-300by1x1: 0px;
+//  $box-width-300by1x1:  $adjust1x1 * (1 - $tileGapPer-300by1x1);
+  $box-width-300by1x1:  100%;
+  $panelHtVis-300by1x1: .4 * $box-height-300by1x1;
+  $panelHtHid-300by1x1: $box-height-300by1x1 - $panelHtVis-300by1x1;
+  .hW300by1x1 { height: $box-height-300by1x1; width: $box-width-300by1x1; }
+
+  .heroHeader {min-height: $box-height-100by1x1; min-width: 100%; display:block}
+  .heroFooter {min-height: $box-height-100by1x1; min-width: 100%; display:block}
+
+  .heroLeft4x1 {height: $box-height-300by1xy; width: $box-width-300by2x1; display:block}
+  .heroLeft3x1 {height: $box-height-300by1xy; width: $box-width-300by3x1; display:block}
+  .heroLeft2x1 {height: $box-height-300by1xy; width: $box-width-300by2x1; display:block}
+  .heroLeft4x1 {height: $box-height-300by1xy; width: $box-width-300by2x1; display:block}
+  .heroLeft1xy {height: $box-height-300by1xy; width: $box-width-300by2x1; display:block}
+
+  //All just height impacted classes
+
+  .hW100 {height: $box-height-100by1xy;}
+  .hW150 {height: $box-height-150by1xy;}
+  .hW300 {height: $box-height-300by1xy;}
+
+  //All just height AND panelHeightHidden impacted classes
+
+  .hTpH100 { height: $box-height-100by1xy; top: $panelHtHid-100by1xy }
+  .hTpH150 { height: $box-height-150by1xy; top: $panelHtHid-150by1xy }
+  .hTpH300 { height: $box-height-300by1xy; top: $panelHtHid-300by1xy }
+
+  //All just height AND panelHeightVisible impacted classes
+
+  .hpHv100 { height: $panelHtVis-100by1xy }
+  .hpHv150 { height: $panelHtVis-150by1xy }
+  .hpHv300 { height: $panelHtVis-300by1xy }
+
+  //All just height AND panelHeightHidden impacted classes
+
+  .wThpHh100 { -webkit-transform: translate3d(0,-$panelHtHid-100by1x1,0);  transform: translate3d(0,-$panelHtHid-100by1x1,0); }
+  .wThpHh150 { -webkit-transform: translate3d(0,-$panelHtHid-150by1x1,0);  transform: translate3d(0,-$panelHtHid-150by1x1,0); }
+  .wThpHh300 { -webkit-transform: translate3d(0,-$panelHtHid-300by1x1,0);  transform: translate3d(0,-$panelHtHid-300by1x1,0); }
+
+
+  .container {
+    max-width: 100%;
+    //margin: 0px auto;
+    //border: 0px;
+    //***ShiftTesting margin: 0px;
+    //padding: 0px;
+    position: relative;
+
+  }
+
+  .pTileItemWrapper {
+    float: left;
+    display: block;
+    //height: $box-height;
+    //width: $box-width;
+    position: relative;
+//    border: #bebebe 1px solid;
+    //border: 0px solid;
+    //***ShiftTesting border: 0px;
+    //margin: 0px;
+    //padding: 0px;
+    //*** overwriting to test image shift Turn this back on
+    margin:  $tileMargin;
+    overflow: hidden;
+  }
+
+  // .pTileItemWrapper999byxyz { @extend .pTileItemWrapper; @extend .hW999byxyz;}
+
+  .pTileItemWrapper100by1xy { @extend .pTileItemWrapper; @extend .hW100by1xy;}
+  .pTileItemWrapper100by4x1 { @extend .pTileItemWrapper; @extend .hW100by4x1;}
+  .pTileItemWrapper100by3x1 { @extend .pTileItemWrapper; @extend .hW100by3x1;}
+  .pTileItemWrapper100by2x1 { @extend .pTileItemWrapper; @extend .hW100by2x1;}
+  .pTileItemWrapper100by1x1 { @extend .pTileItemWrapper; @extend .hW100by1x1;}
+
+  .pTileItemWrapper150by1xy { @extend .pTileItemWrapper; @extend .hW150by1xy;}
+  .pTileItemWrapper150by4x1 { @extend .pTileItemWrapper; @extend .hW150by4x1;}
+  .pTileItemWrapper150by3x1 { @extend .pTileItemWrapper; @extend .hW150by3x1;}
+  .pTileItemWrapper150by2x1 { @extend .pTileItemWrapper; @extend .hW150by2x1;}
+  .pTileItemWrapper150by1x1 { @extend .pTileItemWrapper; @extend .hW150by1x1;}
+
+  .pTileItemWrapper300by1xy { @extend .pTileItemWrapper; @extend .hW300by1xy;}
+  .pTileItemWrapper300by4x1 { @extend .pTileItemWrapper; @extend .hW300by4x1;}
+  .pTileItemWrapper300by3x1 { @extend .pTileItemWrapper; @extend .hW300by3x1;}
+  .pTileItemWrapper300by2x1 { @extend .pTileItemWrapper; @extend .hW300by2x1;}
+  .pTileItemWrapper300by1x1 { @extend .pTileItemWrapper; @extend .hW300by1x1;}
+
+  
+  .pTileItemWrapperExpanded {
+    @extend .pTileItemWrapper;
+    //width: (1-$tileGapPer) * $box-width;
+    //height: $box-height;
+    //margin:  $tileMargin;
+    //border: 0px solid;
+    //***ShiftTesting border: 0px;
+    // *** Setting this to zero removes spaces between tiles  margin: 0px;
+    //***ShiftTesting padding: 0px;
+    -webkit-transition: -webkit-transform 0.5s;
+    transition: transform 0.5s;
+    //-webkit-transform: scale(0.5,0.5);
+    //transform: scale(0.5,0.5);
+    transition:all 0.3s ease;
+    //transition-delay:0.15s;
+  }
+
+
+  // .pTileItemWrapperExpanded999byxyz { @extend .pTileItemWrapperExpanded; @extend .hW999byxyz;}
+
+  .pTileItemWrapperExpanded100by1xy { @extend .pTileItemWrapperExpanded; @extend .hW100by1xy;}
+  .pTileItemWrapperExpanded100by4x1 { @extend .pTileItemWrapperExpanded; @extend .hW100by4x1;}
+  .pTileItemWrapperExpanded100by3x1 { @extend .pTileItemWrapperExpanded; @extend .hW100by3x1;}
+  .pTileItemWrapperExpanded100by2x1 { @extend .pTileItemWrapperExpanded; @extend .hW100by2x1;}
+  .pTileItemWrapperExpanded100by1x1 { @extend .pTileItemWrapperExpanded; @extend .hW100by1x1;}
+
+  .pTileItemWrapperExpanded150by1xy { @extend .pTileItemWrapperExpanded; @extend .hW150by1xy;}
+  .pTileItemWrapperExpanded150by4x1 { @extend .pTileItemWrapperExpanded; @extend .hW150by4x1;}
+  .pTileItemWrapperExpanded150by3x1 { @extend .pTileItemWrapperExpanded; @extend .hW150by3x1;}
+  .pTileItemWrapperExpanded150by2x1 { @extend .pTileItemWrapperExpanded; @extend .hW150by2x1;}
+  .pTileItemWrapperExpanded150by1x1 { @extend .pTileItemWrapperExpanded; @extend .hW150by1x1;}
+
+  .pTileItemWrapperExpanded300by1xy { @extend .pTileItemWrapperExpanded; @extend .hW300by1xy;}
+  .pTileItemWrapperExpanded300by4x1 { @extend .pTileItemWrapperExpanded; @extend .hW300by4x1;}
+  .pTileItemWrapperExpanded300by3x1 { @extend .pTileItemWrapperExpanded; @extend .hW300by3x1;}
+  .pTileItemWrapperExpanded300by2x1 { @extend .pTileItemWrapperExpanded; @extend .hW300by2x1;}
+  .pTileItemWrapperExpanded300by1x1 { @extend .pTileItemWrapperExpanded; @extend .hW300by1x1;}
+
+
+  .pTileItemWrapperNotExpanded {
+    @extend .pTileItemWrapper;
+
+    width: 0px;
+    height: 0px;
+    //margin: 0px 0px 0px 0px;
+    -webkit-transition: -webkit-transform 0.5s;
+    transition: transform 0.5s;
+    //-webkit-transform: scale(1,1);
+    //transform: scale(1,1);
+    transition:all 0.3s ease;
+    //transition-delay:0.15s;
+  }
+
+  .pTileItemImageCustom {
+    // Need to set both height and width to be able to see tile
+    width: 100%;
+    height: 100%;
+
+    // Added -backface-visibility: hidden per this post:  https://theme.co/apex/forums/topic/image-move-when-hover/
+    // Without it, the non-Hero tiles would shift a couple pixels in Chrome on hover.
+    // When editing web part props (like hero or size), effect will come back until you refresh the page.
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    //These did nothing to prevent the left icons from shifting on hover.
+    //border: 0px;
+    //margin: 0px;
+    //padding: 0px;
+
+    //height: $box-height;
+  }
+
+  .pTileItemImage {
+    width: 100%;
+    //height: $box-height;
+  }
+
+
+  .themeBackground {
+    background: $themeWhite;
+  }
+    /* [2] Transition property for smooth transformation of images */
+  .imgHoverZoom {
+      @extend .pTileItemImageCustom;
+      transition:all 2s ease;
+      //background:rgba(255, 255, 255, 0.85);
+      transition-delay:0.25s;
+      //*** Does not impact shift    width: 100%;
+      //*** Does not impact shift    height: 100%;
+  }
+
+  /* [3] Finally, transforming the image when container gets hovered */
+  .imgHoverZoomHover { 
+    @extend .pTileItemImageCustom;
+    transition:all 3.25s ease;
+    // transform: scale(1.2);
+    transition-delay:0.25s;
+    //*** Does not impact shift    width: 100%;
+    //*** Does not impact shift    height: 100%;
+  }
+
+
+  /* [3] Finally, transforming the image when container gets hovered */
+  .imgHoverZoomHover00 {
+    @extend .imgHoverZoomHover;
+    transform: scale(0);
+  }
+  .imgHoverZoomHover10 { 
+    @extend .imgHoverZoomHover;
+    transform: scale(1.0);
+  }
+  .imgHoverZoomHover11 { 
+    @extend .imgHoverZoomHover;
+    transform: scale(1.1);
+  }
+  .imgHoverZoomHover12 { 
+    @extend .imgHoverZoomHover;
+    transform: scale(1.2);
+  }
+
+  // .pTileItemImage100 { @extend .pTileItemImage; @extend .hW100;}
+
+  .pTileItemImage100 { @extend .pTileItemImage; @extend .hW100;}
+  .pTileItemImage150 { @extend .pTileItemImage; @extend .hW150;}
+  .pTileItemImage300 { @extend .pTileItemImage; @extend .hW300;}
+
+ 
+  .pTileItemHoverPanel {
+    position: absolute;
+
+    //top: $panelHtHid;
+    //height: $box-height;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: rgba( 0,0,0,0.75 );
+    filter: alpha(opacity=50);
+    //padding: 2px;
+
+  }
+
+  .pTileItemHoverPanel100 { @extend .pTileItemImage; @extend .hTpH100; }
+  .pTileItemHoverPanel150 { @extend .pTileItemImage; @extend .hTpH150; }
+  .pTileItemHoverPanel300 { @extend .pTileItemImage; @extend .hTpH300; }
+
+
+  .pTileItemHoverPanelExpanded {
+    @extend .pTileItemHoverPanel;
+    // overflow: hidden;
+    -webkit-transition: opacity 0.5s, -webkit-transform 0.5s;
+    transition: opacity 0.5s, transform 0.5s;
+    //-webkit-transform: translate3d(0,-$panelHtHid,0);
+    //transform: translate3d(0,-$panelHtHid,0);
+    transition:all 0.5s ease;
+    transition-delay:0.25s;
+  }
+
+  .pTileItemHoverPanelExpanded100 { @extend .pTileItemHoverPanelExpanded; @extend .wThpHh100; }
+  .pTileItemHoverPanelExpanded150 { @extend .pTileItemHoverPanelExpanded; @extend .wThpHh150; }
+  .pTileItemHoverPanelExpanded300 { @extend .pTileItemHoverPanelExpanded; @extend .wThpHh300; }
+
+
+  .pTileItemHoverPanelNotExpanded {
+    @extend .pTileItemHoverPanel;
+    -webkit-transition: opacity 0.5s, -webkit-transform 0.5s;
+    transition: opacity 0.5s, transform 0.5s;
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+    transition:all 0.7s ease;
+
+  }
+
+  .pTileItemHoverPanelNotExpanded100 { @extend .pTileItemHoverPanelNotExpanded; @extend .hTpH100; }
+  .pTileItemHoverPanelNotExpanded150 { @extend .pTileItemHoverPanelNotExpanded; @extend .hTpH150; }
+  .pTileItemHoverPanelNotExpanded300 { @extend .pTileItemHoverPanelNotExpanded; @extend .hTpH300; }
+
+
+  .pTileItemTitle {
+    //font-size: ($box-size - ($box-size * .80)) - 10px;
+    //line-height: ($box-size - ($box-size * .80)) - 4px;
+    font-size: $titleFontSize;    
+    //font-weight: bold;
+    color: #eee;
+    //height:$panelHtVis;
+    
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+  }
+  
+  .pTileItemTitle100 { @extend .pTileItemTitle; @extend .hpHv100; }
+  .pTileItemTitle150 { @extend .pTileItemTitle; @extend .hpHv150; }
+  .pTileItemTitle300 { @extend .pTileItemTitle; @extend .hpHv300; }
+
+
+  .pTileItemDesc {
+    font-size: $descFontSize;
+    //line-height: ($box-size - ($box-size * .80)) - 4px;
+    color: #ccc;
+    
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
