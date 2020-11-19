@@ -1,6 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
-  "id": "89e3037a-0715-4920-894e-367d420e3d5c",
+  "id": "92b4cb98-3aa1-4ece-9149-a591a572aced", //Copied from Original Pivot Tiles
+//  "id": "89e3037a-0715-4920-894e-367d420e3d5c",  //This was the rebuilt ID
   "alias": "Pivottiles7WebPart",
   "componentType": "WebPart",
 
