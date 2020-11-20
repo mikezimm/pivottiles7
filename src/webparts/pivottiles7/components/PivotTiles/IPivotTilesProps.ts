@@ -30,7 +30,24 @@ export interface ICustomCategories {
   allTabs?: string[];
 }
 
-export interface IFetchListsSettings {
+export interface IFetchInfoSettings {
+
+  hubsInclude: boolean ;
+  hubsCategory: string ;
+  hubsLazy: boolean ;
+
+  groupsInclude: boolean ;
+  groupsSetting: string ;
+  groupsLazy: boolean ;
+
+  usersInclude: boolean ;
+  usersSetting: string ;
+  usersLazy: boolean ;
+
+  subsitesInclude: boolean ;
+  subsitesCategory: string ;
+  ignoreList: boolean ;
+
   listsInclude: boolean;
   listIconStyles: string;
   listFilter: string;
@@ -40,6 +57,7 @@ export interface IFetchListsSettings {
   libsIconStyles: string;
   libsFilter: string;
   libsCategory: string;
+
 
   listHideSystem: boolean;
 
@@ -125,9 +143,9 @@ export interface IPivotTilesProps {
 
   subsitesInclude: boolean;
   subsitesCategory: string;
-  subsitesOnly: boolean;
+  ignoreList: boolean;
 
-  fetchLists: IFetchListsSettings;
+  fetchInfo: IFetchInfoSettings;
   
   //Properties NOT in main webpart properties
   

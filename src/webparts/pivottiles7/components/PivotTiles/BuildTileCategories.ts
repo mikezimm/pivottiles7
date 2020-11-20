@@ -35,6 +35,7 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
   let hasLibraries = false;
   let hasSystem = false;
   let hasFiles = false;
+  let hasHubs = false;
 
   if (thisCatColumn === 'created' || thisCatColumn === 'modified') {
     let thisTime = pivotState[thisCatColumn + 'Info'];
@@ -56,11 +57,12 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
       if ( tile.category.indexOf(pivotProps.subsitesCategory) > -1 ) { hasSubsites = true ; }
 
       if ( tile.sourceType ) {
-        if ( tile.sourceType.indexOf( pivotProps.fetchLists.listCategory ) > -1 ) { hasLists = true ; }
-        if ( tile.sourceType.indexOf( pivotProps.fetchLists.libsCategory ) > -1 ) { hasLibraries = true ; }
+        if ( tile.sourceType.indexOf( pivotProps.fetchInfo.listCategory ) > -1 ) { hasLists = true ; }
+        if ( tile.sourceType.indexOf( pivotProps.fetchInfo.libsCategory ) > -1 ) { hasLibraries = true ; }
         if ( tile.sourceType.toLowerCase().indexOf('files') > -1 ) { hasFiles = true ; }
         if ( tile.sourceType.toLowerCase().indexOf('pages') > -1 ) { hasFiles = true ; }
         if ( tile.sourceType.toLowerCase().indexOf('news') > -1 ) { hasFiles = true ; }
+        if ( tile.sourceType.toLowerCase().indexOf('hubs') > -1 ) { hasHubs = true ; }
       }
 
       if ( tile.system ) { hasSystem = true ; }
@@ -148,20 +150,24 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
     tileCategories.push( pivotProps.subsitesCategory );
   }
 
+  if ( hasHubs === true ) {
+    tileCategories.push( 'Hubs' );
+  }
+
   if ( hasLists === true ) {
-    tileCategories.push( pivotProps.fetchLists.listCategory);
+    tileCategories.push( pivotProps.fetchInfo.listCategory);
   }
   if ( hasLibraries === true ) {
-    tileCategories.push( pivotProps.fetchLists.libsCategory );
+    tileCategories.push( pivotProps.fetchInfo.libsCategory );
   }
   if ( hasSystem === true ) {
     tileCategories.push('System');
   }
 
   /*
-  if ( this.props.fetchLists.libsInclude === false ) {
+  if ( this.props.fetchInfo.libsInclude === false ) {
     listFilter += ' and BaseType eq 0';
-  } else if ( this.props.fetchLists.listsInclude === false ) {
+  } else if ( this.props.fetchInfo.listsInclude === false ) {
     listFilter += ' and BaseType eq 1';
   } 
   */

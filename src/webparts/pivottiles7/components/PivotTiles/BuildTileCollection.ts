@@ -370,6 +370,7 @@ function buildFinalTileCollection ( response: any, theseProps: any, custSearch, 
   
   let showOtherTab = false;
 
+  console.log('buildFinalTileCollection - all response items:', response );
   let tileCollection: IPivotTileItemProps[] = response.map(item => {
 
     let modifiedByTitle = null;
@@ -513,7 +514,7 @@ function buildFinalTileCollection ( response: any, theseProps: any, custSearch, 
     }
 
     let descriptionSuffix = '';
-    if ( item.sourceType === pivotProps.fetchLists.libsCategory || item.sourceType === pivotProps.fetchLists.listCategory || item.sourceType === pivotProps.subsitesCategory ) {
+    if ( item.sourceType === pivotProps.fetchInfo.libsCategory || item.sourceType === pivotProps.fetchInfo.listCategory || item.sourceType === pivotProps.subsitesCategory ) {
       descriptionSuffix =  [ item.sourceType, item.createdNote, item.modifiedNote ].join('; ');
     }
 
@@ -528,18 +529,22 @@ function buildFinalTileCollection ( response: any, theseProps: any, custSearch, 
     let imageHeight = pivotProps.imageHeight;
     let defFabricSize = `;size=50;top=-${imageHeight/5}px;background=white;`;
 
-    if ( sourceType === pivotProps.fetchLists.libsCategory ) {
-      if ( !color || color === '' ) { color = 'font=darkgray;' + defFabricSize + pivotProps.fetchLists.libsIconStyles ; }
-      if ( !imageUrl || imageUrl === '' ) { imageUrl = getStyleProp([ pivotProps.fetchLists.libsIconStyles ], 'icon' ) ; }
+    if ( sourceType === pivotProps.fetchInfo.libsCategory ) {
+      if ( !color || color === '' ) { color = 'font=darkgray;' + defFabricSize + pivotProps.fetchInfo.libsIconStyles ; }
+      if ( !imageUrl || imageUrl === '' ) { imageUrl = getStyleProp([ pivotProps.fetchInfo.libsIconStyles ], 'icon' ) ; }
       if ( !imageUrl || imageUrl === '' ) { imageUrl = 'FolderHorizontal' ; }   
 
-    } else if ( sourceType === pivotProps.fetchLists.listCategory ) {
-      if ( !color || color === '' ) { color = 'font=darkslateblue;' + defFabricSize  + 'background=LightGoldenRodYellow;' + pivotProps.fetchLists.listIconStyles ; }
-      if ( !imageUrl || imageUrl === '' ) { imageUrl = getStyleProp([ pivotProps.fetchLists.listIconStyles ], 'icon' ) ; }
+    } else if ( sourceType === pivotProps.fetchInfo.listCategory ) {
+      if ( !color || color === '' ) { color = 'font=darkslateblue;' + defFabricSize  + 'background=LightGoldenRodYellow;' + pivotProps.fetchInfo.listIconStyles ; }
+      if ( !imageUrl || imageUrl === '' ) { imageUrl = getStyleProp([ pivotProps.fetchInfo.listIconStyles ], 'icon' ) ; }
       if ( !imageUrl || imageUrl === '' ) { imageUrl = 'BulletedList2' ; }   
       
     } else if ( sourceType === pivotProps.subsitesCategory ) {
       if ( !color || color === '' ) { color = 'font=darkslateblue;' + defFabricSize; }
+      if ( !imageUrl || imageUrl === '' ) { imageUrl = 'SharepointLogo' ; }
+
+    } else if ( sourceType === 'Hubs' ) {
+      if ( !color || color === '' ) { color = 'font=red;' + defFabricSize; }
       if ( !imageUrl || imageUrl === '' ) { imageUrl = 'SharepointLogo' ; }
 
     } else if ( sourceType === 'Files' ) {
@@ -758,6 +763,10 @@ export function buildTileCollectionFromLists(response, pivotProps: IPivotTilesPr
         let modResults = addModifiedInfoToItem( item, theseProps, tc, includePeople );
         tc = modResults.tc;
         item = modResults.item;
+        if ( item.description === null ) {
+          item.description = '';
+        }
+        item.description = 'Associated Site: ' + item.description;
     }
 
     tc = setModifiedCats( tc, pivotProps );
@@ -798,6 +807,100 @@ export function buildTileCollectionFromLists(response, pivotProps: IPivotTilesPr
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/***
+ *    d8888b. db    db d888888b db      d8888b.      db   d8b   db d88888b d8888b.      d888888b d888888b db      d88888b .d8888. 
+ *    88  `8D 88    88   `88'   88      88  `8D      88   I8I   88 88'     88  `8D      `~~88~~'   `88'   88      88'     88'  YP 
+ *    88oooY' 88    88    88    88      88   88      88   I8I   88 88ooooo 88oooY'         88       88    88      88ooooo `8bo.   
+ *    88~~~b. 88    88    88    88      88   88      Y8   I8I   88 88~~~~~ 88~~~b.         88       88    88      88~~~~~   `Y8b. 
+ *    88   8D 88b  d88   .88.   88booo. 88  .8D      `8b d8'8b d8' 88.     88   8D         88      .88.   88booo. 88.     db   8D 
+ *    Y8888P' ~Y8888P' Y888888P Y88888P Y8888D'       `8b8' `8d8'  Y88888P Y8888P'         YP    Y888888P Y88888P Y88888P `8888Y' 
+ *                                                                                                                                
+ *                                                                                                                                
+ */
+
+export function buildTileCollectionFromHubs(response, pivotProps: IPivotTilesProps , custCategories: ICustomCategories, fixedURL, currentHero){
+
+  //           let tileCollection = response.map(item=>new ClassTile(item));
+  //          https://stackoverflow.com/questions/47755247/typescript-array-map-return-object
+
+     let includePeople = false;
+
+     console.log( 'buildTileCollectionFromWebs pivotProps:', pivotProps );
+ 
+     let tc = createBaselineModObject();
+ 
+     let theseProps : any = {
+      colModified: 'LastItemUserModifiedDate',
+      colCreated: 'Created',
+      colTitleText: 'Title',
+      colHoverText: 'Description',
+      colImageLink: 'SiteLogoUrl',
+      colGoToLink: 'SPSiteUrl',
+      colCategory: null,
+      colTileStyle: null,
+      colColor: null,
+      colSize: null,
+ 
+     };
+ 
+     for (let item of response) {
+         item.Id = item.SiteId;
+         let modResults = addModifiedInfoToItem( item, theseProps, tc, includePeople );
+         tc = modResults.tc;
+         item = modResults.item;
+     }
+ 
+     tc = setModifiedCats( tc, pivotProps );
+ 
+     response = setBestFormat( response, tc, includePeople );
+ 
+     tc = setLastCat( tc, pivotProps );
+ 
+     let endTime = getTheCurrentTime();
+ 
+     let custSearch: any = setCustSearch ( custCategories, theseProps, includePeople );
+ 
+     let finalTileCollection = buildFinalTileCollection ( response, theseProps, custSearch, custCategories, pivotProps, includePeople , fixedURL, currentHero );
+ 
+     return {
+       tileCollection: finalTileCollection.tileCollection,
+       custCategories: custCategories,
+       createdInfo: tc.createdInfo,
+       modifiedInfo: tc.modifiedInfo,
+       categoryInfo: tc.categoryInfo,
+       createdByInfo: tc.createdByInfo,
+       modifiedByInfo: tc.modifiedByInfo,
+ 
+       modifiedByTitles: tc.modifiedByTitles.sort(),
+       modifiedByIDs: tc.modifiedByIDs.sort(),
+       createdByTitles: tc.createdByTitles.sort(),
+       createdByIDs: tc.createdByIDs.sort(),
+       showOtherTab: finalTileCollection.showOtherTab,
+ 
+     };
+
+  }  // END public static buildTileCollectionFromResponse(response, pivotProps, fixedURL, currentHero){
 
 
 
