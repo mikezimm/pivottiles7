@@ -584,7 +584,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
           lists: this.state.originalLists,
           items: this.state.originalListItems,
           hubs: this.state.originalHubs,
-        }
+        };
         this.processResponse( entireResponse, custCategories, false );
 
       }
@@ -1363,6 +1363,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         originalWebs: originalWebs,
         originalLists: originalLists,
         originalListItems: originalListItems,
+        originalHubs: this.state.originalHubs,
 
         createdInfo: useThisTileCollection.createdInfo,
         modifiedInfo: useThisTileCollection.modifiedInfo,
