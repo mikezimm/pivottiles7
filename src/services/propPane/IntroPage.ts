@@ -270,28 +270,6 @@ export class IntroPage {
               disabled: true,
           }),
         ]}, // this group
-
-        { groupName: 'Hubsites',
-        isCollapsed: true ,
-        groupFields: [
-          PropertyPaneToggle('hubsInclude', {
-              label: 'Show Hubsites automatically',
-              offText: 'Off',
-              onText: 'On',
-              disabled: webPartProps.listWebURL !== '' ? true : false,
-          }),
-          PropertyPaneToggle('ignoreList', {
-              label: 'Ignore Tile list... we like auto-tiles :)',
-              offText: 'Off',
-              onText: 'On',
-              disabled: webPartProps.subsitesInclude === true ? false : true,
-          }),
-          PropertyPaneTextField('hubsCategory', {
-              label: 'Hubsite Category',
-              disabled: webPartProps.subsitesInclude === true ? false : true,
-          }),
-
-        ]}, // this group
   
         { groupName: 'Hubsites',
         isCollapsed: true ,
@@ -312,8 +290,10 @@ export class IntroPage {
               label: 'Hubsite Category',
               disabled: webPartProps.hubsInclude === true ? false : true,
           }),
-          PropertyPaneTextField('hubsLazy', {
+          PropertyPaneToggle('hubsLazy', {
             label: 'Lazy Load Hubs:  do not load until you click tab',
+            offText: 'Off',
+            onText: 'On',
             disabled: webPartProps.hubsInclude === true ? false : true,
           }),
 
@@ -338,8 +318,10 @@ export class IntroPage {
               label: 'Hubsite Category',
               disabled: webPartProps.groupsInclude === true ? false : true,
           }),
-          PropertyPaneTextField('groupsLazy', {
+          PropertyPaneToggle('groupsLazy', {
             label: 'Lazy Load Groups:  do not load until you click tab',
+            offText: 'Off',
+            onText: 'On',
             disabled: webPartProps.groupsInclude === true ? false : true,
           }),
 
@@ -364,8 +346,10 @@ export class IntroPage {
               label: 'User Tile settings',
               disabled: webPartProps.usersInclude === true ? false : true,
           }),
-          PropertyPaneTextField('usersLazy', {
+          PropertyPaneToggle('usersLazy', {
             label: 'Lazy Load Users:  do not load until you click tab',
+            offText: 'Off',
+            onText: 'On',
             disabled: webPartProps.usersInclude === true ? false : true,
           }),
 

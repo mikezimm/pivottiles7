@@ -66,18 +66,6 @@
       "colImageLink": "File/ServerRelativeUrl",
       "colSort": "Title",
 
-      "hubsInclude": false ,
-      "hubsCategory": "Hubs" ,
-      "hubsLazy": true ,
-
-      "groupsInclude": false ,
-      "groupsSetting": "" ,
-      "groupsLazy": true ,
-    
-      "usersInclude": false ,
-      "usersSetting": "" ,
-      "usersLazy": true ,
-
       "custCatType": "tileCategory",
       "custCatCols": "",
       "custCatLogi": "",
@@ -87,6 +75,18 @@
       "subsitesCategory": "Subsites",
       "ignoreList": false,
       
+      "hubsInclude": false ,
+      "hubsCategory": "Hubs" ,
+      "hubsLazy": true ,
+
+      "groupsInclude": false ,
+      "groupsSetting": "Groups" ,
+      "groupsLazy": true ,
+    
+      "usersInclude": false ,
+      "usersSetting": "Users" ,
+      "usersLazy": true ,
+
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
       "libsInclude": false,
@@ -146,6 +146,7 @@
       "colOpenBehaviour": "New Tab",
       "colImageLink": "File/ServerRelativeUrl",
       "colSort": "",
+      
       "custCatType": "tileCategory",
       "custCatCols": "",
       "custCatLogi": "",
@@ -154,6 +155,18 @@
       "subsitesInclude": false,
       "subsitesCategory": "Subsites",
       "ignoreList": false,
+      
+      "hubsInclude": false ,
+      "hubsCategory": "Hubs" ,
+      "hubsLazy": true ,
+
+      "groupsInclude": false ,
+      "groupsSetting": "Groups" ,
+      "groupsLazy": true ,
+    
+      "usersInclude": false ,
+      "usersSetting": "Users" ,
+      "usersLazy": true ,
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
