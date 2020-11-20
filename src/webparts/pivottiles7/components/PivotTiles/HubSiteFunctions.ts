@@ -43,7 +43,7 @@ export interface MySearchResults extends ISearchResult {
 
 }
 
-export function getAssociatedSites(departmentId: string, callback: any ) {
+export function getAssociatedSites(departmentId: string, callback: any, entireResponse: any , custCategories, newData ) {
 
     //var departmentId = departmentId;
     // do a null check of department id
@@ -60,8 +60,8 @@ export function getAssociatedSites(departmentId: string, callback: any ) {
     
             console.log(r.RowCount);
             console.log(r.PrimarySearchResults);
-
-            callback(r.PrimarySearchResults);
+            entireResponse.hubs = r.PrimarySearchResults;
+            callback( entireResponse, custCategories, newData );
     
     });
 

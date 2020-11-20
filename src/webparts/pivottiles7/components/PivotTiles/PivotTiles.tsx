@@ -90,8 +90,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     let custCategories = JSON.parse(JSON.stringify(this.props.custCategories)) ;
     getHubSiteData();
     getHubSiteData2();
-    let hubInfo = getAssociatedSites( departmentId, null ) ;
-    console.log('hubInfo', hubInfo ) ;
+//    let hubInfo = getAssociatedSites( departmentId, null ) ;
+ //   console.log('hubInfo', hubInfo ) ;
 
     this.state = { 
       allTiles:[],
@@ -579,7 +579,13 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
         }
 
-        this.processResponse( this.state.originalWebs, this.state.originalLists, this.state.originalListItems, this.state.originalHubs, custCategories, false );
+        let entireResponse = {
+          webs: this.state.originalWebs,
+          lists: this.state.originalLists,
+          items: this.state.originalListItems,
+          hubs: this.state.originalHubs,
+        }
+        this.processResponse( entireResponse, custCategories, false );
 
       }
 
@@ -1091,24 +1097,27 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
   private _getSubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData  ){
 
+    let entireResponse: any = {};
     if ( this.props.subsitesInclude === true ) {
       web.webs.orderBy('Title',true).get()
       .then((websResponse) => {
           websResponse.map( w => { w.sourceType = this.props.subsitesCategory ; });
-          this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse );
+          entireResponse.webs = websResponse;
+          this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
       }).catch((e) => {
           this.processCatch(e);
       });
 
     } else {
-      this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, [] );
+      entireResponse.webs = [];
+      this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
     }
 
   }
 
 
   
-  private _getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData , websResponse ){
+  private _getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData , entireResponse ){
 
     if ( this.props.fetchLists.libsInclude === true || this.props.fetchLists.listsInclude === true ) {
 
@@ -1133,18 +1142,20 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
             L.sourceType = L.BaseType === 0 ? this.props.fetchLists.listCategory : this.props.fetchLists.libsCategory;
             L.system = SystemLists.indexOf( L.EntityTypeName ) > -1 ? 'System' : '';
           });
-          this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse, listLibResponse );
+          entireResponse.lists = listLibResponse;
+          this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
       }).catch((e) => {
           this.processCatch(e);
       });
 
     } else {
-      this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse, [] );
+      entireResponse.lists = [];
+      this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
     }
 
   }
 
-  private _getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse, listLibResponse  ){
+  private _getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
 
     if ( this.props.subsitesOnly !== true ) {
 
@@ -1158,35 +1169,31 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
             else if ( this.props.listDefinition.toLowerCase().indexOf('page') > -1 ) { I.sourceType = "Pages"; }
             else { I.sourceType = "Items"; }
           });
-          this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse, listLibResponse, listResponse );
+          entireResponse.items = listResponse;
+          this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
       }).catch((e) => {
           this.processCatch(e);
       });
 
     } else {
-      this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse, listLibResponse, [] );
+      entireResponse.items = [];
+      this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
     }
 
   }
 
   //getAssociatedSites
   
-  private _getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse, listLibResponse, listResponse  ){
+  private _getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
 
     let hubResponse = [];
-    getAssociatedSites( this.state.departmentId, this.finalCall.bind(this) );
-
- 
-    console.log('Returned hubResponse:' , hubResponse );
-    
-    this.processResponse( websResponse, listLibResponse, listResponse, [], custCategories, newData );
-
+    getAssociatedSites( this.state.departmentId, this.finalCall.bind(this) , entireResponse, custCategories, newData );
 
   }
 
-  private finalCall ( hubResponse : any[]) {
+  private finalCall ( entireResponse : any, custCategories, newData) {
+    this.processResponse( entireResponse, custCategories, newData );
 
-    console.log('finalCall:', hubResponse );
   }
 
 
@@ -1224,8 +1231,14 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
  *                                                                                                                                    
  */
 
-    private processResponse(subsites: any[], listResponse: any[], itemsResponse: any[], hubResponse: any[], custCategories: ICustomCategories, newData: boolean){
-  
+    private processResponse(entireResponse: any, custCategories: ICustomCategories, newData: boolean){
+      
+      console.log('entireResponse', entireResponse );
+      let subsites = entireResponse.webs;
+      let listResponse = entireResponse.lists;
+      let itemsResponse = entireResponse.items;
+      let hubResponse = entireResponse.hubs;
+
       if (subsites.length === 0 && itemsResponse.length === 0){
         this.setState({  loadStatus: "NoItemsFound", itemsError: true,  });
         return ;
