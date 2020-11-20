@@ -47,6 +47,8 @@ import { buildTileCollectionFromResponse, buildTileCollectionFromWebs, buildTile
 
 import { CustTime , custTimeOption, } from './QuickBuckets';
 
+import { getAssociatedSites , getHubSiteData, getHubSiteData2 } from './HubSiteFunctions';
+
 //2020-11-17:  Copied from genericSolution listsFunctions.ts
 //Usage:  if ( SystemLists.indexOf(theList.EntityTypeName) > -1 ) { ... }
 const SystemLists = ["WorkflowTasks", "Style Library",
@@ -77,7 +79,12 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
   public constructor(props:IPivotTilesProps){
     super(props);
 
+    var departmentId = this.props.pageContext.legacyPageContext.departmentId;
     let custCategories = JSON.parse(JSON.stringify(this.props.custCategories)) ;
+    getHubSiteData();
+    getHubSiteData2();
+    let hubInfo = getAssociatedSites( departmentId ) ;
+    console.log('hubInfo', hubInfo ) ;
 
     this.state = { 
       allTiles:[],
@@ -112,6 +119,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       originalListItems: [],
       originalWebs: [],
       originalLists: [],
+      departmentId: departmentId,
     };
 
     console.log('PivotTiles.tsx Constructor: this.props', this.props);

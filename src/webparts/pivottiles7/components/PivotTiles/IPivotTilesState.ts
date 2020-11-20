@@ -39,6 +39,8 @@ export interface IPivotTilesState {
   originalListItems:any[];
   originalWebs:any[];
 
+  departmentId: string;
+
   shuffleShow?: boolean;
 
   endTime?: theTime;
