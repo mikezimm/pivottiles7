@@ -38,6 +38,7 @@ export interface IPivotTilesState {
   originalLists:any[];
   originalListItems:any[];
   originalWebs:any[];
+  originalHubs:any[];
 
   departmentId: string;
 

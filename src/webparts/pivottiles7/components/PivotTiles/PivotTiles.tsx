@@ -23,6 +23,7 @@ import { DefaultButton, autobind } from 'office-ui-fabric-react';
 //https://pnp.github.io/pnpjs/documentation/polyfill/ -- Needed to select/extend pnpJs in IE11
 //import "@pnp/polyfill-ie11"; //Removed in Pviottiles7 -- going only modern browser
 import { sp } from '@pnp/sp';
+
 import { Web,  } from '@pnp/sp/presets/all';
 import { IWebInfo  } from '@pnp/sp/webs';
 import * as strings from 'Pivottiles7WebPartStrings';
@@ -48,6 +49,12 @@ import { buildTileCollectionFromResponse, buildTileCollectionFromWebs, buildTile
 import { CustTime , custTimeOption, } from './QuickBuckets';
 
 import { getAssociatedSites , getHubSiteData, getHubSiteData2 } from './HubSiteFunctions';
+
+import { ISearchQuery, SearchResults, ISearchResult } from "@pnp/sp/search";
+
+import { IHubSiteWebData, IHubSiteInfo } from  "@pnp/sp/hubsites";
+import "@pnp/sp/webs";
+import "@pnp/sp/hubsites/web";
 
 //2020-11-17:  Copied from genericSolution listsFunctions.ts
 //Usage:  if ( SystemLists.indexOf(theList.EntityTypeName) > -1 ) { ... }
@@ -83,7 +90,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     let custCategories = JSON.parse(JSON.stringify(this.props.custCategories)) ;
     getHubSiteData();
     getHubSiteData2();
-    let hubInfo = getAssociatedSites( departmentId ) ;
+    let hubInfo = getAssociatedSites( departmentId, null ) ;
     console.log('hubInfo', hubInfo ) ;
 
     this.state = { 
@@ -119,6 +126,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       originalListItems: [],
       originalWebs: [],
       originalLists: [],
+      originalHubs: [],
       departmentId: departmentId,
     };
 
@@ -571,7 +579,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
         }
 
-        this.processResponse( this.state.originalWebs, this.state.originalLists, this.state.originalListItems, custCategories, false );
+        this.processResponse( this.state.originalWebs, this.state.originalLists, this.state.originalListItems, this.state.originalHubs, custCategories, false );
 
       }
 
@@ -1080,6 +1088,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
   }
 
+
   private _getSubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData  ){
 
     if ( this.props.subsitesInclude === true ) {
@@ -1149,16 +1158,37 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
             else if ( this.props.listDefinition.toLowerCase().indexOf('page') > -1 ) { I.sourceType = "Pages"; }
             else { I.sourceType = "Items"; }
           });
-          this.processResponse( websResponse, listLibResponse, listResponse, custCategories, newData );
+          this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse, listLibResponse, listResponse );
       }).catch((e) => {
           this.processCatch(e);
       });
 
     } else {
-      this.processResponse( websResponse, listLibResponse, [], custCategories, newData );
+      this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse, listLibResponse, [] );
     }
 
   }
+
+  //getAssociatedSites
+  
+  private _getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, websResponse, listLibResponse, listResponse  ){
+
+    let hubResponse = [];
+    getAssociatedSites( this.state.departmentId, this.finalCall.bind(this) );
+
+ 
+    console.log('Returned hubResponse:' , hubResponse );
+    
+    this.processResponse( websResponse, listLibResponse, listResponse, [], custCategories, newData );
+
+
+  }
+
+  private finalCall ( hubResponse : any[]) {
+
+    console.log('finalCall:', hubResponse );
+  }
+
 
 /***
  *    d8888b. d8888b.  .d88b.   .o88b. d88888b .d8888. .d8888.       .o88b.  .d8b.  d888888b  .o88b. db   db 
@@ -1194,7 +1224,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
  *                                                                                                                                    
  */
 
-    private processResponse(subsites: any[], listResponse: any[], itemsResponse: any[], custCategories: ICustomCategories, newData: boolean){
+    private processResponse(subsites: any[], listResponse: any[], itemsResponse: any[], hubResponse: any[], custCategories: ICustomCategories, newData: boolean){
   
       if (subsites.length === 0 && itemsResponse.length === 0){
         this.setState({  loadStatus: "NoItemsFound", itemsError: true,  });
