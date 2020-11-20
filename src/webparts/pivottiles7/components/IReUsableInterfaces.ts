@@ -325,6 +325,8 @@ export interface ILink {
     id?: any;
     Id?: any;
     ID?: any;
+    remoteID: any;
+    PrincipalType?: number;
   
     isSiteAdmin?:boolean;
     LoginName?: string;

@@ -1,4 +1,5 @@
-//2020-10-20:  Imported from drilldown7
+
+
 import { IUser} from '../webparts/pivottiles7/components/IReUsableInterfaces';
 
 export const msPerMin = 60000;

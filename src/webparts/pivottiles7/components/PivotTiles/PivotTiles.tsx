@@ -44,11 +44,12 @@ import { convertCategoryToIndex, fixURLs } from './UtilsNew';
 
 import { buildTileCategoriesFromResponse } from './BuildTileCategories';
 
-import { buildTileCollectionFromResponse, buildTileCollectionFromWebs, buildTileCollectionFromLists } from './BuildTileCollection';
+import { buildTileCollectionFromResponse, buildTileCollectionFromWebs, 
+  buildTileCollectionFromLists, buildTileCollectionFromHubs } from './BuildTileCollection';
 
 import { CustTime , custTimeOption, } from './QuickBuckets';
 
-import { getAssociatedSites , getHubSiteData, getHubSiteData2 } from './HubSiteFunctions';
+import { getAssociatedSites , getHubSiteData, getHubSiteData2, allAvailableHubWebs } from './HubSiteFunctions';
 
 import { ISearchQuery, SearchResults, ISearchResult } from "@pnp/sp/search";
 
@@ -1244,22 +1245,24 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         return ;
       }
       
-
       let originalWebs = [];
       let originalLists = [];
       let originalListItems = [];
+      let originalHubs = [];
 
       if ( newData === true ) {
 
         originalWebs = JSON.parse(JSON.stringify(subsites));
         originalLists = JSON.parse(JSON.stringify(listResponse));
         originalListItems = JSON.parse(JSON.stringify(itemsResponse));
+        originalHubs = JSON.parse(JSON.stringify(hubResponse));
 
       } else { 
 
         originalWebs = this.state.originalWebs;
         originalLists = this.state.originalLists;
         originalListItems = this.state.originalListItems;
+        originalHubs = this.state.originalHubs;
       }
 
       const fixedURL = fixURLs(this.props.listWebURL, this.props.pageContext);
@@ -1284,11 +1287,13 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       let tileCollectionResults = buildTileCollectionFromResponse(itemsResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
       let tileCollectionWebs = buildTileCollectionFromWebs(subsites, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
       let tileCollectionLists = buildTileCollectionFromLists(listResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
+      let tileCollectionHubs = buildTileCollectionFromHubs(hubResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
 
       console.log('tileCollectionWebs: ', tileCollectionWebs);
       console.log('tileCollectionLists: ', tileCollectionLists);
       console.log('tileCollectionResults: ', tileCollectionResults);
-
+      console.log('tileCollectionHubs: ', tileCollectionHubs);
+      
       let tileCollection : IPivotTileItemProps[] = tileCollectionResults.tileCollection;
 
       if ( tileCollectionWebs.tileCollection.length > 0 ) {
@@ -1299,6 +1304,11 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
       if ( tileCollectionLists.tileCollection.length > 0 ) {
         tileCollectionLists.tileCollection.map( w => {
+          tileCollection.push( w );
+        });
+      }
+      if ( tileCollectionHubs.tileCollection.length > 0 ) {
+        tileCollectionHubs.tileCollection.map( w => {
           tileCollection.push( w );
         });
       }
@@ -1363,7 +1373,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         originalWebs: originalWebs,
         originalLists: originalLists,
         originalListItems: originalListItems,
-        originalHubs: this.state.originalHubs,
+        originalHubs: originalHubs,
 
         createdInfo: useThisTileCollection.createdInfo,
         modifiedInfo: useThisTileCollection.modifiedInfo,
@@ -1381,11 +1391,40 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       });
 
       saveAnalytics(this.props,this.state);
+
+      if ( tileCollection !== null && tileCollection.length > 0 && originalHubs.length > 0 ) {
+        allAvailableHubWebs( tileCollection, this.updateStateHubs.bind(this) );
+      }
+
       
       return true;
   
     }
 
+    private updateStateHubs( tileCollection ) {
+
+      console.log('state received originalHubs', tileCollection );
+
+      let allTiles = this.state.allTiles;
+
+      allTiles.map( thisTile => {
+
+        if (thisTile.sourceType === 'Hubs' ) {
+          tileCollection.map( hub => {
+            if ( hub.Id === thisTile.Id ) { 
+              thisTile = hub;
+            }
+          });
+        }
+
+      });
+
+      this.setState({
+        allTiles: allTiles,
+
+      });
+
+    }
 
     /***
      *     d888b  d88888b d888888b      d8b   db d88888b db   d8b   db d88888b d888888b db      d888888b d88888b d8888b. d88888b d8888b.      d888888b d888888b db      d88888b .d8888. 
