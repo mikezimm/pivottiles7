@@ -66,6 +66,18 @@
       "colImageLink": "File/ServerRelativeUrl",
       "colSort": "Title",
 
+      "hubsInclude": false ,
+      "hubsCategory": "Hubs" ,
+      "hubsLazy": true ,
+
+      "groupsInclude": false ,
+      "groupsSetting": "" ,
+      "groupsLazy": true ,
+    
+      "usersInclude": false ,
+      "usersSetting": "" ,
+      "usersLazy": true ,
+
       "custCatType": "tileCategory",
       "custCatCols": "",
       "custCatLogi": "",
@@ -73,7 +85,7 @@
 
       "subsitesInclude": true,
       "subsitesCategory": "Subsites",
-      "subsitesOnly": false,
+      "ignoreList": false,
       
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
@@ -141,7 +153,7 @@
 
       "subsitesInclude": false,
       "subsitesCategory": "Subsites",
-      "subsitesOnly": false,
+      "ignoreList": false,
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
@@ -209,7 +221,7 @@
 
       "subsitesInclude": true,
       "subsitesCategory": "Subsites",
-      "subsitesOnly": false,
+      "ignoreList": false,
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",

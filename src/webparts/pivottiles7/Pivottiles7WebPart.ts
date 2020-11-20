@@ -22,7 +22,7 @@ import { Web } from '@pnp/sp/presets/all';
 
 import { IPivottiles7WebPartProps } from './IPivottiles7WebPartProps';
 import PivotTiles from './components/PivotTiles/PivotTiles';
-import { IPivotTilesProps, IFetchListsSettings, ICustomCategories, ICustomLogic } from './components/PivotTiles/IPivotTilesProps';
+import { IPivotTilesProps, IFetchInfoSettings, ICustomCategories, ICustomLogic } from './components/PivotTiles/IPivotTilesProps';
 import { IPivotTileItemProps } from './components/TileItems/IPivotTileItemProps';
 import { string, any } from 'prop-types';
 import { propertyPaneBuilder } from '../../services/propPane/PropPaneBuilder';
@@ -162,7 +162,24 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     custCategories = JSON.parse(JSON.stringify(custCategories));
 
-    let fetchLists : IFetchListsSettings = {
+    let fetchInfo : IFetchInfoSettings = {
+
+      hubsInclude: this.properties.hubsInclude ,
+      hubsCategory: this.properties.hubsCategory ,
+      hubsLazy: this.properties.hubsLazy ,
+    
+      groupsInclude: this.properties.groupsInclude ,
+      groupsSetting: this.properties.groupsSetting ,
+      groupsLazy: this.properties.groupsLazy ,
+
+      usersInclude: this.properties.usersInclude ,
+      usersSetting: this.properties.usersSetting ,
+      usersLazy: this.properties.usersLazy ,
+
+      subsitesInclude: this.properties.subsitesInclude ,
+      subsitesCategory: this.properties.subsitesCategory ,
+      ignoreList: this.properties.ignoreList ,
+
       listsInclude: this.properties.listsInclude ,
       listIconStyles: this.properties.listIconStyles ,
       listFilter: this.properties.listFilter ,
@@ -256,9 +273,9 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
         subsitesInclude: this.properties.subsitesInclude ,
         subsitesCategory: this.properties.subsitesCategory ,
-        subsitesOnly: this.properties.subsitesOnly ,
+        ignoreList: this.properties.ignoreList ,
 
-        fetchLists: fetchLists,
+        fetchInfo: fetchInfo,
 
       }
     );
@@ -376,7 +393,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       'setSize','setTab','otherTab','setPivSize','heroCategory','heroRatio','showHero','setPivFormat','setImgFit','setImgCover','target',
       'imageWidth','imageHeight','textPadding','setHeroFit','setHeroCover','onHoverZoom', 'enableChangePivots', 'definitionToggle',
       'custCatType', 'custCatCols', 'custCatLogi', 'custCatBrak',
-      'subsitesCategory', 'subsitesOnly', 'subsitesOnly', 
+      'subsitesCategory', 'ignoreList', 'ignoreList', 
       'listsInclude', 'listIconStyles', 'listFilter', 'listLibCat', 
       'libsInclude', 'libsIconStyles', 'libsFilter', 'listHideSystem', 
     ];

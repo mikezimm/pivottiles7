@@ -66,9 +66,22 @@ export interface IPivottiles7WebPartProps {
   custCatLogi: string;
   custCatBrak: boolean;
   
+  hubsInclude: boolean ;
+  hubsCategory: string ;
+  hubsLazy: boolean ;
+
+  groupsInclude: boolean ;
+  groupsSetting: string ;
+  groupsLazy: boolean ;
+
+  usersInclude: boolean ;
+  usersSetting: string ;
+  usersLazy: boolean ;
+
   subsitesInclude: boolean;
   subsitesCategory: string;
-  subsitesOnly: boolean;
+
+  ignoreList: boolean;
   
   listsInclude: boolean;
   listIconStyles: string;

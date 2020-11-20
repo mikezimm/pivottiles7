@@ -203,10 +203,10 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     else if (this.props.custCategories !== prevProps.custCategories) {  reloadData = true ; }   
 
     else if (this.props.subsitesCategory !== prevProps.subsitesCategory) {  reloadData = true ; }    
-    else if (this.props.subsitesOnly !== prevProps.subsitesOnly) {  reloadData = true ; }    
+    else if (this.props.ignoreList !== prevProps.ignoreList) {  reloadData = true ; }    
     else if (this.props.subsitesInclude !== prevProps.subsitesInclude) {  reloadData = true ; }
 
-    else if (this.props.fetchLists !== prevProps.fetchLists) {  reloadData = true ; }
+    else if (this.props.fetchInfo !== prevProps.fetchInfo) {  reloadData = true ; }
 
     if ( reloadData === true ) {
       this._getListItems( this.props.custCategories );
@@ -1120,17 +1120,17 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
   
   private _getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData , entireResponse ){
 
-    if ( this.props.fetchLists.libsInclude === true || this.props.fetchLists.listsInclude === true ) {
+    if ( this.props.fetchInfo.libsInclude === true || this.props.fetchInfo.listsInclude === true ) {
 
       let listFilter = 'Hidden eq false';
 
-      if ( this.props.fetchLists.libsInclude === false ) {
+      if ( this.props.fetchInfo.libsInclude === false ) {
         listFilter += ' and BaseType eq 0';
-      } else if ( this.props.fetchLists.listsInclude === false ) {
+      } else if ( this.props.fetchInfo.listsInclude === false ) {
         listFilter += ' and BaseType eq 1';
       } 
 
-      if ( this.props.fetchLists.listHideSystem === true ) {
+      if ( this.props.fetchInfo.listHideSystem === true ) {
         SystemLists.map( entityName => {
           listFilter += ` and EntityTypeName ne \'${entityName}\'`;
         });
@@ -1140,7 +1140,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       web.lists.filter(listFilter).orderBy('Title',true).get()
       .then((listLibResponse) => {
           listLibResponse.map( L => { 
-            L.sourceType = L.BaseType === 0 ? this.props.fetchLists.listCategory : this.props.fetchLists.libsCategory;
+            L.sourceType = L.BaseType === 0 ? this.props.fetchInfo.listCategory : this.props.fetchInfo.libsCategory;
             L.system = SystemLists.indexOf( L.EntityTypeName ) > -1 ? 'System' : '';
           });
           entireResponse.lists = listLibResponse;
@@ -1158,7 +1158,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
   private _getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
 
-    if ( this.props.subsitesOnly !== true ) {
+    if ( this.props.ignoreList !== true ) {
 
       web.lists.getByTitle(useTileList).items
       .select(selectCols).expand(expandThese).filter(restFilter).orderBy(restSort,true).getAll()
@@ -1344,7 +1344,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       if ( tileCollectionResults.showOtherTab === true ) { showOtherTab = true ; }
       else if ( tileCollectionWebs.showOtherTab === true ) { showOtherTab = true ; }
 
-      let useThisTileCollection = this.props.subsitesOnly || tileCollectionResults.tileCollection.length ===  0 ? tileCollectionWebs : tileCollectionResults ;
+      let useThisTileCollection = this.props.ignoreList || tileCollectionResults.tileCollection.length ===  0 ? tileCollectionWebs : tileCollectionResults ;
 
       this.setState({
         allTiles: tileCollection,

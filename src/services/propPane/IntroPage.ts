@@ -203,8 +203,8 @@ export class IntroPage {
               onText: 'On',
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
-          PropertyPaneToggle('subsitesOnly', {
-              label: 'Only show Subsites, Ignore your List settings',
+          PropertyPaneToggle('ignoreList', {
+              label: 'Ignore Tile list... we like auto-tiles :)',
               offText: 'Off',
               onText: 'On',
               disabled: webPartProps.subsitesInclude === true ? false : true,
@@ -262,17 +262,115 @@ export class IntroPage {
               disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
           }),
 
-          PropertyPaneToggle('subsitesOnly', {
+          PropertyPaneToggle('ignoreList', {
               label: 'Only show Lists and Libraries, Ignore your List settings',
               offText: 'Off',
               onText: 'On',
               //disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
               disabled: true,
           }),
+        ]}, // this group
 
-
+        { groupName: 'Hubsites',
+        isCollapsed: true ,
+        groupFields: [
+          PropertyPaneToggle('hubsInclude', {
+              label: 'Show Hubsites automatically',
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.listWebURL !== '' ? true : false,
+          }),
+          PropertyPaneToggle('ignoreList', {
+              label: 'Ignore Tile list... we like auto-tiles :)',
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.subsitesInclude === true ? false : true,
+          }),
+          PropertyPaneTextField('hubsCategory', {
+              label: 'Hubsite Category',
+              disabled: webPartProps.subsitesInclude === true ? false : true,
+          }),
 
         ]}, // this group
+  
+        { groupName: 'Hubsites',
+        isCollapsed: true ,
+        groupFields: [
+          PropertyPaneToggle('hubsInclude', {
+              label: 'Show Hubsites automatically',
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.listWebURL !== '' ? true : false,
+          }),
+          PropertyPaneToggle('ignoreList', {
+              label: 'Ignore Tile list... we like auto-tiles :)',
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.subsitesInclude === true ? false : true,
+          }),
+          PropertyPaneTextField('hubsCategory', {
+              label: 'Hubsite Category',
+              disabled: webPartProps.hubsInclude === true ? false : true,
+          }),
+          PropertyPaneTextField('hubsLazy', {
+            label: 'Lazy Load Hubs:  do not load until you click tab',
+            disabled: webPartProps.hubsInclude === true ? false : true,
+          }),
+
+        ]}, // this group
+  
+        { groupName: 'Groups',
+        isCollapsed: true ,
+        groupFields: [
+          PropertyPaneToggle('groupsInclude', {
+              label: 'Show Groups automatically',
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.listWebURL !== '' ? true : false,
+          }),
+          PropertyPaneToggle('ignoreList', {
+              label: 'Ignore Tile list... we like auto-tiles :)',
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.subsitesInclude === true ? false : true,
+          }),
+          PropertyPaneTextField('groupsCategory', {
+              label: 'Hubsite Category',
+              disabled: webPartProps.groupsInclude === true ? false : true,
+          }),
+          PropertyPaneTextField('groupsLazy', {
+            label: 'Lazy Load Groups:  do not load until you click tab',
+            disabled: webPartProps.groupsInclude === true ? false : true,
+          }),
+
+        ]}, // this group
+
+        { groupName: 'Users',
+        isCollapsed: true ,
+        groupFields: [
+          PropertyPaneToggle('usersInclude', {
+              label: 'Show Users automatically',
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.listWebURL !== '' ? true : false,
+          }),
+          PropertyPaneToggle('ignoreList', {
+              label: 'Ignore Tile list... we like auto-tiles :)',
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.subsitesInclude === true ? false : true,
+          }),
+          PropertyPaneTextField('usersSetting', {
+              label: 'User Tile settings',
+              disabled: webPartProps.usersInclude === true ? false : true,
+          }),
+          PropertyPaneTextField('usersLazy', {
+            label: 'Lazy Load Users:  do not load until you click tab',
+            disabled: webPartProps.usersInclude === true ? false : true,
+          }),
+
+        ]}, // this group
+
 
     ]}; // Groups
   } // getPropertyPanePage()

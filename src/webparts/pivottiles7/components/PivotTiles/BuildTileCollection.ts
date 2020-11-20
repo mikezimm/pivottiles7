@@ -514,7 +514,7 @@ function buildFinalTileCollection ( response: any, theseProps: any, custSearch, 
     }
 
     let descriptionSuffix = '';
-    if ( item.sourceType === pivotProps.fetchLists.libsCategory || item.sourceType === pivotProps.fetchLists.listCategory || item.sourceType === pivotProps.subsitesCategory ) {
+    if ( item.sourceType === pivotProps.fetchInfo.libsCategory || item.sourceType === pivotProps.fetchInfo.listCategory || item.sourceType === pivotProps.subsitesCategory ) {
       descriptionSuffix =  [ item.sourceType, item.createdNote, item.modifiedNote ].join('; ');
     }
 
@@ -529,14 +529,14 @@ function buildFinalTileCollection ( response: any, theseProps: any, custSearch, 
     let imageHeight = pivotProps.imageHeight;
     let defFabricSize = `;size=50;top=-${imageHeight/5}px;background=white;`;
 
-    if ( sourceType === pivotProps.fetchLists.libsCategory ) {
-      if ( !color || color === '' ) { color = 'font=darkgray;' + defFabricSize + pivotProps.fetchLists.libsIconStyles ; }
-      if ( !imageUrl || imageUrl === '' ) { imageUrl = getStyleProp([ pivotProps.fetchLists.libsIconStyles ], 'icon' ) ; }
+    if ( sourceType === pivotProps.fetchInfo.libsCategory ) {
+      if ( !color || color === '' ) { color = 'font=darkgray;' + defFabricSize + pivotProps.fetchInfo.libsIconStyles ; }
+      if ( !imageUrl || imageUrl === '' ) { imageUrl = getStyleProp([ pivotProps.fetchInfo.libsIconStyles ], 'icon' ) ; }
       if ( !imageUrl || imageUrl === '' ) { imageUrl = 'FolderHorizontal' ; }   
 
-    } else if ( sourceType === pivotProps.fetchLists.listCategory ) {
-      if ( !color || color === '' ) { color = 'font=darkslateblue;' + defFabricSize  + 'background=LightGoldenRodYellow;' + pivotProps.fetchLists.listIconStyles ; }
-      if ( !imageUrl || imageUrl === '' ) { imageUrl = getStyleProp([ pivotProps.fetchLists.listIconStyles ], 'icon' ) ; }
+    } else if ( sourceType === pivotProps.fetchInfo.listCategory ) {
+      if ( !color || color === '' ) { color = 'font=darkslateblue;' + defFabricSize  + 'background=LightGoldenRodYellow;' + pivotProps.fetchInfo.listIconStyles ; }
+      if ( !imageUrl || imageUrl === '' ) { imageUrl = getStyleProp([ pivotProps.fetchInfo.listIconStyles ], 'icon' ) ; }
       if ( !imageUrl || imageUrl === '' ) { imageUrl = 'BulletedList2' ; }   
       
     } else if ( sourceType === pivotProps.subsitesCategory ) {
