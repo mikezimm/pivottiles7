@@ -2,9 +2,9 @@ import * as React from "react";
 import styles from "./Directory.module.scss";
 import { IDirectoryProps } from "./IDirectoryProps";
 import { PersonaCard } from "./PersonaCard/PersonaCard";
-import { spservices } from "../../../SPServices/spservices";
+import { spservices } from "../../../../SPServices/spservices";
 import { IDirectoryState } from "./IDirectoryState";
-import * as strings from "DirectoryWebPartStrings";
+import * as strings from "Pivottiles7WebPartStrings";
 import {
   Spinner,
   SpinnerSize,
@@ -22,9 +22,8 @@ import {
 } from "office-ui-fabric-react";
 
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
-import { ISPServices } from "../../../SPServices/ISPServices";
+import { ISPServices } from "../../../../SPServices/ISPServices";
 import { Environment, EnvironmentType } from "@microsoft/sp-core-library";
-import { spMockServices } from "../../../SPServices/spMockServices";
 
 const az: string[] = [
   "A",
@@ -79,11 +78,9 @@ export default class Directory extends React.Component<
       searchString: "LastName",
       searchText: ""
     };
-    if (Environment.type === EnvironmentType.Local) {
-      this._services = new spMockServices();
-    } else {
+
     this._services = new spservices(this.props.context);
-    }
+
     // Register event handlers
     this._searchUsers = this._searchUsers.bind(this);
     this._selectedIndex = this._selectedIndex.bind(this);

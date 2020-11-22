@@ -54,8 +54,11 @@ import { getAssociatedSites , getHubSiteData, getHubSiteData2, allAvailableHubWe
 import { ISearchQuery, SearchResults, ISearchResult } from "@pnp/sp/search";
 
 import { IHubSiteWebData, IHubSiteInfo } from  "@pnp/sp/hubsites";
+
+ import DirectoryHook from '../Directory/DirectoryHook';
 import "@pnp/sp/webs";
 import "@pnp/sp/hubsites/web";
+import { WebPartContext } from '@microsoft/sp-webpart-base';
 
 //2020-11-17:  Copied from genericSolution listsFunctions.ts
 //Usage:  if ( SystemLists.indexOf(theList.EntityTypeName) > -1 ) { ... }
@@ -67,6 +70,18 @@ const SystemLists = ["WorkflowTasks", "Style Library",
 "AESwipeGalleryDefaultImagesList", "Workflows", "Workflow HistoryList", "OData__catalogs/fpdatasources", "IWConvertedForms", "Access Requests", "Style Library",
 ];
 
+/*
+                title: this.properties.title,
+                context: this.context,
+                searchFirstName: this.properties.searchFirstName,
+                displayMode: this.displayMode,
+                updateProperty: (value: string) => {
+                    this.properties.title = value;
+                },
+                searchProps: this.properties.searchProps,
+                clearTextSearchProps: this.properties.clearTextSearchProps,
+                pageSize: this.properties.pageSize
+*/
 
 export default class PivotTiles extends React.Component<IPivotTilesProps, IPivotTilesState> {
 
@@ -355,6 +370,24 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       </div>
       ;
 
+
+    let directory = <DirectoryHook
+      title={ 'directoryTitle'}
+      context={ this.props.context }
+      searchFirstName={ true }
+      displayMode={ 1 }
+      updateProperty={
+        (value: string) => {
+          // this.properties.title = value; //This is for updating Title Props from webpart
+      }
+      }
+      searchProps={ 'Mike' }
+      clearTextSearchProps={ ''}
+      pageSize={ 5 }
+    ></DirectoryHook>;
+/* */
+
+
     /***
      *    d8888b. d88888b d888888b db    db d8888b. d8b   db      
      *    88  `8D 88'     `~~88~~' 88    88 88  `8D 888o  88      
@@ -444,7 +477,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
             { ( loadingSpinner ) }
             { ( noListFound )}
             { ( noItemsFound )}
-
+            { directory /*  */  }
             </div>
 
 

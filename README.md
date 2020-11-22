@@ -7,6 +7,10 @@ npm install @pnp/sp
 npm install @pnp/spfx-controls-react --save --save-exact
 npm install react-slick
 npm install webpack-bundle-analyzer --save-dev
+
+npm install @pnp/graph
+npm install react-js-pagination
+npm install throttle-debounce
 ```
 
 ## Summary

@@ -205,6 +205,8 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       {
         themeVariant: this._themeVariant,
 
+        context: this.context,
+
         startTime: getTheCurrentTime(),
         scenario: this.properties.scenario,
         description: this.properties.description,

@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import styles from "./Directory.module.scss";
 import { PersonaCard } from "./PersonaCard/PersonaCard";
-import { spservices } from "../../../SPServices/spservices";
+import { spservices } from "../../../../SPServices/spservices";
 import { IDirectoryState } from "./IDirectoryState";
-import * as strings from "DirectoryWebPartStrings";
+import * as strings from "Pivottiles7WebPartStrings";
 import {
     Spinner, SpinnerSize, MessageBar, MessageBarType, SearchBox, Icon, Label,
     Pivot, PivotItem, PivotLinkFormat, PivotLinkSize, Dropdown, IDropdownOption
@@ -12,9 +12,8 @@ import {
 import { Stack, IStackStyles, IStackTokens } from 'office-ui-fabric-react/lib/Stack';
 import { debounce } from "throttle-debounce";
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
-import { ISPServices } from "../../../SPServices/ISPServices";
+import { ISPServices } from "../../../../SPServices/ISPServices";
 import { Environment, EnvironmentType } from "@microsoft/sp-core-library";
-import { spMockServices } from "../../../SPServices/spMockServices";
 import { IDirectoryProps } from './IDirectoryProps';
 import Paging from './Pagination/Paging';
 
@@ -24,11 +23,9 @@ const wrapStackTokens: IStackTokens = { childrenGap: 30 };
 
 const DirectoryHook: React.FC<IDirectoryProps> = (props) => {
     let _services: ISPServices = null;
-    if (Environment.type === EnvironmentType.Local) {
-        _services = new spMockServices();
-    } else {
-        _services = new spservices(props.context);
-    }
+
+    _services = new spservices(props.context);
+    
     const [az, setaz] = useState<string[]>([]);
     const [alphaKey, setalphaKey] = useState<string>('A');
     const [state, setstate] = useState<IDirectoryState>({
