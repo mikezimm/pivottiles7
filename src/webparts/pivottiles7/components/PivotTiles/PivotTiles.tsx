@@ -56,6 +56,9 @@ import { ISearchQuery, SearchResults, ISearchResult } from "@pnp/sp/search";
 import { IHubSiteWebData, IHubSiteInfo } from  "@pnp/sp/hubsites";
 
  import DirectoryHook from '../Directory/DirectoryHook';
+
+ import MyGroups from '../Groups/MyGroups';
+
 import "@pnp/sp/webs";
 import "@pnp/sp/hubsites/web";
 import { WebPartContext } from '@microsoft/sp-webpart-base';
@@ -370,7 +373,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       </div>
       ;
 
-
+/* 
     let directory = <DirectoryHook
       title={ 'directoryTitle'}
       context={ this.props.context }
@@ -385,7 +388,26 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       clearTextSearchProps={ ''}
       pageSize={ 5 }
     ></DirectoryHook>;
-/* */
+
+
+*/
+
+      let directory = <MyGroups
+        title={ 'MyGroups'}
+        groups={ [] }
+        webURL={ this.props.pageContext.web.absoluteUrl }
+        context={ this.props.context }
+        searchFirstName={ true }
+        displayMode={ 1 }
+        updateProperty={
+          (value: string) => {
+            // this.properties.title = value; //This is for updating Title Props from webpart
+        }
+        }
+        searchProps={ 'Mike' }
+        clearTextSearchProps={ ''}
+        pageSize={ 5 }
+      ></MyGroups>;
 
 
     /***
