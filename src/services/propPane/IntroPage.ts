@@ -23,6 +23,8 @@ export class IntroPage {
 
     let theListChoices : IPropertyPaneDropdownOption[] = devListMapping.listChoices;
 
+    let supressTileList = 'Ignore Tile list... we like auto-tiles :)';
+
     if (webPartProps.scenario === "DEV"){
         theListChoices = devListMapping.listChoices;
 
@@ -217,13 +219,13 @@ export class IntroPage {
         isCollapsed: true ,
         groupFields: [
           PropertyPaneToggle('subsitesInclude', {
-              label: 'Show Subsites automatically',
+              label: 'Show Subsites',
               offText: 'Off',
               onText: 'On',
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
           PropertyPaneToggle('ignoreList', {
-              label: 'Ignore Tile list... we like auto-tiles :)',
+              label: supressTileList,
               offText: 'Off',
               onText: 'On',
               disabled: webPartProps.subsitesInclude === true ? false : true,
@@ -271,7 +273,7 @@ export class IntroPage {
               //disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
               disabled: true,
           }),
-          
+
           PropertyPaneTextField('listFilter', {
             label: 'Filter to apply to lists',
             disabled: true , //webPartProps.listsInclude === true ? false : true,
@@ -331,7 +333,7 @@ export class IntroPage {
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
           PropertyPaneToggle('ignoreList', {
-              label: 'Ignore Tile list... we like auto-tiles :)',
+              label: supressTileList,
               offText: 'Off',
               onText: 'On',
               disabled: webPartProps.subsitesInclude === true ? false : true,
@@ -359,13 +361,13 @@ export class IntroPage {
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
           PropertyPaneToggle('ignoreList', {
-              label: 'Ignore Tile list... we like auto-tiles :)',
+              label: supressTileList,
               offText: 'Off',
               onText: 'On',
               disabled: webPartProps.subsitesInclude === true ? false : true,
           }),
           PropertyPaneTextField('groupsCategory', {
-              label: 'Hubsite Category',
+              label: 'Groups Category',
               disabled: webPartProps.groupsInclude === true ? false : true,
           }),
           PropertyPaneToggle('groupsLazy', {
@@ -387,7 +389,7 @@ export class IntroPage {
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
           PropertyPaneToggle('ignoreList', {
-              label: 'Ignore Tile list... we like auto-tiles :)',
+              label: supressTileList,
               offText: 'Off',
               onText: 'On',
               disabled: webPartProps.subsitesInclude === true ? false : true,

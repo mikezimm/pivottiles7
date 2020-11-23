@@ -144,9 +144,77 @@ public constructor(props:IMyGroupsProps){
         const color = this.props.context.microsoftTeams ? "white" : "";
 
         let isLoaded = this.state.myGroups.isLoading === false ? true : false; 
+
+        let webpartTitle = <WebPartTitle
+            displayMode={this.props.displayMode}
+            title={this.props.title}
+            updateProperty={this.props.updateProperty}
+          />;
+
+        let searchBox = <SearchBox
+          placeholder={strings.SearchPlaceHolder}
+          styles={{
+            root: {
+              minWidth: 180,
+              maxWidth: 300,
+              marginLeft: "auto",
+              marginRight: "auto",
+              marginBottom: 25
+            }
+          }}
+          onSearch={this._searchUsers}
+          onClear={() => {
+            this._searchUsers("A");
+          }}
+          value={this.state.searchText}
+          onChange={this._searchBoxChanged}
+        />;
+
+        let groupPivot = <Pivot
+            styles={{
+              root: {
+                paddingLeft: 10,
+                paddingRight: 10,
+                whiteSpace: "normal",
+                textAlign: "center"
+              }
+            }}
+            linkFormat={PivotLinkFormat.tabs}
+            selectedKey={this.state.indexSelectedKey}
+            onLinkClick={this._selectedIndex}
+            linkSize={PivotLinkSize.normal}
+          >
+            { this.props.groups.map((index: string) => {
+              return (
+                <PivotItem headerText={index} itemKey={index} key={index} />
+              );
+            })}
+          </Pivot>;
+
+          let showNoUsers = isLoaded === false || !this.state.myGroups.groups[0].users || this.state.myGroups.groups[0].users.length == 0 ? true : false;
+
+          let noUsers = <div className={styles.noUsers}>
+              <Icon
+                iconName={"ProfileSearch"}
+                style={{ fontSize: "54px", color: color }}
+              />
+              <Label>
+                <span style={{ marginLeft: 5, fontSize: "26px", color: color }}>
+                  {strings.DirectoryMessage}
+                </span>
+              </Label>
+            </div>;
+
+            let errorBar = this.state.hasError ? <MessageBar messageBarType={MessageBarType.error}>
+              {this.state.errorMessage}
+            </MessageBar> : null ;
+
+
+        let searchSpinner = showNoUsers !== true && this.state.isLoading ? <Spinner size={SpinnerSize.large} label={"searching ..."} /> : null ;
+
         const diretoryGrid =
-            isLoaded === true && this.state.myGroups.groups[0].users && this.state.myGroups.groups[0].users.length > 0
-            ? this.state.myGroups.groups[0].users.map((user: any) => {
+            isLoaded === true && this.state.myGroups.groups[2].users && this.state.myGroups.groups[2].users.length > 0
+            ? this.state.myGroups.groups[2].users.map((user: any) => {
               return (
                 <PersonaCard
                   context={this.props.context}
@@ -177,6 +245,21 @@ public constructor(props:IMyGroupsProps){
               );
             })
             : [];
+
+            
+            let sortDropdown = <div className={styles.dropDownSortBy}>
+                <Dropdown
+                  placeholder={strings.DropDownPlaceHolderMessage}
+                  label={strings.DropDownPlaceLabelMessage}
+                  options={orderOptions}
+                  selectedKey={this.state.searchString}
+                  onChange={(ev: any, value: IDropdownOption) => {
+                    this._sortPeople(value.key.toString());
+                  }}
+                  styles={{ dropdown: { width: 200 } }}
+                />
+                <div>{diretoryGrid}</div>
+            </div>;
     
 /***
  *              d888888b db   db d888888b .d8888.      d8888b.  .d8b.   d888b  d88888b 
@@ -204,87 +287,29 @@ public constructor(props:IMyGroupsProps){
 
         return (
           <div className={styles.directory}>
-            <WebPartTitle
-              displayMode={this.props.displayMode}
-              title={this.props.title}
-              updateProperty={this.props.updateProperty}
-            />
+            { webpartTitle }
     
             <div className={styles.searchBox}>
-              <SearchBox
-                placeholder={strings.SearchPlaceHolder}
-                styles={{
-                  root: {
-                    minWidth: 180,
-                    maxWidth: 300,
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    marginBottom: 25
-                  }
-                }}
-                onSearch={this._searchUsers}
-                onClear={() => {
-                  this._searchUsers("A");
-                }}
-                value={this.state.searchText}
-                onChange={this._searchBoxChanged}
-              />
-              <div>
-                <Pivot
-                  styles={{
-                    root: {
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      whiteSpace: "normal",
-                      textAlign: "center"
-                    }
-                  }}
-                  linkFormat={PivotLinkFormat.tabs}
-                  selectedKey={this.state.indexSelectedKey}
-                  onLinkClick={this._selectedIndex}
-                  linkSize={PivotLinkSize.normal}
-                >
-                  {groupTitles.map((index: string) => {
-                    return (
-                      <PivotItem headerText={index} itemKey={index} key={index} />
-                    );
-                  })}
-                </Pivot>
-              </div>
+                  ( { searchBox } ) 
+
+                <div>
+                  ( { groupPivot } ) 
+                </div>
+
             </div>
-            {isLoaded === false || !this.state.myGroups.groups[0].users || this.state.myGroups.groups[0].users.length == 0 ? (
-              <div className={styles.noUsers}>
-                <Icon
-                  iconName={"ProfileSearch"}
-                  style={{ fontSize: "54px", color: color }}
-                />
-                <Label>
-                  <span style={{ marginLeft: 5, fontSize: "26px", color: color }}>
-                    {strings.DirectoryMessage}
-                  </span>
-                </Label>
-              </div>
-            ) : this.state.isLoading ? (
-              <Spinner size={SpinnerSize.large} label={"searching ..."} />
-            ) : this.state.hasError ? (
-              <MessageBar messageBarType={MessageBarType.error}>
-                {this.state.errorMessage}
-              </MessageBar>
-            ) : (
-                    <div className={styles.dropDownSortBy}>
-                      <Dropdown
-                        placeholder={strings.DropDownPlaceHolderMessage}
-                        label={strings.DropDownPlaceLabelMessage}
-                        options={orderOptions}
-                        selectedKey={this.state.searchString}
-                        onChange={(ev: any, value: IDropdownOption) => {
-                          this._sortPeople(value.key.toString());
-                        }}
-                        styles={{ dropdown: { width: 200 } }}
-                      />
-                      <div>{diretoryGrid}</div>
-                    </div>
-                  )}
+
+            { showNoUsers === true ? 
+                  ( { noUsers } ) 
+
+              : this.state.isLoading ? 
+                  ( { searchSpinner } ) 
+            
+              : this.state.hasError ? 
+                  ( { errorBar } ) 
+
+              : 
+                  ( { sortDropdown } ) 
+             }
           </div>
         );
       }
