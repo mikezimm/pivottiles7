@@ -46,6 +46,9 @@ export interface IPivottiles7WebPartProps {
   listWebURL: string;
   listTitle: string;
   setFilter: string;
+  filterOnlyList: boolean;
+  filterTitle: string;
+  filterDescription: string;
   propURLQuery: boolean;
   getAll: boolean;
 

@@ -185,8 +185,27 @@ export class IntroPage {
         isCollapsed: true ,
         groupFields: [
           PropertyPaneTextField('setFilter', {
-              label: strings.setFilter
+              label: strings.setFilter,
+              description: 'default = contains this string (case sensitive)',
           }),
+
+          PropertyPaneTextField('filterTitle', {
+              label: 'Title filter',
+              description: 'default = contains this string (case sensitive)',
+          }),
+
+          PropertyPaneTextField('filterDescription', {
+              label: 'Description filter',
+              description: 'default = contains this string (case sensitive)',
+          }),
+
+          PropertyPaneToggle('filterOnlyList', {
+              label: 'Title/Desc filter applies to',
+              offText: 'Only main list items',
+              onText: 'Everything including Subsites etc...',
+              disabled: webPartProps.filterTitle || webPartProps.filterDescription ? false : true,
+          }),
+
           PropertyPaneTextField('propURLQuery', {
             disabled: true,
               label: strings.propURLQuery
@@ -217,7 +236,7 @@ export class IntroPage {
         ]}, // this group
 
         
-        { groupName: 'Lists and Libraries',
+        { groupName: 'Lists',
         isCollapsed: true ,
         groupFields: [
           PropertyPaneToggle('listsInclude', {
@@ -234,6 +253,32 @@ export class IntroPage {
             label: 'List Icon Style (similar to tile icons)',
             disabled: webPartProps.listsInclude === true ? false : true,
           }),
+
+          PropertyPaneTextField('listLibCat', {
+              label: 'Combined category label (if blank, you will get Lists and Libraries',
+              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+          }),
+
+          //listHideSystem
+          PropertyPaneToggle('listHideSystem', {
+              label: 'Hide System lists',
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+          }),
+
+          PropertyPaneToggle('ignoreList', {
+              label: 'Only show Lists and Libraries, Ignore your List settings',
+              offText: 'Off',
+              onText: 'On',
+              //disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+              disabled: true,
+          }),
+        ]}, // this group
+
+        { groupName: 'Libraries',
+        isCollapsed: true ,
+        groupFields: [
           PropertyPaneToggle('libsInclude', {
               label: 'Show all Libraries',
               offText: 'Off',

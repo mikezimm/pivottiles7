@@ -17,6 +17,76 @@ import { Environment, EnvironmentType } from "@microsoft/sp-core-library";
 import { IDirectoryProps } from './IDirectoryProps';
 import Paging from './Pagination/Paging';
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * This is how you can use this component
+ */
+
+/* 
+    let directory = <DirectoryHook
+      title={ 'directoryTitle'}
+      context={ this.props.context }
+      searchFirstName={ true }
+      displayMode={ 1 }
+      updateProperty={
+        (value: string) => {
+          // this.properties.title = value; //This is for updating Title Props from webpart
+      }
+      }
+      searchProps={ 'Mike' }
+      clearTextSearchProps={ ''}
+      pageSize={ 5 }
+    ></DirectoryHook>;
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const slice: any = require('lodash/slice');
 const filter: any = require('lodash/filter');
 const wrapStackTokens: IStackTokens = { childrenGap: 30 };

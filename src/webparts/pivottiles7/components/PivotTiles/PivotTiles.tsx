@@ -55,7 +55,7 @@ import { ISearchQuery, SearchResults, ISearchResult } from "@pnp/sp/search";
 
 import { IHubSiteWebData, IHubSiteInfo } from  "@pnp/sp/hubsites";
 
- import DirectoryHook from '../Directory/DirectoryHook';
+//import DirectoryHook from '../Directory/DirectoryHook';
 
  import MyGroups from '../Groups/MyGroups';
 
@@ -203,6 +203,19 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
     let reloadData : boolean = false;
 
+    if (this.props.setFilter !== prevProps.setFilter) {  reloadData = true ; }  
+    else if (this.props.filterTitle !== prevProps.filterTitle) {  reloadData = true ; }  
+    else if (this.props.filterDescription !== prevProps.filterDescription) {  reloadData = true ; }  
+    else if (this.props.filterOnlyList !== prevProps.filterOnlyList) {  reloadData = true ; }  
+    else if (this.props.listDefinition !== prevProps.listDefinition) {  reloadData = true ; }  
+    else if (this.props.listWebURL !== prevProps.listWebURL) {  reloadData = true ; }  
+    else if (this.props.listTitle !== prevProps.listTitle) {  reloadData = true ; }  
+    else if (this.props.custCategories !== prevProps.custCategories) {  reloadData = true ; }   
+    else if (this.props.subsitesCategory !== prevProps.subsitesCategory) {  reloadData = true ; }    
+    else if (this.props.ignoreList !== prevProps.ignoreList) {  reloadData = true ; }    
+    else if (this.props.subsitesInclude !== prevProps.subsitesInclude) {  reloadData = true ; }
+    else if (this.props.fetchInfo !== prevProps.fetchInfo) {  reloadData = true ; }
+
     if (this.props.setTab !== prevProps.setTab) {  rebuildTiles = true ; }
     else if (this.props.setSize !== prevProps.setSize) {  rebuildTiles = true ; }
     else if (this.props.showHero !== prevProps.showHero) {  rebuildTiles = true ; }
@@ -212,19 +225,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     else if (this.props.setImgCover !== prevProps.setImgCover) {  rebuildTiles = true ; }
     else if (this.props.heroCategory !== prevProps.heroCategory) {  rebuildTiles = true ; }
     else if (this.props.heroRatio !== prevProps.heroRatio) {  rebuildTiles = true ; }
-
-    else if (this.props.listDefinition !== prevProps.listDefinition) {  reloadData = true ; }  
-    else if (this.props.listWebURL !== prevProps.listWebURL) {  reloadData = true ; }  
-    else if (this.props.listTitle !== prevProps.listTitle) {  reloadData = true ; }  
     else if (this.props.heroRatio !== prevProps.heroRatio) {  rebuildTiles = true ; }     
 
-    else if (this.props.custCategories !== prevProps.custCategories) {  reloadData = true ; }   
-
-    else if (this.props.subsitesCategory !== prevProps.subsitesCategory) {  reloadData = true ; }    
-    else if (this.props.ignoreList !== prevProps.ignoreList) {  reloadData = true ; }    
-    else if (this.props.subsitesInclude !== prevProps.subsitesInclude) {  reloadData = true ; }
-
-    else if (this.props.fetchInfo !== prevProps.fetchInfo) {  reloadData = true ; }
 
     if ( reloadData === true ) {
       this._getListItems( this.props.custCategories );
@@ -373,24 +375,6 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       </div>
       ;
 
-/* 
-    let directory = <DirectoryHook
-      title={ 'directoryTitle'}
-      context={ this.props.context }
-      searchFirstName={ true }
-      displayMode={ 1 }
-      updateProperty={
-        (value: string) => {
-          // this.properties.title = value; //This is for updating Title Props from webpart
-      }
-      }
-      searchProps={ 'Mike' }
-      clearTextSearchProps={ ''}
-      pageSize={ 5 }
-    ></DirectoryHook>;
-
-
-*/
 
       let directory = <MyGroups
         title={ 'MyGroups'}

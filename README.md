@@ -8,6 +8,7 @@ npm install @pnp/spfx-controls-react --save --save-exact
 npm install react-slick
 npm install webpack-bundle-analyzer --save-dev
 
+//Added for Directory component for groups
 npm install @pnp/graph
 npm install react-js-pagination
 npm install throttle-debounce

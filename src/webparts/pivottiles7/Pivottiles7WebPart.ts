@@ -115,6 +115,9 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     if ( urlVars.scenario && urlVars.scenario.toLowerCase() === 'dev' ) {  this.properties.scenario = 'DEV';  }
 
+    //Added for https://github.com/mikezimm/pivottiles7/issues/2
+    if ( urlVars.category ) {  this.properties.setTab = urlVars.category;  }
+
     //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
 
     let custCatLogi : ICustomLogic[] | string[] = null;
@@ -231,6 +234,11 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
         setImgCover: this.properties.setImgCover,
         target: this.properties.target,
         setFilter: this.properties.setFilter,
+
+        filterTitle: this.properties.filterTitle ? this.properties.filterTitle : '',
+        filterDescription: this.properties.filterDescription ? this.properties.filterDescription : '',
+        filterOnlyList: this.properties.filterOnlyList === true ? true : false,
+
         propURLQuery: this.properties.propURLQuery,
         setTab: this.properties.setTab,
         otherTab: this.properties.otherTab,
@@ -396,8 +404,13 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       'imageWidth','imageHeight','textPadding','setHeroFit','setHeroCover','onHoverZoom', 'enableChangePivots', 'definitionToggle',
       'custCatType', 'custCatCols', 'custCatLogi', 'custCatBrak',
       'subsitesCategory', 'ignoreList', 'ignoreList', 
+
       'listsInclude', 'listIconStyles', 'listFilter', 'listLibCat', 
       'libsInclude', 'libsIconStyles', 'libsFilter', 'listHideSystem', 
+      'hubsInclude', 'hubsCategory',
+      'setFilter', 'filterTitle', 'filterDescription', 'filterOnlyList', 
+
+
     ];
 
     if (updateOnThese.indexOf(propertyPath) > -1 ) {

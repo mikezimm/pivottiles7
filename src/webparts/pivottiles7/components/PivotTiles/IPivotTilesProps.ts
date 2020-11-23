@@ -113,6 +113,9 @@ export interface IPivotTilesProps {
   listWebURL: string;
   listTitle: string;
   setFilter: string;
+  filterTitle: string;
+  filterDescription: string;
+  filterOnlyList: boolean;
   propURLQuery: boolean;
   getAll: boolean;
 
