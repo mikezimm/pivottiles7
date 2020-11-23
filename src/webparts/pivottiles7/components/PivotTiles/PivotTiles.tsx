@@ -45,7 +45,9 @@ import { convertCategoryToIndex, fixURLs } from './UtilsNew';
 import { buildTileCategoriesFromResponse } from './BuildTileCategories';
 
 import { buildTileCollectionFromResponse, buildTileCollectionFromWebs, 
-  buildTileCollectionFromLists, buildTileCollectionFromHubs } from './BuildTileCollection';
+  buildTileCollectionFromLists, buildTileCollectionFromHubs,
+  buildTileCollectionFromAllResponse
+} from './BuildTileCollection';
 
 import { CustTime , custTimeOption, } from './QuickBuckets';
 
@@ -1321,10 +1323,10 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       let pivotProps = this.props;
       let pivotState = this.state;
 
-      let tileCollectionResults = buildTileCollectionFromResponse(itemsResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
-      let tileCollectionWebs = buildTileCollectionFromWebs(subsites, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
-      let tileCollectionLists = buildTileCollectionFromLists(listResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
-      let tileCollectionHubs = buildTileCollectionFromHubs(hubResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
+      let tileCollectionResults = buildTileCollectionFromAllResponse( 'items', itemsResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
+      let tileCollectionWebs = buildTileCollectionFromAllResponse( 'subs', subsites, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
+      let tileCollectionLists = buildTileCollectionFromAllResponse( 'lists', listResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
+      let tileCollectionHubs = buildTileCollectionFromAllResponse( 'hubs', hubResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
 
       console.log('tileCollectionWebs: ', tileCollectionWebs);
       console.log('tileCollectionLists: ', tileCollectionLists);

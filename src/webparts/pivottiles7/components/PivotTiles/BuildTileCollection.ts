@@ -1017,6 +1017,196 @@ export function buildTileCollectionFromWebs(response, pivotProps: IPivotTilesPro
 
 
 
+  function isVisibleItem( item , theseProps, pivotProps ) {
+
+    let isVisible : boolean = true;
+
+    let filterTitle = pivotProps.filterTitle ;
+    let titleEquals = filterTitle.indexOf('<>') === 0 ? false : true;
+    filterTitle = filterTitle.replace('<>','');
+
+    let filterDescription = pivotProps.filterDescription;
+    let descriptionEquals = filterDescription.indexOf('<>') === 0 ? false : true;
+    filterDescription = filterDescription.replace('<>','');
+
+    let title = ( item[ theseProps.colTitleText ] );
+    let desc = ( item[ theseProps.colHoverText ] );
+
+
+    if ( filterTitle && filterTitle.length > 0 ) {
+
+      if ( titleEquals ) { //Check if title contains value.  if not return isVisible = false;
+        if ( title === '' || title === null || title === undefined ) { isVisible = false; } 
+        else if ( title.indexOf( filterTitle ) < 0 )  { isVisible = false ; }
+
+
+      } else { //Check if title does NOT contain value.  if it does return isVisible = false;
+        if ( title !== '' && title !== undefined && title !== null && title !== '' && title.indexOf( filterTitle ) > -1 ) { isVisible = false ; }
+
+      }
+
+    }
+
+    if ( filterDescription && filterDescription.length > 0 ) {
+
+      if ( descriptionEquals ) { //Check if title contains value.  if not return isVisible = false;
+
+        if ( desc === '' || desc === null || desc === undefined ) { isVisible = false; } 
+        else if ( desc.indexOf( filterDescription ) < 0 )  { isVisible = false ; }
+
+      } else { //Check if title does NOT contain value.  if it does return isVisible = false;
+        if ( desc !== '' && desc !== undefined && desc !== null && desc !== '' && desc.indexOf( filterDescription ) > -1 ) { isVisible = false ; }
+
+      }
+    }
+
+    return isVisible;
+
+  }
+
+
+  function getTheseProps( type: responseType , pivotProps: IPivotTilesProps ) {
+    let theseProps : any = null;
+
+    if ( type === 'items') {
+      return pivotProps;
+    }
+
+    theseProps = {
+
+      colCreated: 'Created',
+      colTitleText: 'Title',
+      colHoverText: 'Description',
+
+      colCategory: null,
+      colTileStyle: null,
+      colColor: null,
+      colSize: null,
+
+    };
+
+    if ( type === 'subs') {
+
+      theseProps.colModified = 'LastItemUserModifiedDate';
+      theseProps.colImageLink = 'SiteLogoUrl';
+      theseProps.colGoToLink = 'ServerRelativeUrl';
+
+    } else if ( type === 'hubs') {
+      theseProps.colModified = 'LastItemUserModifiedDate';
+      theseProps.colImageLink = 'SiteLogoUrl';
+      theseProps.colGoToLink = 'SPSiteUrl';
+
+    } else if ( type === 'lists') {
+      theseProps.colModified = 'LastItemUserModifiedDate';
+      theseProps.colImageLink = '';
+      theseProps.colGoToLink = 'ParentWebUrl';
+
+    } 
+
+    return theseProps;
+
+  }
+
+
+  
+
+/***
+ *    d8888b. db    db d888888b db      d8888b.      d888888b d888888b db      d88888b       .o88b.  .d88b.  db      db           d88888b d8888b.      d8888b. d88888b .d8888. d8888b. 
+ *    88  `8D 88    88   `88'   88      88  `8D      `~~88~~'   `88'   88      88'          d8P  Y8 .8P  Y8. 88      88           88'     88  `8D      88  `8D 88'     88'  YP 88  `8D 
+ *    88oooY' 88    88    88    88      88   88         88       88    88      88ooooo      8P      88    88 88      88           88ooo   88oobY'      88oobY' 88ooooo `8bo.   88oodD' 
+ *    88~~~b. 88    88    88    88      88   88         88       88    88      88~~~~~      8b      88    88 88      88           88~~~   88`8b        88`8b   88~~~~~   `Y8b. 88~~~   
+ *    88   8D 88b  d88   .88.   88booo. 88  .8D         88      .88.   88booo. 88.          Y8b  d8 `8b  d8' 88booo. 88booo.      88      88 `88.      88 `88. 88.     db   8D 88      
+ *    Y8888P' ~Y8888P' Y888888P Y88888P Y8888D'         YP    Y888888P Y88888P Y88888P       `Y88P'  `Y88P'  Y88888P Y88888P      YP      88   YD      88   YD Y88888P `8888Y' 88      
+ *                                                                                                                                                                                     
+ *                                                                                                                                                                                     
+ */
+
+ export type responseType = 'subs' | 'hubs' | 'lists' | 'items' | 'groups' | 'users' ;
+
+export function buildTileCollectionFromAllResponse( type:  responseType, response, pivotProps: IPivotTilesProps , custCategories: ICustomCategories, fixedURL, currentHero){
+
+  //           let tileCollection = response.map(item=>new ClassTile(item));
+  //          https://stackoverflow.com/questions/47755247/typescript-array-map-return-object
+
+    console.log( 'buildTileCollectionFromResponse pivotProps:', pivotProps );
+
+    let includePeople =  type === 'items' ? true : false ;
+
+    let tc = createBaselineModObject();
+
+    let theseProps = getTheseProps( type, pivotProps ) ;
+
+    let newResponse : any[] = [];
+    let alwaysVisible : any = type === 'items' ? false : !pivotProps.filterOnlyList ;
+
+    for (let item of response) {
+
+      let isVisible = alwaysVisible === false ? isVisibleItem( item , theseProps, pivotProps ) : true ;
+
+      if ( isVisible === true ) {
+
+        let modResults = addModifiedInfoToItem( item, theseProps, tc, includePeople );
+        tc = modResults.tc;
+        item = modResults.item;
+        newResponse.push( item );
+      }
+
+    }
+
+    tc = setModifiedCats( tc, pivotProps );
+
+    newResponse = setBestFormat( newResponse, tc, includePeople );
+
+    tc = setLastCat( tc, pivotProps );
+
+    let endTime = getTheCurrentTime();
+
+    let custSearch: any = setCustSearch ( custCategories, theseProps, includePeople );
+
+    let finalTileCollection = buildFinalTileCollection ( newResponse, theseProps, custSearch, custCategories, pivotProps, includePeople , fixedURL, currentHero );
+
+    return {
+      tileCollection: finalTileCollection.tileCollection,
+      custCategories: custCategories,
+      createdInfo: tc.createdInfo,
+      modifiedInfo: tc.modifiedInfo,
+      categoryInfo: tc.categoryInfo,
+      createdByInfo: tc.createdByInfo,
+      modifiedByInfo: tc.modifiedByInfo,
+
+      modifiedByTitles: tc.modifiedByTitles.sort(),
+      modifiedByIDs: tc.modifiedByIDs.sort(),
+      createdByTitles: tc.createdByTitles.sort(),
+      createdByIDs: tc.createdByIDs.sort(),
+      showOtherTab: finalTileCollection.showOtherTab,
+
+    };
+
+  }  // END public static buildTileCollectionFromResponse(response, pivotProps, fixedURL, currentHero){
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1058,16 +1248,26 @@ export function buildTileCollectionFromWebs(response, pivotProps: IPivotTilesPro
 
     let theseProps = pivotProps;
 
+    let newResponse : any[] = [];
+    let filterOnlyList : any = false ; // pivotProps.filterOnlyList;
+
     for (let item of response) {
+
+      let isVisible = filterOnlyList === false ? isVisibleItem( item , theseProps, pivotProps ) : true ;
+
+      if ( isVisible === true ) {
 
         let modResults = addModifiedInfoToItem( item, theseProps, tc, includePeople );
         tc = modResults.tc;
         item = modResults.item;
+        newResponse.push( item );
+      }
+
     }
 
     tc = setModifiedCats( tc, pivotProps );
 
-    response = setBestFormat( response, tc, includePeople );
+    newResponse = setBestFormat( newResponse, tc, includePeople );
 
     tc = setLastCat( tc, pivotProps );
 
@@ -1075,7 +1275,7 @@ export function buildTileCollectionFromWebs(response, pivotProps: IPivotTilesPro
 
     let custSearch: any = setCustSearch ( custCategories, theseProps, includePeople );
 
-    let finalTileCollection = buildFinalTileCollection ( response, theseProps, custSearch, custCategories, pivotProps, includePeople , fixedURL, currentHero );
+    let finalTileCollection = buildFinalTileCollection ( newResponse, theseProps, custSearch, custCategories, pivotProps, includePeople , fixedURL, currentHero );
 
     return {
       tileCollection: finalTileCollection.tileCollection,

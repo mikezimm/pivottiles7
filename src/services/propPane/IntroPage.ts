@@ -186,17 +186,17 @@ export class IntroPage {
         groupFields: [
           PropertyPaneTextField('setFilter', {
               label: strings.setFilter,
-              description: 'default = contains this string (case sensitive)',
+              description: '',
           }),
 
           PropertyPaneTextField('filterTitle', {
-              label: 'Title filter',
-              description: 'default = contains this string (case sensitive)',
+              label: 'Title contains (Case sensitive)',
+              description: 'begin with <> to show items that do not contain text',
           }),
 
           PropertyPaneTextField('filterDescription', {
-              label: 'Description filter',
-              description: 'default = contains this string (case sensitive)',
+              label: 'Description contains (Case sensitive)',
+              description: 'begin with <> to show items that do not contain text',
           }),
 
           PropertyPaneToggle('filterOnlyList', {
@@ -245,10 +245,7 @@ export class IntroPage {
               onText: 'On',
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
-          PropertyPaneTextField('listFilter', {
-            label: 'Filter to apply to lists',
-            disabled: webPartProps.listsInclude === true ? false : true,
-          }),
+
           PropertyPaneTextField('listIconStyles', {
             label: 'List Icon Style (similar to tile icons)',
             disabled: webPartProps.listsInclude === true ? false : true,
@@ -274,6 +271,12 @@ export class IntroPage {
               //disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
               disabled: true,
           }),
+          
+          PropertyPaneTextField('listFilter', {
+            label: 'Filter to apply to lists',
+            disabled: true , //webPartProps.listsInclude === true ? false : true,
+          }),
+
         ]}, // this group
 
         { groupName: 'Libraries',
@@ -285,10 +288,7 @@ export class IntroPage {
               onText: 'On',
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
-          PropertyPaneTextField('libsFilter', {
-            label: 'Filter to apply to lists',
-            disabled: webPartProps.libsInclude === true ? false : true,
-          }),
+
           PropertyPaneTextField('libsIconStyles', {
             label: 'Library Icon Style (similar to tile icons)',
             disabled: webPartProps.libsInclude === true ? false : true,
@@ -305,6 +305,11 @@ export class IntroPage {
               offText: 'Off',
               onText: 'On',
               disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+          }),
+
+          PropertyPaneTextField('libsFilter', {
+            label: 'Filter to apply to lists',
+            disabled: true , //webPartProps.libsInclude === true ? false : true,
           }),
 
           PropertyPaneToggle('ignoreList', {
