@@ -380,7 +380,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
       let directory = <MyGroups
         title={ 'MyGroups'}
-        groups={ [] }
+        groups={ ["PivotTiles Owners", "PivotTiles Members", "PivotTiles Visitors"] }
         webURL={ this.props.pageContext.web.absoluteUrl }
         context={ this.props.context }
         searchFirstName={ true }

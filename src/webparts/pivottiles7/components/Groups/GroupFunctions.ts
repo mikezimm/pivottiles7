@@ -67,6 +67,7 @@ export function getPrincipalTypeString( type: PrincipalType ) {
                 allGroups[i].users = groupUsers.users;
                 allGroups[i].uCount = groupUsers.users.length;
                 newGroups.counts.push( groupUsers.users.length );
+                newGroups.Ids.push(  allGroups[i].Id );
             }
         }
     

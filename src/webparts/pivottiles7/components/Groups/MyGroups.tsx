@@ -3,7 +3,10 @@
 //https://mcclickster.sharepoint.com/sites/Templates/PowerShell/_layouts/15/userphoto.aspx?size=M&accountname=bb@mcclickster.onmicrosoft.com
 
 import * as React from 'react';
-import styles from "../Directory/Directory.module.scss";
+import styles from "./MyGroups.module.scss";
+
+
+import { CompoundButton, Stack, IStackTokens, elementContains, initializeIcons } from 'office-ui-fabric-react';
 import { PersonaCard } from "../Directory/PersonaCard/PersonaCard";
 import { spservices } from "../../../../SPServices/spservices";
 import * as strings from "Pivottiles7WebPartStrings";
@@ -66,7 +69,7 @@ private setMyGroups() {
 
     let myGroups: IMyGroups =  {
         groups:  [],
-        titles: ["PivotTiles Owners", "PivotTiles Members", "PivotTiles Visitors"],
+        titles: this.props.groups,
         Ids: [],
         isLoading: true,
         counts: [],
@@ -85,7 +88,7 @@ public constructor(props:IMyGroupsProps){
         isLoading: true,
         errorMessage: "",
         hasError: false,
-        indexSelectedKey: "A",
+        indexSelectedKey: "PivotTiles Visitors",
         searchString: "LastName",
         searchText: ""
     };
@@ -145,13 +148,13 @@ public constructor(props:IMyGroupsProps){
 
         let isLoaded = this.state.myGroups.isLoading === false ? true : false; 
 
-        let webpartTitle = <WebPartTitle
+        let webpartTitle = <div><WebPartTitle
             displayMode={this.props.displayMode}
             title={this.props.title}
             updateProperty={this.props.updateProperty}
-          />;
+          /></div>;
 
-        let searchBox = <SearchBox
+        let searchBox = <div><SearchBox
           placeholder={strings.SearchPlaceHolder}
           styles={{
             root: {
@@ -168,9 +171,11 @@ public constructor(props:IMyGroupsProps){
           }}
           value={this.state.searchText}
           onChange={this._searchBoxChanged}
-        />;
+        /></div>;
 
-        let groupPivot = <Pivot
+        let selectedGroupIndex = this.props.groups.indexOf(this.state.indexSelectedKey);
+
+        let groupPivot = <div><Pivot
             styles={{
               root: {
                 paddingLeft: 10,
@@ -181,7 +186,7 @@ public constructor(props:IMyGroupsProps){
             }}
             linkFormat={PivotLinkFormat.tabs}
             selectedKey={this.state.indexSelectedKey}
-            onLinkClick={this._selectedIndex}
+            onLinkClick={this._selectedIndex.bind(this)}
             linkSize={PivotLinkSize.normal}
           >
             { this.props.groups.map((index: string) => {
@@ -189,7 +194,7 @@ public constructor(props:IMyGroupsProps){
                 <PivotItem headerText={index} itemKey={index} key={index} />
               );
             })}
-          </Pivot>;
+          </Pivot></div>;
 
           let showNoUsers = isLoaded === false || !this.state.myGroups.groups[0].users || this.state.myGroups.groups[0].users.length == 0 ? true : false;
 
@@ -205,16 +210,16 @@ public constructor(props:IMyGroupsProps){
               </Label>
             </div>;
 
-            let errorBar = this.state.hasError ? <MessageBar messageBarType={MessageBarType.error}>
+            let errorBar = this.state.hasError ? <div><MessageBar messageBarType={MessageBarType.error}>
               {this.state.errorMessage}
-            </MessageBar> : null ;
+            </MessageBar></div> : null ;
 
 
         let searchSpinner = showNoUsers !== true && this.state.isLoading ? <Spinner size={SpinnerSize.large} label={"searching ..."} /> : null ;
 
         const diretoryGrid =
-            isLoaded === true && this.state.myGroups.groups[2].users && this.state.myGroups.groups[2].users.length > 0
-            ? this.state.myGroups.groups[2].users.map((user: any) => {
+            isLoaded === true && this.state.myGroups.groups[ selectedGroupIndex ].users && this.state.myGroups.groups[ selectedGroupIndex ].users.length > 0
+            ? this.state.myGroups.groups[ selectedGroupIndex ].users.map((user: any) => {
               return (
                 <PersonaCard
                   context={this.props.context}
@@ -247,6 +252,9 @@ public constructor(props:IMyGroupsProps){
             : [];
 
             
+            let sortDropdown = <div style={{ width: '100%' }}>{diretoryGrid}</div>; //
+            
+            /*
             let sortDropdown = <div className={styles.dropDownSortBy}>
                 <Dropdown
                   placeholder={strings.DropDownPlaceHolderMessage}
@@ -260,6 +268,7 @@ public constructor(props:IMyGroupsProps){
                 />
                 <div>{diretoryGrid}</div>
             </div>;
+            */
     
 /***
  *              d888888b db   db d888888b .d8888.      d8888b.  .d8b.   d888b  d88888b 
@@ -284,32 +293,35 @@ public constructor(props:IMyGroupsProps){
  *                                                                 
  *                                                                 
  */
+        let stackSettingTokens = { childrenGap: 20 };
 
         return (
           <div className={styles.directory}>
             { webpartTitle }
-    
-            <div className={styles.searchBox}>
-                  ( { searchBox } ) 
-
-                <div>
-                  ( { groupPivot } ) 
+            <Stack horizontal={false} wrap={false} horizontalAlign={"center"} tokens={stackSettingTokens}>{/* Stack for Buttons and Webs */}
+ 
+                <div className={styles.searchBox}>
+                  { searchBox } 
                 </div>
 
-            </div>
+                <div>
+                  { groupPivot } 
+                </div>
 
-            { showNoUsers === true ? 
-                  ( { noUsers } ) 
+                { showNoUsers === true ? 
+                      noUsers 
 
-              : this.state.isLoading ? 
-                  ( { searchSpinner } ) 
-            
-              : this.state.hasError ? 
-                  ( { errorBar } ) 
+                  : this.state.isLoading ? 
+                      searchSpinner
+                
+                  : this.state.hasError ? 
+                      errorBar 
 
-              : 
-                  ( { sortDropdown } ) 
-             }
+                  : 
+                      sortDropdown 
+                }
+
+             </Stack>
           </div>
         );
       }
@@ -503,7 +515,13 @@ debugger;
    * @memberof Directory
    */
   private _selectedIndex(item?: PivotItem, ev?: React.MouseEvent<HTMLElement>) {
-    this.setState({ searchText: "" }, () => this._searchUsers(item.props.itemKey));
+    //this.setState({ searchText: "" }, () => this._searchUsers(item.props.itemKey));
+
+    this.setState({ 
+      searchText: "",
+      indexSelectedKey: item.props.itemKey,
+     });
+
   }
 
 }
