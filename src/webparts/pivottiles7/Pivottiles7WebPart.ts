@@ -30,6 +30,7 @@ import { availableListMapping } from './AvailableListMapping';
 
 
 import { saveTheTime, getTheCurrentTime, saveAnalytics } from '../../services/createAnalytics';
+import { trimEnd } from '@microsoft/sp-lodash-subset';
 
 require('../../services/propPane/GrayPropPaneAccordions.css');
 
@@ -165,6 +166,14 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     custCategories = JSON.parse(JSON.stringify(custCategories));
 
+    let groupList = [];
+
+    let groupString = this.properties.groupsList;
+    if ( !groupString || groupString === '' ) { groupList = [] ; } 
+    else {
+      groupList = groupString.split(';').map( g => { return g.trim(); } );
+    }
+
     let fetchInfo : IFetchInfoSettings = {
 
       hubsInclude: this.properties.hubsInclude ,
@@ -174,6 +183,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       groupsInclude: this.properties.groupsInclude ,
       groupsCategory: this.properties.groupsCategory ,
       groupsLazy: this.properties.groupsLazy ,
+      groupsList: groupList ,
 
       usersInclude: this.properties.usersInclude ,
       usersCategory: this.properties.usersCategory ,

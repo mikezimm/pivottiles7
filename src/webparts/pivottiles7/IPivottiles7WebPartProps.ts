@@ -76,6 +76,7 @@ export interface IPivottiles7WebPartProps {
   groupsInclude: boolean ;
   groupsCategory: string ;
   groupsLazy: boolean ;
+  groupsList: string ;
 
   usersInclude: boolean ;
   usersCategory: string ;

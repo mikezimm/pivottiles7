@@ -360,6 +360,13 @@ export class IntroPage {
               onText: 'On',
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
+
+          PropertyPaneTextField('groupsList', {
+              label: 'List of group names - separated by ;',
+              disabled: webPartProps.groupsInclude === true ? false : true,
+              multiline: true,
+          }),
+          
           PropertyPaneToggle('ignoreList', {
               label: supressTileList,
               offText: 'Off',

@@ -16,6 +16,7 @@ export interface IMyGroups {
 
   groups:  ISingleGroup[];
   titles: string[];
+  propTitles: string[];
   Ids: number[];
   isLoading: boolean;
   counts: number[];

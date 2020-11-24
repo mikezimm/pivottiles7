@@ -70,6 +70,7 @@ private setMyGroups() {
     let myGroups: IMyGroups =  {
         groups:  [],
         titles: this.props.groups,
+        propTitles: JSON.parse(JSON.stringify( this.props.groups )), 
         Ids: [],
         isLoading: true,
         counts: [],
@@ -106,6 +107,7 @@ public constructor(props:IMyGroupsProps){
 
 
   public componentDidMount() {
+    console.log('componentDidMount MyGroups:', this.props.groups);
     this.fetchUsers();
   }
 
@@ -124,10 +126,16 @@ public constructor(props:IMyGroupsProps){
   public componentDidUpdate(prevProps){
 
     let rebuildTiles = false;
-
+    let reload = false;
     if (prevProps.width !== this.props.width ) { rebuildTiles = true ; }
+    if ( prevProps.groups !== this.props.groups ) { reload = true ; }
 
-    if (rebuildTiles === true) {
+    if ( reload === true ) {
+      console.log('componentDidUpdate reloading MyGroups:', this.props.groups);
+      this.fetchUsers();
+
+    } else if (rebuildTiles === true) {
+      console.log('componentDidUpdate rebuilding MyGroups:', this.props.groups);
       this._updateStateOnPropsChange();
     }
         /*
@@ -176,7 +184,7 @@ public constructor(props:IMyGroupsProps){
           onChange={this._searchBoxChanged}
         /></div>;
 
-        let selectedGroupIndex = this.props.groups.indexOf(this.state.indexSelectedKey);
+        let selectedGroupIndex = this.state.myGroups.titles.indexOf(this.state.indexSelectedKey);
 
         let groupPivot = <div><Pivot
             styles={{
@@ -192,7 +200,7 @@ public constructor(props:IMyGroupsProps){
             onLinkClick={this._selectedIndex.bind(this)}
             linkSize={PivotLinkSize.large}
           >
-            { this.props.groups.map((index: string) => {
+            { this.state.myGroups.titles.map((index: string) => {
               return (
                 <PivotItem headerText={index} itemKey={index} key={index} />
               );
@@ -361,6 +369,7 @@ public constructor(props:IMyGroupsProps){
 
         this.setState({ 
             myGroups: myGroups,
+            indexSelectedKey: myGroups.titles[0],
             isLoading: myGroups.isLoading,
             errorMessage: errorMessage,
         });

@@ -31,13 +31,14 @@ export function getPrincipalTypeString( type: PrincipalType ) {
         let newGroups : IMyGroups = myGroups;
         let allGroups : ISingleGroup[] = [];
         newGroups.counts = [];
+        newGroups.titles = [];
         newGroups.isLoading = true;
 
         let errMessage = '';
         try {
             //` and Title ne \'Style Library\'`
             let groupAdder = "\' or Title eq \'";
-            let groupFilter = "Title eq \'" + myGroups.titles.join( groupAdder ) + "\'";
+            let groupFilter = "Title eq \'" + myGroups.propTitles.join( groupAdder ) + "\'";
 
             thisWebInstance = Web(webURL);
             allGroups = await thisWebInstance.siteGroups.filter( groupFilter ).get();
@@ -62,12 +63,14 @@ export function getPrincipalTypeString( type: PrincipalType ) {
                 errMessage = errMessage.length > 0 ? errMessage += '\n' : errMessage;
                 errMessage += groupUsers.errMessage;
                 newGroups.counts.push( null );
+                newGroups.titles.push( null );
 
             } else {
                 allGroups[i].users = groupUsers.users;
                 allGroups[i].uCount = groupUsers.users.length;
                 newGroups.counts.push( groupUsers.users.length );
                 newGroups.Ids.push(  allGroups[i].Id );
+                newGroups.titles.push( allGroups[i].Title );
             }
         }
     
