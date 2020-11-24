@@ -7,7 +7,40 @@
   min-width: 300px;
   max-width: 300px;
   vertical-align: top;
+
+  //https://blog.hubspot.com/website/css-fade-in
+  opacity: 1;
+  animation: fadeIn ease 1s;
+  -webkit-animation: fadeIn ease 1s;
+
 }
+
+//https://blog.hubspot.com/website/css-fade-in
+@keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-moz-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-webkit-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-o-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-ms-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+
 .documentCard {
   border-color: $ms-color-themeDark;
   border-top-width: 5px;

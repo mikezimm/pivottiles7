@@ -383,8 +383,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       ;
 
 
-      let directory = <MyGroups
-        title={ 'MyGroups'}
+      let directory = defIndex !== this.props.fetchInfo.groupsCategory || this.props.fetchInfo.groupsInclude !== true ? null : <MyGroups
+        title={ 'Key site groups'}
         width= { this.state.WebpartWidth }
         groups={ ["PivotTiles Owners", "PivotTiles Members", "PivotTiles Visitors"] }
         webURL={ this.props.pageContext.web.absoluteUrl }
@@ -715,10 +715,14 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       let pivotState = this.state;
 
 //      newFiltered = this.getOnClickFilteredTiles(pivotProps, pivotState, newCollection, heroIds, newHeros, thisCatColumn, lastCategory)
+      let showSearch = true;
+
       if ( item.props.headerText !== this.props.fetchInfo.groupsCategory 
         && item.props.headerText !== this.props.fetchInfo.usersCategory ) { //Skip finding tiles if you click Groups or Users
         newFilteredTiles = this.getOnClickFilteredTiles(this.state.allTiles, this.state.heroIds, this.state.heroTiles, this.state.thisCatColumn, item.props.headerText);
 
+      } else {
+        showSearch = false; //Hide this bar when you are showing groups
       }
 
       //Save back the last pivot/tile clicked.
@@ -746,6 +750,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         createdByInfo: createdByInfo,
         createdInfo: createdInfo,
         pivotDefSelKey: defaultSelectedKey,
+        searchShow: showSearch,
 
       });
 
@@ -924,11 +929,14 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
   public createPivots(thisState,thisProps){
 
     let tempPivotTitles = JSON.parse(JSON.stringify(thisState.pivtTitles));
-    if (thisState.showOtherTab && tempPivotTitles.indexOf(thisProps.otherTab) === -1) {
-      tempPivotTitles.push(thisProps.otherTab);
+
+    if ( thisState.loadStatus !== "Loading" ) {
+      if (thisState.showOtherTab && tempPivotTitles.indexOf(thisProps.otherTab) === -1) {
+        tempPivotTitles.push(thisProps.otherTab);
+      }
+      if ( this.props.fetchInfo.groupsInclude === true ) { 
+        tempPivotTitles.push( thisProps.fetchInfo.groupsCategory ) ; }
     }
-    if ( this.props.fetchInfo.groupsInclude === true ) { 
-      tempPivotTitles.push( thisProps.fetchInfo.groupsCategory ) ; }
 
     let piv = tempPivotTitles.map(this.createPivot);
     console.log('createPivots: ', piv);

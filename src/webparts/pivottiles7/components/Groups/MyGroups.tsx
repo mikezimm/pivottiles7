@@ -88,7 +88,7 @@ public constructor(props:IMyGroupsProps){
         isLoading: true,
         errorMessage: "",
         hasError: false,
-        indexSelectedKey: "PivotTiles Visitors",
+        indexSelectedKey: this.props.groups[0],
         searchString: "LastName",
         searchText: ""
     };
@@ -199,7 +199,7 @@ public constructor(props:IMyGroupsProps){
             })}
           </Pivot></div>;
 
-          let showNoUsers = isLoaded === false || !this.state.myGroups.groups[0].users || this.state.myGroups.groups[0].users.length == 0 ? true : false;
+          let showNoUsers = isLoaded === false ? false : !this.state.myGroups.groups[0].users || this.state.myGroups.groups[0].users.length == 0 ? true : false;
 
           let noUsers = <div className={styles.noUsers}>
               <Icon
@@ -306,10 +306,13 @@ public constructor(props:IMyGroupsProps){
           <div className={styles.directory} style={{ width: this.props.width }}>
             { webpartTitle }
             <Stack horizontal={false} wrap={false} horizontalAlign={"center"} tokens={stackSettingTokens}>{/* Stack for Buttons and Webs */}
- 
-                <div className={styles.searchBox}>
-                  { searchBox } 
-                </div>
+
+                {/*
+                    <div className={styles.searchBox}>
+                      { searchBox } 
+                    </div>
+                    */
+                }
 
                 <div>
                   { groupPivot } 
