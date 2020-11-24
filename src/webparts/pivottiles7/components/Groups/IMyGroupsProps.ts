@@ -4,6 +4,7 @@ export interface IMyGroupsProps {
   webURL: string;
   groups: any[];
   title: string;
+  width: number;
   displayMode: DisplayMode;
   context: WebPartContext;
   searchFirstName: boolean;

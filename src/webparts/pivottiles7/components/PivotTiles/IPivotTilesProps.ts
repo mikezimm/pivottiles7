@@ -77,6 +77,8 @@ export interface IPivotTilesProps {
   tenant: string;
   urlVars: {};
 
+  WebpartElement: HTMLElement;   //Size courtesy of https://www.netwoven.com/2018/11/13/resizing-of-spfx-react-web-parts-in-different-scenarios/
+
   //Hero tile properties
   showHero: boolean;
   heroType: string;

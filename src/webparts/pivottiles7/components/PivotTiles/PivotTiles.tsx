@@ -115,6 +115,11 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
  //   console.log('hubInfo', hubInfo ) ;
 
     this.state = { 
+
+      //Size courtesy of https://www.netwoven.com/2018/11/13/resizing-of-spfx-react-web-parts-in-different-scenarios/
+      WebpartHeight: this.props.WebpartElement.getBoundingClientRect().height ,
+      WebpartWidth:  this.props.WebpartElement.getBoundingClientRect().width ,
+
       allTiles:[],
       filteredTiles:[],
       lastFilteredTiles:[],
@@ -380,6 +385,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
       let directory = <MyGroups
         title={ 'MyGroups'}
+        width= { this.state.WebpartWidth }
         groups={ ["PivotTiles Owners", "PivotTiles Members", "PivotTiles Visitors"] }
         webURL={ this.props.pageContext.web.absoluteUrl }
         context={ this.props.context }

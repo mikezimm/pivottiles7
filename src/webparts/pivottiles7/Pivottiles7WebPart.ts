@@ -210,6 +210,9 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
         context: this.context,
 
+        //Size courtesy of https://www.netwoven.com/2018/11/13/resizing-of-spfx-react-web-parts-in-different-scenarios/
+        WebpartElement: this.domElement,
+
         startTime: getTheCurrentTime(),
         scenario: this.properties.scenario,
         description: this.properties.description,

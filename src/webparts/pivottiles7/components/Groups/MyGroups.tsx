@@ -6,7 +6,7 @@ import * as React from 'react';
 import styles from "./MyGroups.module.scss";
 
 
-import { CompoundButton, Stack, IStackTokens, elementContains, initializeIcons } from 'office-ui-fabric-react';
+import { CompoundButton, Stack, IStackTokens, elementContains, initializeIcons, IStackProps } from 'office-ui-fabric-react';
 import { PersonaCard } from "../Directory/PersonaCard/PersonaCard";
 import { spservices } from "../../../../SPServices/spservices";
 import * as strings from "Pivottiles7WebPartStrings";
@@ -124,10 +124,13 @@ public constructor(props:IMyGroupsProps){
   public componentDidUpdate(prevProps){
 
     let rebuildTiles = false;
-    /*
+
+    if (prevProps.width !== this.props.width ) { rebuildTiles = true ; }
+
     if (rebuildTiles === true) {
-      this._updateStateOnPropsChange({});
+      this._updateStateOnPropsChange();
     }
+        /*
     */
 
   }
@@ -251,8 +254,12 @@ public constructor(props:IMyGroupsProps){
             })
             : [];
 
-            
-            let sortDropdown = <div style={{ width: '100%' }}>{diretoryGrid}</div>; //
+            let stackCardsTokens = { childrenGap: 10 };
+            let sortDropdown = <div style={{ width: '100%', paddingTop: 10, paddingBottom: 10 }}>
+              <Stack horizontal={true} wrap={true} horizontalAlign={"center"} tokens={stackCardsTokens} >{/* Stack for Buttons and Webs */}
+                  {diretoryGrid}
+              </Stack>
+              </div>; //
             
             /*
             let sortDropdown = <div className={styles.dropDownSortBy}>
@@ -293,10 +300,10 @@ public constructor(props:IMyGroupsProps){
  *                                                                 
  *                                                                 
  */
-        let stackSettingTokens = { childrenGap: 20 };
+        let stackSettingTokens = { childrenGap: 20, width: '100%' };
 
         return (
-          <div className={styles.directory}>
+          <div className={styles.directory} style={{ width: this.props.width }}>
             { webpartTitle }
             <Stack horizontal={false} wrap={false} horizontalAlign={"center"} tokens={stackSettingTokens}>{/* Stack for Buttons and Webs */}
  
@@ -326,7 +333,10 @@ public constructor(props:IMyGroupsProps){
         );
       }
 
-      
+      private _updateStateOnPropsChange() {
+        this.setState({ 
+        });
+      }
       private fetchUsers() {
 
         allAvailableGroups( this.props.webURL , this.state.myGroups, this.addTheseGroupsToState.bind(this), null );
