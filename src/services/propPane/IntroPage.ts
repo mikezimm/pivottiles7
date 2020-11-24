@@ -394,7 +394,7 @@ export class IntroPage {
               onText: 'On',
               disabled: webPartProps.subsitesInclude === true ? false : true,
           }),
-          PropertyPaneTextField('usersSetting', {
+          PropertyPaneTextField('usersCategory', {
               label: 'User Tile settings',
               disabled: webPartProps.usersInclude === true ? false : true,
           }),

@@ -80,11 +80,11 @@
       "hubsLazy": true ,
 
       "groupsInclude": false ,
-      "groupsSetting": "Groups" ,
+      "groupsCategory": "Groups" ,
       "groupsLazy": true ,
     
       "usersInclude": false ,
-      "usersSetting": "Users" ,
+      "usersCategory": "Users" ,
       "usersLazy": true ,
 
       "listsInclude": false,
@@ -161,11 +161,11 @@
       "hubsLazy": true ,
 
       "groupsInclude": false ,
-      "groupsSetting": "Groups" ,
+      "groupsCategory": "Groups" ,
       "groupsLazy": true ,
     
       "usersInclude": false ,
-      "usersSetting": "Users" ,
+      "usersCategory": "Users" ,
       "usersLazy": true ,
 
       "listsInclude": false,
@@ -232,9 +232,22 @@
       "custCatLogi": "",
       "custCatBrak": false,
 
-      "subsitesInclude": true,
+
+      "subsitesInclude": false,
       "subsitesCategory": "Subsites",
       "ignoreList": false,
+      
+      "hubsInclude": false ,
+      "hubsCategory": "Hubs" ,
+      "hubsLazy": true ,
+
+      "groupsInclude": false ,
+      "groupsCategory": "Groups" ,
+      "groupsLazy": true ,
+    
+      "usersInclude": false ,
+      "usersCategory": "Users" ,
+      "usersLazy": true ,
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
@@ -243,7 +256,7 @@
       "listLibCat": "",
       
       "listHideSystem": true,
-
+      
       "colTileStyle": ""
     }
   }]

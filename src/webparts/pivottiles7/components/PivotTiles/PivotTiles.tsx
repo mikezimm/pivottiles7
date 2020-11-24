@@ -715,8 +715,11 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       let pivotState = this.state;
 
 //      newFiltered = this.getOnClickFilteredTiles(pivotProps, pivotState, newCollection, heroIds, newHeros, thisCatColumn, lastCategory)
+      if ( item.props.headerText !== this.props.fetchInfo.groupsCategory 
+        && item.props.headerText !== this.props.fetchInfo.usersCategory ) { //Skip finding tiles if you click Groups or Users
+        newFilteredTiles = this.getOnClickFilteredTiles(this.state.allTiles, this.state.heroIds, this.state.heroTiles, this.state.thisCatColumn, item.props.headerText);
 
-      newFilteredTiles = this.getOnClickFilteredTiles(this.state.allTiles, this.state.heroIds, this.state.heroTiles, this.state.thisCatColumn, item.props.headerText);
+      }
 
       //Save back the last pivot/tile clicked.
       let thisCatColumn = this.state.thisCatColumn;
@@ -924,6 +927,9 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     if (thisState.showOtherTab && tempPivotTitles.indexOf(thisProps.otherTab) === -1) {
       tempPivotTitles.push(thisProps.otherTab);
     }
+    if ( this.props.fetchInfo.groupsInclude === true ) { 
+      tempPivotTitles.push( thisProps.fetchInfo.groupsCategory ) ; }
+
     let piv = tempPivotTitles.map(this.createPivot);
     console.log('createPivots: ', piv);
     return (
@@ -972,6 +978,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     let newFiltered = [];
     let custCategories = pivotProps.custCategories;
     let tileCategories = buildTileCategoriesFromResponse(pivotProps, pivotState, custCategories, newCollection, currentHero, thisCatColumn);
+
     let filteredCategory = '';
     let lastCategory = null;
 
@@ -1233,7 +1240,12 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
   private _getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
 
     let hubResponse = [];
-    getAssociatedSites( this.state.departmentId, this.finalCall.bind(this) , entireResponse, custCategories, newData );
+    if ( this.props.fetchInfo.hubsInclude === true ) {
+      getAssociatedSites( this.state.departmentId, this.finalCall.bind(this) , entireResponse, custCategories, newData );
+    } else {
+      entireResponse.hubs = hubResponse;
+      this.finalCall ( entireResponse, custCategories, newData);
+    }
 
   }
 
@@ -1285,7 +1297,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       let itemsResponse = entireResponse.items;
       let hubResponse = entireResponse.hubs;
 
-      if (subsites.length === 0 && itemsResponse.length === 0){
+      if (subsites.length === 0 && listResponse === 0 && itemsResponse.length === 0 && hubResponse === 0 ){
         this.setState({  loadStatus: "NoItemsFound", itemsError: true,  });
         return ;
       }

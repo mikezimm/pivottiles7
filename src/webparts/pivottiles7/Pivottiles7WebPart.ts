@@ -172,11 +172,11 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       hubsLazy: this.properties.hubsLazy ,
     
       groupsInclude: this.properties.groupsInclude ,
-      groupsSetting: this.properties.groupsSetting ,
+      groupsCategory: this.properties.groupsCategory ,
       groupsLazy: this.properties.groupsLazy ,
 
       usersInclude: this.properties.usersInclude ,
-      usersSetting: this.properties.usersSetting ,
+      usersCategory: this.properties.usersCategory ,
       usersLazy: this.properties.usersLazy ,
 
       subsitesInclude: this.properties.subsitesInclude ,

@@ -74,11 +74,11 @@ export interface IPivottiles7WebPartProps {
   hubsLazy: boolean ;
 
   groupsInclude: boolean ;
-  groupsSetting: string ;
+  groupsCategory: string ;
   groupsLazy: boolean ;
 
   usersInclude: boolean ;
-  usersSetting: string ;
+  usersCategory: string ;
   usersLazy: boolean ;
 
   subsitesInclude: boolean;

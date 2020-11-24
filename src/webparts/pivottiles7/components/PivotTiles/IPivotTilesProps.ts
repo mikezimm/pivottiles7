@@ -38,11 +38,11 @@ export interface IFetchInfoSettings {
   hubsLazy: boolean ;
 
   groupsInclude: boolean ;
-  groupsSetting: string ;
+  groupsCategory: string ;
   groupsLazy: boolean ;
 
   usersInclude: boolean ;
-  usersSetting: string ;
+  usersCategory: string ;
   usersLazy: boolean ;
 
   subsitesInclude: boolean ;
