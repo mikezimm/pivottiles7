@@ -7,7 +7,7 @@ import { IDirectoryState } from "./IDirectoryState";
 import * as strings from "Pivottiles7WebPartStrings";
 import {
     Spinner, SpinnerSize, MessageBar, MessageBarType, SearchBox, Icon, Label,
-    Pivot, PivotItem, PivotLinkFormat, PivotLinkSize, Dropdown, IDropdownOption
+    Pivot, PivotItem, PivotLinkFormat, PivotLinkSize, Dropdown, IDropdownOption, PersonaSize
 } from "office-ui-fabric-react";
 import { Stack, IStackStyles, IStackTokens } from 'office-ui-fabric-react/lib/Stack';
 import { debounce } from "throttle-debounce";
@@ -134,6 +134,7 @@ const DirectoryHook: React.FC<IDirectoryProps> = (props) => {
             ? pagedItems.map((user: any) => {
                 return (
                     <PersonaCard
+                        size= { PersonaSize.size72 }
                         context={props.context}
                         profileProperties={{
                             DisplayName: user.PreferredName,

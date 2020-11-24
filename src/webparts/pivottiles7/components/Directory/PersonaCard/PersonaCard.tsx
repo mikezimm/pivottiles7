@@ -79,6 +79,30 @@ export class PersonaCard extends React.Component<
     );
   }
 
+  //2020-11-24:  Added for adjusting card size
+  private getCardHeight(  ) {
+    let size = this.props.size ;
+    if ( size === PersonaSize.size72 ) {
+      return '120px';
+    } else if ( size === PersonaSize.size48 ) {
+      return '80px';
+    } else if ( size === PersonaSize.size32 ) {
+      return '60px';
+    }
+  }
+
+  //2020-11-24:  Added for adjusting card size
+  private getCardWidth(  ) {
+    let size = this.props.size ;
+    if ( size === PersonaSize.size72 ) {
+      return '300px';
+    } else if ( size === PersonaSize.size48 ) {
+      return '210px';
+    } else if ( size === PersonaSize.size32 ) {
+      return '200px';
+    }
+  }
+
   /**
    *
    *
@@ -87,10 +111,15 @@ export class PersonaCard extends React.Component<
    * @memberof PersonaCard
    */
   private _PersonaCard(): JSX.Element {
+
+
     return (
       <DocumentCard
         className={styles.documentCard}
         type={DocumentCardType.normal}
+
+        //2020-11-24:  Added for adjusting card size
+        style={{ height: this.getCardHeight(), minWidth: this.getCardWidth(), maxWidth: this.getCardWidth() } }
       >
         <div className={styles.persona}>
           <Persona
@@ -98,7 +127,7 @@ export class PersonaCard extends React.Component<
             secondaryText={this.props.profileProperties.Title}
             tertiaryText={this.props.profileProperties.Department}
             imageUrl={this.props.profileProperties.PictureUrl}
-            size={PersonaSize.size72}
+            size={ this.props.size }
             imageShouldFadeIn={false}
             imageShouldStartVisible={true}
           >
@@ -152,8 +181,10 @@ export class PersonaCard extends React.Component<
    * @memberof PersonaCard
    */
   public render(): React.ReactElement<IPersonaCardProps> {
+
     return (
-      <div className={styles.personaContainer}>
+      //2020-11-24:  Added for adjusting card size
+      <div className={styles.personaContainer} style={{ minWidth: this.getCardWidth(), maxWidth: this.getCardWidth() }}>
         {this.state.livePersonaCard
           ? this._LivePersonaCard()
           : this._PersonaCard()}

@@ -18,7 +18,8 @@ import {
   PivotLinkFormat,
   PivotLinkSize,
   Dropdown,
-  IDropdownOption
+  IDropdownOption,
+  PersonaSize
 } from "office-ui-fabric-react";
 
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
@@ -295,6 +296,8 @@ debugger;
         ? this.state.users.map((user: any) => {
           return (
             <PersonaCard
+              //2020-11-24:  This was not in the original React Directory sample
+              size= { PersonaSize.size72 }
               context={this.props.context}
               profileProperties={{
                 DisplayName: user.PreferredName,

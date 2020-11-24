@@ -6,7 +6,7 @@ import * as React from 'react';
 import styles from "./MyGroups.module.scss";
 
 
-import { CompoundButton, Stack, IStackTokens, elementContains, initializeIcons, IStackProps } from 'office-ui-fabric-react';
+import { CompoundButton, Stack, IStackTokens, elementContains, initializeIcons, IStackProps, PersonaSize } from 'office-ui-fabric-react';
 import { PersonaCard } from "../Directory/PersonaCard/PersonaCard";
 import { spservices } from "../../../../SPServices/spservices";
 import * as strings from "Pivottiles7WebPartStrings";
@@ -190,7 +190,7 @@ public constructor(props:IMyGroupsProps){
             linkFormat={PivotLinkFormat.tabs}
             selectedKey={this.state.indexSelectedKey}
             onLinkClick={this._selectedIndex.bind(this)}
-            linkSize={PivotLinkSize.normal}
+            linkSize={PivotLinkSize.large}
           >
             { this.props.groups.map((index: string) => {
               return (
@@ -219,13 +219,21 @@ public constructor(props:IMyGroupsProps){
 
 
         let searchSpinner = showNoUsers !== true && this.state.isLoading ? <Spinner size={SpinnerSize.large} label={"searching ..."} /> : null ;
-
+        let size : PersonaSize = PersonaSize.size72;
+        if ( isLoaded !== true || !this.state.myGroups.groups[ selectedGroupIndex ] ) {
+          //Do nothing if there are no groups
+        } else if ( this.state.myGroups.groups[ selectedGroupIndex ].users.length > 20 ) {
+          size = PersonaSize.size48;
+        } else if ( this.state.myGroups.groups[ selectedGroupIndex ].users.length > 6 ) {
+          size = PersonaSize.size32;         
+        }
         const diretoryGrid =
             isLoaded === true && this.state.myGroups.groups[ selectedGroupIndex ].users && this.state.myGroups.groups[ selectedGroupIndex ].users.length > 0
             ? this.state.myGroups.groups[ selectedGroupIndex ].users.map((user: any) => {
               return (
                 <PersonaCard
                   context={this.props.context}
+                  size = { size }
                   profileProperties={{
                     DisplayName: user.Title,
                     Title: '',
