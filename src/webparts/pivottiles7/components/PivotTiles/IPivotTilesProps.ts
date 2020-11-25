@@ -73,6 +73,8 @@ export interface IFetchInfoSettings {
   listLibCat: string;
 }
 
+export type IPropChangeTypes =  'hubs' | 'subs' | 'groups' | 'lists' | 'format' | 'items' | 'other' | 'cats' | 'filters' | 'na' ; //lastPropChange
+
 export interface IPivotTilesProps {
 
   themeVariant: IReadonlyTheme | undefined;
@@ -84,6 +86,8 @@ export interface IPivotTilesProps {
   context: WebPartContext;
   tenant: string;
   urlVars: {};
+
+  lastPropChange: IPropChangeTypes;
 
   WebpartElement: HTMLElement;   //Size courtesy of https://www.netwoven.com/2018/11/13/resizing-of-spfx-react-web-parts-in-different-scenarios/
 

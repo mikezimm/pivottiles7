@@ -22,8 +22,8 @@ import { Web } from '@pnp/sp/presets/all';
 
 import { IPivottiles7WebPartProps } from './IPivottiles7WebPartProps';
 import PivotTiles from './components/PivotTiles/PivotTiles';
-import { IPivotTilesProps, IFetchInfoSettings, ICustomCategories, ICustomLogic } from './components/PivotTiles/IPivotTilesProps';
-import { IPivotTileItemProps } from './components/TileItems/IPivotTileItemProps';
+import { IPivotTilesProps, IFetchInfoSettings, ICustomCategories, ICustomLogic, IPropChangeTypes } from './components/PivotTiles/IPivotTilesProps';
+import { IPivotTileItemProps,  } from './components/TileItems/IPivotTileItemProps';
 import { string, any } from 'prop-types';
 import { propertyPaneBuilder } from '../../services/propPane/PropPaneBuilder';
 import { availableListMapping } from './AvailableListMapping';
@@ -54,6 +54,9 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     // Register a handler to be notified if the theme variant changes
     this._themeProvider.themeChangedEvent.add(this, this._handleThemeChangedEvent);
+
+    this.properties.lastPropChange = 'na';
+    //IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other'; //lastPropChange
 
     return super.onInit().then(_ => {
       // other init code may be present
@@ -226,6 +229,9 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       PivotTiles,
       {
         themeVariant: this._themeVariant,
+
+          //IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other'; //lastPropChange
+        lastPropChange: this.properties.lastPropChange,
 
         context: this.context,
 
@@ -421,21 +427,41 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     }
 
-    let updateOnThese = [
-      'setSize','setTab','otherTab','setPivSize','heroCategory','heroRatio','showHero','setPivFormat','setImgFit','setImgCover','target',
-      'imageWidth','imageHeight','textPadding','setHeroFit','setHeroCover','onHoverZoom', 'enableChangePivots', 'definitionToggle',
-      'custCatType', 'custCatCols', 'custCatLogi', 'custCatBrak',
-      'subsitesCategory', 'ignoreList', 'ignoreList', 
+    let changeHubs = [ 'hubsInclude', 'hubsInclude', 'hubsCategory','hubsOthers', ];
+    let changeSubs = [ 'subsitesInclude', 'subsitesCategory', 'subsOthers',  ];
+    let changeGroups = [ 'groupsInclude', 'groupsOthers' , 'usersOthers', ];
+    let changeLists = [ 'listsInclude', 'listIconStyles', 'listFilter', 'listLibCat', 
+      'libsInclude', 'libsIconStyles', 'libsFilter', 'listHideSystem', 'listOthers', 'libsOthers', ];
 
-      'listsInclude', 'listIconStyles', 'listFilter', 'listLibCat', 
-      'libsInclude', 'libsIconStyles', 'libsFilter', 'listHideSystem', 
-      'hubsInclude', 'hubsCategory',
-      'setFilter', 'filterTitle', 'filterDescription', 'filterOnlyList', 
+    let changeFormats = [ 'setSize','setTab','otherTab','setPivSize','heroCategory','heroRatio','showHero','setPivFormat','setImgFit','setImgCover','target',
+      'imageWidth','imageHeight','textPadding','setHeroFit','setHeroCover','onHoverZoom', 'enableChangePivots',];
 
-      'hubsOthers', 'subsOthers', 'listOthers', 'libsOthers', 'usersOthers', 'groupsOthers', 
+    let changeItems = [ 'subsitesInclude', 'ignoreList', 'ignoreList', 'definitionToggle', 'listDefinition', 'listTitle', 'listWebURL' ];
+    let changeCats = [ 'custCatType', 'custCatCols', 'custCatLogi', 'custCatBrak', ];
 
+    let changeFilters = [  'setFilter', 'filterTitle', 'filterDescription', 'filterOnlyList', ];
 
-    ];
+    let updateOnThese = changeHubs;
+    
+    updateOnThese.push( ...changeSubs );
+    updateOnThese.push( ...changeGroups );
+    updateOnThese.push( ...changeLists );
+    updateOnThese.push( ...changeFormats );
+    updateOnThese.push( ...changeItems );
+    updateOnThese.push( ...changeCats );
+    updateOnThese.push( ...changeFilters );
+
+    //export type IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other' | 'cats' | 'filters' | 'na' ; //lastPropChange
+    
+    if ( changeHubs.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'hubs' ; } 
+    else if ( changeSubs.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'subs' ; } 
+    else if ( changeGroups.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'groups' ; } 
+    else if ( changeLists.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'lists' ; } 
+    else if ( changeFormats.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'format' ; } 
+    else if ( changeItems.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'items' ; } 
+    else if ( changeCats.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'cats' ; } 
+    else if ( changeFilters.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'filters' ; } 
+    else { this.properties.lastPropChange = 'other' ; }
 
     if (updateOnThese.indexOf(propertyPath) > -1 ) {
       this.properties[propertyPath] = newValue;   

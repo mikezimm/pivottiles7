@@ -1,4 +1,5 @@
 import { IPivotTileItemProps } from './components/TileItems/IPivotTileItemProps';
+import { IPropChangeTypes } from './components/PivotTiles/IPivotTilesProps';
 import { ICustomTypes } from './components/PivotTiles/IPivotTilesProps';
 
 import { PageContext } from '@microsoft/sp-page-context';
@@ -9,6 +10,8 @@ export interface IPivottiles7WebPartProps {
   scenario: string;
   description: string;
   pageContext: PageContext;
+
+  lastPropChange: IPropChangeTypes; //IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other'; //lastPropChange
 
   //Hero tile properties
   showHero: boolean;
