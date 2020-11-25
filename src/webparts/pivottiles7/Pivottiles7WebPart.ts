@@ -441,8 +441,8 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     let changeFilters = [  'setFilter', 'filterTitle', 'filterDescription', 'filterOnlyList', ];
 
-    let updateOnThese = changeHubs;
-    
+    let updateOnThese = [];
+    updateOnThese.push( ...changeHubs );
     updateOnThese.push( ...changeSubs );
     updateOnThese.push( ...changeGroups );
     updateOnThese.push( ...changeLists );
@@ -452,7 +452,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
     updateOnThese.push( ...changeFilters );
 
     //export type IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other' | 'cats' | 'filters' | 'na' ; //lastPropChange
-    
+    let previousChange = this.properties.lastPropChange + '';
     if ( changeHubs.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'hubs' ; } 
     else if ( changeSubs.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'subs' ; } 
     else if ( changeGroups.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'groups' ; } 
@@ -463,7 +463,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
     else if ( changeFilters.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'filters' ; } 
     else { this.properties.lastPropChange = 'other' ; }
 
-    if (updateOnThese.indexOf(propertyPath) > -1 ) {
+    if (updateOnThese.indexOf(propertyPath) > -1 || previousChange !== this.properties.lastPropChange ) {
       this.properties[propertyPath] = newValue;   
       this.context.propertyPane.refresh();
 

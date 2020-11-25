@@ -89,6 +89,8 @@ const SystemLists = ["WorkflowTasks", "Style Library",
 
 export default class PivotTiles extends React.Component<IPivotTilesProps, IPivotTilesState> {
 
+   
+  private currentPageUrl = this.props.pageContext.web.absoluteUrl + this.props.pageContext.site.serverRequestPath;
 
   /***
  *     .o88b.  .d88b.  d8b   db .d8888. d888888b d8888b. db    db  .o88b. d888888b  .d88b.  d8888b. 
@@ -414,10 +416,15 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
      *                                                            
      */
 
-     let searchBoxStyles = this.state.changePivotCats !== true ? { root: { maxWidth: 300 } } :  { root: { maxWidth: 300, background: 'yellow' } } ;
+    let searchBoxStyles = this.state.changePivotCats !== true ? { root: { maxWidth: 300 } } :  { root: { maxWidth: 300, background: 'yellow' } } ;
+    let urlVars : any = this.props.urlVars;
+    let showDevHeader = urlVars.debug === 'true' || this.currentPageUrl.indexOf('_workbench.aspx') ? true : false;
+    let devHeader = showDevHeader === true ? <div> { this.props.lastPropChange } </div> : null ;
 
     return (
+      
       <div>
+        { devHeader }
         { earlyAccess }
         { ( (this.props.showHero === true && this.props.heroType === "header" &&  this.state.heroStatus === "Ready") ? ( heroFullLineBuild ) : ""  ) }
 
@@ -718,7 +725,9 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 //      newFiltered = this.getOnClickFilteredTiles(pivotProps, pivotState, newCollection, heroIds, newHeros, thisCatColumn, lastCategory)
       let showSearch = true;
 
-      if ( item.props.headerText !== this.props.fetchInfo.groupsCategory 
+      if ( item.props.headerText === '' ) {
+        //You clicked on empty category... show no tiles
+      } else if ( item.props.headerText !== this.props.fetchInfo.groupsCategory 
         && item.props.headerText !== this.props.fetchInfo.usersCategory ) { //Skip finding tiles if you click Groups or Users
         newFilteredTiles = this.getOnClickFilteredTiles(this.state.allTiles, this.state.heroIds, this.state.heroTiles, this.state.thisCatColumn, item.props.headerText);
 
@@ -1359,10 +1368,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       }
 
       const listURL = fixedURL + ( this.props.listDefinition.indexOf("Library") < 0 ? "lists/" : "" ) + listStaticName;
- 
-      const currentPageUrl = this.props.pageContext.web.absoluteUrl + this.props.pageContext.site.serverRequestPath;
 
-      const editItemURL = listURL + (listURL.indexOf('/lists/') > -1 ? '' : '/Forms') + "/DispForm.aspx?ID=" + "ReplaceID" + "&Source=" + currentPageUrl;
+      const editItemURL = listURL + (listURL.indexOf('/lists/') > -1 ? '' : '/Forms') + "/DispForm.aspx?ID=" + "ReplaceID" + "&Source=" + this.currentPageUrl;
       //console.log('editItemURL',editItemURL);
 
       let pivotProps = this.props;
