@@ -28,6 +28,9 @@ import { string, any } from 'prop-types';
 import { propertyPaneBuilder } from '../../services/propPane/PropPaneBuilder';
 import { availableListMapping } from './AvailableListMapping';
 
+import { PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
+
+import { pivotOptionsGroup, } from '../../services/propPane';
 
 import { saveTheTime, getTheCurrentTime, saveAnalytics } from '../../services/createAnalytics';
 import { trimEnd } from '@microsoft/sp-lodash-subset';
@@ -264,8 +267,8 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
         enableChangePivots: this.properties.enableChangePivots,
         maxPivotChars: 30,
 
-        setPivSize: this.properties.setPivSize,
-        setPivFormat: this.properties.setPivFormat,
+        setPivSize: pivotOptionsGroup.getPivSize(this.properties.setPivSize),
+        setPivFormat: pivotOptionsGroup.getPivFormat(this.properties.setPivFormat),
         setPivOptions: this.properties.setPivOptions,
 
         colTitleText: this.properties.colTitleText,

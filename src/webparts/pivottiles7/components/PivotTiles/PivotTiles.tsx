@@ -385,6 +385,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       let directory = defIndex !== this.props.fetchInfo.groupsCategory || this.props.fetchInfo.groupsInclude !== true ? null : <MyGroups
         title={ 'Key site groups'}
         width= { this.state.WebpartWidth }
+        setPivSize = { this.props.setPivSize }
+        setPivFormat = { PivotLinkFormat.tabs }
         groups={ this.props.fetchInfo.groupsList } //["PivotTiles Owners", "PivotTiles Members", "PivotTiles Visitors"]
         webURL={ this.props.pageContext.web.absoluteUrl }
         context={ this.props.context }

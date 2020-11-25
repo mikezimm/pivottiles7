@@ -4,6 +4,8 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
+import { Pivot, IPivotStyles, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
+
 export interface theTime {
   now: Date;
   theTime : string;
@@ -109,8 +111,8 @@ export interface IPivotTilesProps {
 
   //Pivot Tab properties
   setTab: string;
-  setPivSize: string;
-  setPivFormat: string;
+  setPivSize: PivotLinkSize;
+  setPivFormat: PivotLinkFormat;
   setPivOptions: string[];
   otherTab: string;
   enableChangePivots: boolean;
