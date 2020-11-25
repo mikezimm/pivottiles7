@@ -1,7 +1,10 @@
 import {IPivotTileItemProps} from './../TileItems/IPivotTileItemProps';
 import { PageContext } from '@microsoft/sp-page-context';
+import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
+
+import { Pivot, IPivotStyles, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 
 export interface theTime {
   now: Date;
@@ -35,29 +38,35 @@ export interface IFetchInfoSettings {
   hubsInclude: boolean ;
   hubsCategory: string ;
   hubsLazy: boolean ;
+  hubsOthers: boolean ;
 
   groupsInclude: boolean ;
-  groupsSetting: string ;
+  groupsCategory: string ;
   groupsLazy: boolean ;
+  groupsList: string[] ;
+  groupsOthers: boolean ;
 
   usersInclude: boolean ;
-  usersSetting: string ;
+  usersCategory: string ;
   usersLazy: boolean ;
+  usersOthers: boolean ;
 
   subsitesInclude: boolean ;
   subsitesCategory: string ;
   ignoreList: boolean ;
+  subsOthers: boolean ;
 
   listsInclude: boolean;
   listIconStyles: string;
   listFilter: string;
   listCategory: string;
+  listOthers: boolean ;
 
   libsInclude: boolean;
   libsIconStyles: string;
   libsFilter: string;
   libsCategory: string;
-
+  libsOthers: boolean ;
 
   listHideSystem: boolean;
 
@@ -72,8 +81,11 @@ export interface IPivotTilesProps {
   scenario: string;
   description: string;
   pageContext: PageContext;
+  context: WebPartContext;
   tenant: string;
   urlVars: {};
+
+  WebpartElement: HTMLElement;   //Size courtesy of https://www.netwoven.com/2018/11/13/resizing-of-spfx-react-web-parts-in-different-scenarios/
 
   //Hero tile properties
   showHero: boolean;
@@ -99,8 +111,8 @@ export interface IPivotTilesProps {
 
   //Pivot Tab properties
   setTab: string;
-  setPivSize: string;
-  setPivFormat: string;
+  setPivSize: PivotLinkSize;
+  setPivFormat: PivotLinkFormat;
   setPivOptions: string[];
   otherTab: string;
   enableChangePivots: boolean;
@@ -111,6 +123,9 @@ export interface IPivotTilesProps {
   listWebURL: string;
   listTitle: string;
   setFilter: string;
+  filterTitle: string;
+  filterDescription: string;
+  filterOnlyList: boolean;
   propURLQuery: boolean;
   getAll: boolean;
 

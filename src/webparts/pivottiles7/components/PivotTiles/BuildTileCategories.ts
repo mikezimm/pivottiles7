@@ -36,6 +36,8 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
   let hasSystem = false;
   let hasFiles = false;
   let hasHubs = false;
+  let hasGroups = false;
+  let hasUsers = false;
 
   if (thisCatColumn === 'created' || thisCatColumn === 'modified') {
     let thisTime = pivotState[thisCatColumn + 'Info'];
@@ -157,9 +159,11 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
   if ( hasLists === true ) {
     tileCategories.push( pivotProps.fetchInfo.listCategory);
   }
+
   if ( hasLibraries === true ) {
     tileCategories.push( pivotProps.fetchInfo.libsCategory );
   }
+  
   if ( hasSystem === true ) {
     tileCategories.push('System');
   }

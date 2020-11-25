@@ -28,8 +28,12 @@ import { string, any } from 'prop-types';
 import { propertyPaneBuilder } from '../../services/propPane/PropPaneBuilder';
 import { availableListMapping } from './AvailableListMapping';
 
+import { PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
+
+import { pivotOptionsGroup, } from '../../services/propPane';
 
 import { saveTheTime, getTheCurrentTime, saveAnalytics } from '../../services/createAnalytics';
+import { trimEnd } from '@microsoft/sp-lodash-subset';
 
 require('../../services/propPane/GrayPropPaneAccordions.css');
 
@@ -115,6 +119,9 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     if ( urlVars.scenario && urlVars.scenario.toLowerCase() === 'dev' ) {  this.properties.scenario = 'DEV';  }
 
+    //Added for https://github.com/mikezimm/pivottiles7/issues/2
+    if ( urlVars.category ) {  this.properties.setTab = urlVars.category;  }
+
     //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
 
     let custCatLogi : ICustomLogic[] | string[] = null;
@@ -162,35 +169,50 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     custCategories = JSON.parse(JSON.stringify(custCategories));
 
+    let groupList = [];
+
+    let groupString = this.properties.groupsList;
+    if ( !groupString || groupString === '' ) { groupList = [] ; } 
+    else {
+      groupList = groupString.split(';').map( g => { return g.trim(); } );
+    }
+
     let fetchInfo : IFetchInfoSettings = {
 
       hubsInclude: this.properties.hubsInclude ,
       hubsCategory: this.properties.hubsCategory ,
       hubsLazy: this.properties.hubsLazy ,
-    
+      hubsOthers: this.properties.hubsOthers ,
+
       groupsInclude: this.properties.groupsInclude ,
-      groupsSetting: this.properties.groupsSetting ,
+      groupsCategory: this.properties.groupsCategory ,
       groupsLazy: this.properties.groupsLazy ,
+      groupsList: groupList ,
+      groupsOthers: this.properties.groupsOthers ,
 
       usersInclude: this.properties.usersInclude ,
-      usersSetting: this.properties.usersSetting ,
+      usersCategory: this.properties.usersCategory ,
       usersLazy: this.properties.usersLazy ,
+      usersOthers: this.properties.usersOthers ,
 
       subsitesInclude: this.properties.subsitesInclude ,
       subsitesCategory: this.properties.subsitesCategory ,
       ignoreList: this.properties.ignoreList ,
+      subsOthers: this.properties.subsOthers ,
 
       listsInclude: this.properties.listsInclude ,
       listIconStyles: this.properties.listIconStyles ,
       listFilter: this.properties.listFilter ,
       listCategory: 'Lists',
+      listOthers: this.properties.listOthers ,
 
       libsInclude: this.properties.libsInclude ,
       libsIconStyles: this.properties.libsIconStyles ,
       libsFilter: this.properties.libsFilter ,
       libsCategory: 'Libraries',
-      listHideSystem: this.properties.listHideSystem ,
+      libsOthers: this.properties.libsOthers ,
 
+      listHideSystem: this.properties.listHideSystem ,
       listLibCat: this.properties.listLibCat ,
     };
 
@@ -204,6 +226,11 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       PivotTiles,
       {
         themeVariant: this._themeVariant,
+
+        context: this.context,
+
+        //Size courtesy of https://www.netwoven.com/2018/11/13/resizing-of-spfx-react-web-parts-in-different-scenarios/
+        WebpartElement: this.domElement,
 
         startTime: getTheCurrentTime(),
         scenario: this.properties.scenario,
@@ -229,14 +256,19 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
         setImgCover: this.properties.setImgCover,
         target: this.properties.target,
         setFilter: this.properties.setFilter,
+
+        filterTitle: this.properties.filterTitle ? this.properties.filterTitle : '',
+        filterDescription: this.properties.filterDescription ? this.properties.filterDescription : '',
+        filterOnlyList: this.properties.filterOnlyList === true ? true : false,
+
         propURLQuery: this.properties.propURLQuery,
         setTab: this.properties.setTab,
         otherTab: this.properties.otherTab,
         enableChangePivots: this.properties.enableChangePivots,
         maxPivotChars: 30,
 
-        setPivSize: this.properties.setPivSize,
-        setPivFormat: this.properties.setPivFormat,
+        setPivSize: pivotOptionsGroup.getPivSize(this.properties.setPivSize),
+        setPivFormat: pivotOptionsGroup.getPivFormat(this.properties.setPivFormat),
         setPivOptions: this.properties.setPivOptions,
 
         colTitleText: this.properties.colTitleText,
@@ -394,8 +426,15 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       'imageWidth','imageHeight','textPadding','setHeroFit','setHeroCover','onHoverZoom', 'enableChangePivots', 'definitionToggle',
       'custCatType', 'custCatCols', 'custCatLogi', 'custCatBrak',
       'subsitesCategory', 'ignoreList', 'ignoreList', 
+
       'listsInclude', 'listIconStyles', 'listFilter', 'listLibCat', 
       'libsInclude', 'libsIconStyles', 'libsFilter', 'listHideSystem', 
+      'hubsInclude', 'hubsCategory',
+      'setFilter', 'filterTitle', 'filterDescription', 'filterOnlyList', 
+
+      'hubsOthers', 'subsOthers', 'listOthers', 'libsOthers', 'usersOthers', 'groupsOthers', 
+
+
     ];
 
     if (updateOnThese.indexOf(propertyPath) > -1 ) {

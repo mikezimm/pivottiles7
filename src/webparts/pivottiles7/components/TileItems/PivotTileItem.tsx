@@ -15,6 +15,8 @@ import { imageOptionsGroup, } from '../../../../services/propPane';
 
 import { createIconButton } from '../createButtons/IconButton';
 
+import { jiraIcon } from '../PivotTiles/BuildTileCollection';
+
 export default class PivotTileItem extends React.Component<IPivotTileItemProps, IPivotTileItemState> {
 
   public iHoverZoomStyle = tUtils.getOnHoverStyle(this.props.onHoverZoom);
@@ -199,11 +201,14 @@ export default class PivotTileItem extends React.Component<IPivotTileItemProps, 
     let result = null;
     let isFabricIcon : boolean = this.props.imageUrl && this.props.imageUrl.length < 20 && this.props.imageUrl.indexOf('/') === -1 ? true : false;
 //    console.log('isFabricIcon', isFabricIcon );
-    if ( isFabricIcon === true ) {
+
       
-      let size = parseInt(this.getThisStyle('size')) / 100;
-      let top = this.getThisStyle('top');
-      let iconHeight = parseInt(this.thisHeight, 10) * size;
+    let size = parseInt(this.getThisStyle('size')) / 100;
+    let top = this.getThisStyle('top');
+    let iconHeight = parseInt(this.thisHeight, 10) * size;
+
+    if ( isFabricIcon === true ) {
+
 
 
       let defCommandIconStyles = {
@@ -237,7 +242,15 @@ export default class PivotTileItem extends React.Component<IPivotTileItemProps, 
 
     } else {
 
+      let sizeStyle : React.CSSProperties = {};
+
+      //Special styling if icon is the Jira Icon
+      if ( this.props.imageUrl === jiraIcon ) {
+        sizeStyle = { height: this.props.imageHeight / 2, top: this.props.imageHeight / 3.4 } ;
+      }
+
       result = <Image 
+        style={ sizeStyle }
         className={[
           styles.pTileItemImageCustom, styles.themeBackground,
           ( this.state.hovering === true  ? this.iHoverZoomStyle : styles.imgHoverZoom )

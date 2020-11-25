@@ -73,6 +73,23 @@ declare interface IPivottiles7WebPartStrings {
   Property_getAll_Label: string;
 
   onHoverZoom: string;
+
+  //Added from Directory component
+  DropDownPlaceLabelMessage: string;
+  DropDownPlaceHolderMessage: string;
+  SearchPlaceHolder: string;
+  
+  PropertyPaneDescription: string;
+  BasicGroupName: string;
+  TitleFieldLabel: string;
+  DirectoryMessage: string;
+  LoadingText: string;
+  SearchPropsLabel: string;
+  SearchPropsDesc: string;
+  ClearTextSearchPropsLabel: string;
+  ClearTextSearchPropsDesc: string;
+  PagingLabel: string;
+
 }
 
 declare module 'Pivottiles7WebPartStrings' {

@@ -114,6 +114,7 @@ public constructor(props:IInfoAboutMeProps){
             let thisPage = null;
 
             let underScoreIssue = <a href="https://github.com/mikezimm/Pivot-Tiles/issues/30" target="_blank">Issue #30</a>;
+            
 
             thisPage = <div>
                 <WebPartLinks
@@ -127,6 +128,8 @@ public constructor(props:IInfoAboutMeProps){
                 <table className={styles.infoTable} style={{ width: '100%' }}>
                     <tr><th>Date</th><th>Version</th><th>Focus</th><th>Notes</th></tr>
 
+                    <tr><td>2020-11-19</td><td>{'1.2.2.0'}</td><td>Add Hubsites and Groups tabs</td></tr>
+                    <tr><td>2020-11-19</td><td>{'1.2.1.0'}</td><td>Add filtering based on the Title/Description properties</td></tr>
                     <tr><td>2020-11-19</td><td>{'1.2.0.0'}</td><td>Complete Rebuild of solution to PivotTiles7</td></tr>
 
                     <tr><td>2020-11-17</td><td>{'1.1.3.1'}</td><td>Use Fabric {links.devDocsIcon} as Tiles</td><td>{links.devDocsIcon}</td></tr>

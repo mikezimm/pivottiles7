@@ -23,6 +23,10 @@ export class IntroPage {
 
     let theListChoices : IPropertyPaneDropdownOption[] = devListMapping.listChoices;
 
+    let supressTileList = 'Ignore Tile list... go with auto-tiles :)';
+
+    let addToOthers = 'Add uncategorized xxx to ' + webPartProps.otherTab + ' tab.';
+
     if (webPartProps.scenario === "DEV"){
         theListChoices = devListMapping.listChoices;
 
@@ -58,14 +62,22 @@ export class IntroPage {
         { groupName: 'List setup',
         isCollapsed: true ,
         groupFields: [
+          
+          PropertyPaneToggle('ignoreList', {
+              label: supressTileList,
+              offText: 'Off',
+              onText: 'On',
+          }),
+
           PropertyPaneTextField('listWebURL', {
-              label: strings.listWebURL
+              label: strings.listWebURL,
+              disabled: webPartProps.ignoreList === true ? true : false,
           }),
           PropertyPaneTextField('setTab', {
-            label: strings.setTab
+            label: strings.setTab,
           }),
           PropertyPaneTextField('otherTab', {
-            label: strings.otherTab
+            label: strings.otherTab,
           }),
         ]}, // this group
 
@@ -79,45 +91,84 @@ export class IntroPage {
                 label: 'Lock List Type - prevents accidently reseting props with List Type dropdown!',
                 offText: 'Off',
                 onText: 'On',
+                disabled: webPartProps.ignoreList === true ? true : false,
             }),
 
             PropertyPaneDropdown('listDefinition', <IPropertyPaneDropdownProps>{
                 label: strings.listDefinition,
                 options: theListChoices,
-                disabled: webPartProps.definitionToggle,
+                disabled: webPartProps.ignoreList === true ? true : webPartProps.definitionToggle,
             }),
 
             PropertyPaneTextField('listTitle', {
-                label: strings.listTitle
+                label: strings.listTitle,
+                disabled: webPartProps.ignoreList === true ? true : false,
             }),
             
             PropertyPaneToggle('getAll', {
                 label: strings.Property_getAll_Label,
                 offText: strings.Property_ShowHero_OffText,
-                onText: strings.Property_ShowHero_OnText
+                onText: strings.Property_ShowHero_OnText,
+                disabled: webPartProps.ignoreList === true ? true : false,
               }),
 
             PropertyPaneTextField('colTitleText', {
-                label: strings.colTitleText
+                label: strings.colTitleText,
+                disabled: webPartProps.ignoreList === true ? true : false,
             }),
             PropertyPaneTextField('colHoverText', {
-                label: strings.colHoverText
+                label: strings.colHoverText,
+                disabled: webPartProps.ignoreList === true ? true : false,
             }),
             PropertyPaneTextField('colCategory', {
-                label: strings.colCategory
+                label: strings.colCategory,
+                disabled: webPartProps.ignoreList === true ? true : false,
             }),
             PropertyPaneTextField('colGoToLink', {
-                label: strings.colGoToLink
+                label: strings.colGoToLink,
+                disabled: webPartProps.ignoreList === true ? true : false,
             }),
             PropertyPaneTextField('colImageLink', {
-                label: strings.colImageLink
+                label: strings.colImageLink,
+                disabled: webPartProps.ignoreList === true ? true : false,
             }),
             PropertyPaneTextField('colSort', {
-                label: strings.colSort
+                label: strings.colSort,
+                disabled: webPartProps.ignoreList === true ? true : false,
             }),
 
           ]
         },
+
+        
+        {
+          groupName: strings.PropertyPaneColumnsDescription2,
+          isCollapsed: true ,
+          groupFields: [
+
+          PropertyPaneTextField('colColor', {
+              description: 'Column defining tile background color, not yet available.',
+              label: strings.colColor,
+              disabled: true,                    
+          }),
+
+          PropertyPaneTextField('colSize', {
+              label: strings.colSize,
+              disabled: webPartProps.ignoreList === true ? true : false,
+          }),
+
+          PropertyPaneTextField('colOpenBehaviour', {
+              label: strings.colOpenBehaviour,
+              disabled: webPartProps.ignoreList === true ? true : false,
+          }),
+
+          PropertyPaneTextField('colTileStyle', {
+              label: strings.colTileStyle,
+              disabled: webPartProps.ignoreList === true ? true : false,
+          }),
+        ]
+      },
+
         {
           groupName: 'Custom Categories',
           isCollapsed: true ,
@@ -155,38 +206,34 @@ export class IntroPage {
           ]
         },
 
-        {
-          groupName: strings.PropertyPaneColumnsDescription2,
-          isCollapsed: true ,
-          groupFields: [
-
-          PropertyPaneTextField('colColor', {
-              description: 'Column defining tile background color, not yet available.',
-              label: strings.colColor,
-              disabled: true,                    
-          }),
-
-          PropertyPaneTextField('colSize', {
-              label: strings.colSize
-          }),
-
-          PropertyPaneTextField('colOpenBehaviour', {
-              label: strings.colOpenBehaviour
-          }),
-
-          PropertyPaneTextField('colTileStyle', {
-              label: strings.colTileStyle
-          }),
-        ]
-      },
 
 
         { groupName: 'Filtering',
         isCollapsed: true ,
         groupFields: [
           PropertyPaneTextField('setFilter', {
-              label: strings.setFilter
+              label: strings.setFilter,
+              description: webPartProps.ignoreList === true ? 'Only applies to Tile list.' : '',
+              disabled: webPartProps.ignoreList === true ? true : false,
           }),
+
+          PropertyPaneTextField('filterTitle', {
+              label: 'Title contains (Case sensitive)',
+              description: 'begin with <> to show items that do not contain text',
+          }),
+
+          PropertyPaneTextField('filterDescription', {
+              label: 'Description contains (Case sensitive)',
+              description: 'begin with <> to show items that do not contain text',
+          }),
+
+          PropertyPaneToggle('filterOnlyList', {
+              label: 'Title/Desc filter applies to',
+              offText: 'Only main list items',
+              onText: 'Everything including Subsites etc...',
+              disabled: webPartProps.filterTitle || webPartProps.filterDescription ? false : true,
+          }),
+
           PropertyPaneTextField('propURLQuery', {
             disabled: true,
               label: strings.propURLQuery
@@ -198,26 +245,28 @@ export class IntroPage {
         isCollapsed: true ,
         groupFields: [
           PropertyPaneToggle('subsitesInclude', {
-              label: 'Show Subsites automatically',
+              label: 'Show Subsites',
               offText: 'Off',
               onText: 'On',
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
-          PropertyPaneToggle('ignoreList', {
-              label: 'Ignore Tile list... we like auto-tiles :)',
-              offText: 'Off',
-              onText: 'On',
-              disabled: webPartProps.subsitesInclude === true ? false : true,
-          }),
+
           PropertyPaneTextField('subsitesCategory', {
               label: 'Subsite Category,',
               disabled: webPartProps.subsitesInclude === true ? false : true,
           }),
 
+          PropertyPaneToggle('subsOthers', {
+              label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.subsitesCategory ),
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
+          }),
+
         ]}, // this group
 
         
-        { groupName: 'Lists and Libraries',
+        { groupName: 'Lists',
         isCollapsed: true ,
         groupFields: [
           PropertyPaneToggle('listsInclude', {
@@ -226,24 +275,49 @@ export class IntroPage {
               onText: 'On',
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
-          PropertyPaneTextField('listFilter', {
-            label: 'Filter to apply to lists',
-            disabled: webPartProps.listsInclude === true ? false : true,
-          }),
+
           PropertyPaneTextField('listIconStyles', {
             label: 'List Icon Style (similar to tile icons)',
             disabled: webPartProps.listsInclude === true ? false : true,
           }),
+
+          PropertyPaneTextField('listLibCat', {
+              label: 'Combined category label (if blank, you will get Lists and Libraries',
+              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+          }),
+
+          //listHideSystem
+          PropertyPaneToggle('listHideSystem', {
+              label: 'Hide System lists',
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+          }),
+
+          PropertyPaneTextField('listFilter', {
+            label: 'Filter to apply to lists',
+            disabled: true , //webPartProps.listsInclude === true ? false : true,
+          }),
+
+          PropertyPaneToggle('listOthers', {
+            label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', 'Lists' ),
+            offText: 'Off',
+            onText: 'On',
+            disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
+        }),
+
+        ]}, // this group
+
+        { groupName: 'Libraries',
+        isCollapsed: true ,
+        groupFields: [
           PropertyPaneToggle('libsInclude', {
               label: 'Show all Libraries',
               offText: 'Off',
               onText: 'On',
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
-          PropertyPaneTextField('libsFilter', {
-            label: 'Filter to apply to lists',
-            disabled: webPartProps.libsInclude === true ? false : true,
-          }),
+
           PropertyPaneTextField('libsIconStyles', {
             label: 'Library Icon Style (similar to tile icons)',
             disabled: webPartProps.libsInclude === true ? false : true,
@@ -262,6 +336,11 @@ export class IntroPage {
               disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
           }),
 
+          PropertyPaneTextField('libsFilter', {
+            label: 'Filter to apply to lists',
+            disabled: true , //webPartProps.libsInclude === true ? false : true,
+          }),
+
           PropertyPaneToggle('ignoreList', {
               label: 'Only show Lists and Libraries, Ignore your List settings',
               offText: 'Off',
@@ -269,6 +348,14 @@ export class IntroPage {
               //disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
               disabled: true,
           }),
+
+          PropertyPaneToggle('libsOthers', {
+              label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', 'Libraries' ),
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
+          }),
+
         ]}, // this group
   
         { groupName: 'Hubsites',
@@ -280,21 +367,24 @@ export class IntroPage {
               onText: 'On',
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
-          PropertyPaneToggle('ignoreList', {
-              label: 'Ignore Tile list... we like auto-tiles :)',
-              offText: 'Off',
-              onText: 'On',
-              disabled: webPartProps.subsitesInclude === true ? false : true,
-          }),
+
           PropertyPaneTextField('hubsCategory', {
               label: 'Hubsite Category',
               disabled: webPartProps.hubsInclude === true ? false : true,
           }),
+
           PropertyPaneToggle('hubsLazy', {
             label: 'Lazy Load Hubs:  do not load until you click tab',
             offText: 'Off',
             onText: 'On',
             disabled: webPartProps.hubsInclude === true ? false : true,
+          }),
+
+          PropertyPaneToggle('hubsOthers', {
+              label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.hubsCategory ),
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
           }),
 
         ]}, // this group
@@ -308,14 +398,15 @@ export class IntroPage {
               onText: 'On',
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
-          PropertyPaneToggle('ignoreList', {
-              label: 'Ignore Tile list... we like auto-tiles :)',
-              offText: 'Off',
-              onText: 'On',
-              disabled: webPartProps.subsitesInclude === true ? false : true,
+
+          PropertyPaneTextField('groupsList', {
+              label: 'List of group names - separated by ;',
+              disabled: webPartProps.groupsInclude === true ? false : true,
+              multiline: true,
           }),
+          
           PropertyPaneTextField('groupsCategory', {
-              label: 'Hubsite Category',
+              label: 'Groups Category',
               disabled: webPartProps.groupsInclude === true ? false : true,
           }),
           PropertyPaneToggle('groupsLazy', {
@@ -324,9 +415,15 @@ export class IntroPage {
             onText: 'On',
             disabled: webPartProps.groupsInclude === true ? false : true,
           }),
+          PropertyPaneToggle('groupsOthers', {
+              label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.groupsCategory ),
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
+          }),
 
         ]}, // this group
-
+/*
         { groupName: 'Users',
         isCollapsed: true ,
         groupFields: [
@@ -336,24 +433,28 @@ export class IntroPage {
               onText: 'On',
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
-          PropertyPaneToggle('ignoreList', {
-              label: 'Ignore Tile list... we like auto-tiles :)',
-              offText: 'Off',
-              onText: 'On',
-              disabled: webPartProps.subsitesInclude === true ? false : true,
-          }),
-          PropertyPaneTextField('usersSetting', {
+
+          PropertyPaneTextField('usersCategory', {
               label: 'User Tile settings',
               disabled: webPartProps.usersInclude === true ? false : true,
           }),
+
           PropertyPaneToggle('usersLazy', {
             label: 'Lazy Load Users:  do not load until you click tab',
             offText: 'Off',
             onText: 'On',
             disabled: webPartProps.usersInclude === true ? false : true,
           }),
+          PropertyPaneToggle('groupsOthers', {
+              label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.usersCategory ),
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
+          }),
 
-        ]}, // this group
+        ]}, 
+        */
+        // this group
 
 
     ]}; // Groups
