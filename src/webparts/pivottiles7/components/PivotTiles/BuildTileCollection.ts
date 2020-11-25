@@ -13,6 +13,8 @@ import { convertLinks, parseMe } from './UtilsNew';
 
 import { getQuarter } from './QuickBuckets';
 
+export const jiraIcon = 'https://cdn.onlinewebfonts.com/svg/img_117214.png';
+
 const monthCats = getLocalMonths('en-us','short');
 const one_day = 1000 * 60 * 60 * 24;
 
@@ -444,12 +446,20 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
         let att = 'i';
         let match = false;
 
+        /**
+         * 2020-11-25:  Added testHref so that if you define custom Category === 'SharePoint', it doesnt show everything in your tenant
+         */
+        let testHref = href + '';
+        if ( href.toLowerCase().indexOf( pivotProps.tenant ) === 0 ) {
+          testHref = href.substring( pivotProps.tenant.length );
+        }
+
         var regex = new RegExp("\\b" + custCat + "\\b", att);
         if (  custSearch.Title && title.search(regex) > -1 ) {
           match = true;
         } else if (  custSearch.Desc && description.search(regex) > -1 ) {
           match = true;
-        } else if (  custSearch.Href && href.search(regex) > -1 ) {
+        } else if (  custSearch.Href && testHref.search(regex) > -1 ) {
           match = true;
         } else if (  custSearch.Cate && categoryCopy.search(regex) > -1 ) {
           match = true;
@@ -533,7 +543,6 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
 
     }
 
-
     if ( pivotProps.otherTab && pivotProps.otherTab.length > 0 && category[0] == pivotProps.otherTab ) { 
       showOtherTab = true ;
     }
@@ -597,7 +606,7 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
         if ( !color || color === '' ) { color = 'font=#464EB8;' + defFabricSize ; }
 
       } else if ( href.toLowerCase().indexOf('jira') > -1 ) { 
-        imageUrl = 'https://cdn.onlinewebfonts.com/svg/img_117214.png' ; 
+        imageUrl = jiraIcon ; 
         if ( !color || color === '' ) { color = 'font=black;' + defFabricSize ; }
 
       } else if ( href.toLowerCase().indexOf('powerbi') > -1 ) { 
@@ -648,6 +657,12 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
       
     }
 
+    
+    /*
+    if ( href.toLowerCase().indexOf( pivotProps.tenant ) === 0 ) {
+      href = href.substring( pivotProps.tenant.length );
+    }
+    */
 
     category.push(sourceType);
 
@@ -743,7 +758,13 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
 
 
 
-
+/**
+ * This function determines if item is visible using the Title and Description string in "Filtering" webpart props.
+ * This process was added as a check after the response was returned to simplify rest filter
+ * @param item 
+ * @param theseProps 
+ * @param pivotProps 
+ */
   function isVisibleItem( item , theseProps, pivotProps ) {
 
     let isVisible : boolean = true;

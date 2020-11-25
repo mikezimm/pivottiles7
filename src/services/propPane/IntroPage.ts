@@ -423,7 +423,7 @@ export class IntroPage {
           }),
 
         ]}, // this group
-
+/*
         { groupName: 'Users',
         isCollapsed: true ,
         groupFields: [
@@ -452,7 +452,9 @@ export class IntroPage {
               disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
           }),
 
-        ]}, // this group
+        ]}, 
+        */
+        // this group
 
 
     ]}; // Groups

@@ -1425,6 +1425,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       let showOtherTab = false;
       if ( tileCollectionResults.showOtherTab === true ) { showOtherTab = true ; }
       else if ( tileCollectionWebs.showOtherTab === true ) { showOtherTab = true ; }
+      else if ( tileCollectionHubs.showOtherTab === true ) { showOtherTab = true ; }
+      else if ( tileCollectionLists.showOtherTab === true ) { showOtherTab = true ; }
 
       let useThisTileCollection = this.props.ignoreList || tileCollectionResults.tileCollection.length ===  0 ? tileCollectionWebs : tileCollectionResults ;
 

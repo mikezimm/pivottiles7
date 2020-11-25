@@ -116,8 +116,11 @@ public constructor(props:IAdvancedProps){
             messageRows.push( <tr><td></td><td><mark>created</mark></td><td>Type <b>'created'</b> and <b>Enter</b> to group in labels</td></tr> );
             messageRows.push( <tr><td></td><td><mark>created&lt;</mark></td><td>Type <b>'created&lt;'</b> and <b>Enter</b> to group in recent buckets</td></tr> );
 
-            messageRows.push( <tr><td>Custom Categories</td><td></td><td>See Github Wiki for examples</td></tr> );
+            //
 
+            let customCatWiki = <a href="https://github.com/mikezimm/pivottiles7/wiki/Custom-Category---basic" target="_blank">Github Wiki</a>;
+
+            messageRows.push( <tr><td>Custom Categories</td><td></td><td>See { customCatWiki } for examples</td></tr> );
 
 
             messageRows.push( <tr><td>Fabric UI {links.devDocsIcon}</td><td></td><td>Set your ImageUrl column value to a valid Fabric UI Icon name - {links.devDocsIcon}</td></tr> );
