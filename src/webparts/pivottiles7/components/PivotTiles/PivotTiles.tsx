@@ -38,6 +38,8 @@ import * as tileBuilders from './TileBuilder';
 
 import { saveTheTime, getTheCurrentTime, saveAnalytics } from '../../../../services/createAnalytics';
 
+import { doesObjectExistInArray } from '../../../../services/arrayServices';
+
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
 
 import { convertCategoryToIndex, fixURLs } from './UtilsNew';
@@ -120,6 +122,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       //Size courtesy of https://www.netwoven.com/2018/11/13/resizing-of-spfx-react-web-parts-in-different-scenarios/
       WebpartHeight: this.props.WebpartElement.getBoundingClientRect().height ,
       WebpartWidth:  this.props.WebpartElement.getBoundingClientRect().width ,
+
+      lastStateChange: 'constructor',
 
       allTiles:[],
       filteredTiles:[],
@@ -207,34 +211,53 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
     //alert('componentDidUpdate 1');
 
+    console.log( 'LAST-STATE-CHANGE:', this.state.lastStateChange );
+
     let rebuildTiles : boolean = false;
 
     let reloadData : boolean = false;
 
-    if (this.props.setFilter !== prevProps.setFilter) {  reloadData = true ; }  
-    else if (this.props.filterTitle !== prevProps.filterTitle) {  reloadData = true ; }  
-    else if (this.props.filterDescription !== prevProps.filterDescription) {  reloadData = true ; }  
-    else if (this.props.filterOnlyList !== prevProps.filterOnlyList) {  reloadData = true ; }  
-    else if (this.props.listDefinition !== prevProps.listDefinition) {  reloadData = true ; }  
-    else if (this.props.listWebURL !== prevProps.listWebURL) {  reloadData = true ; }  
-    else if (this.props.listTitle !== prevProps.listTitle) {  reloadData = true ; }  
-    else if (this.props.custCategories !== prevProps.custCategories) {  reloadData = true ; }   
-    else if (this.props.subsitesCategory !== prevProps.subsitesCategory) {  reloadData = true ; }    
-    else if (this.props.ignoreList !== prevProps.ignoreList) {  reloadData = true ; }    
-    else if (this.props.subsitesInclude !== prevProps.subsitesInclude) {  reloadData = true ; }
-    else if (this.props.fetchInfo !== prevProps.fetchInfo) {  reloadData = true ; }
+    if ( prevProps.lastPropChange === this.props.lastPropChange ) { 
+      //Then check individual props
+      if (this.props.setFilter !== prevProps.setFilter) {  reloadData = true ; }  
+      else if (this.props.filterTitle !== prevProps.filterTitle) {  reloadData = true ; }  
+      else if (this.props.filterDescription !== prevProps.filterDescription) {  reloadData = true ; }  
+      else if (this.props.filterOnlyList !== prevProps.filterOnlyList) {  reloadData = true ; }  
+      else if (this.props.listDefinition !== prevProps.listDefinition) {  reloadData = true ; }  
+      else if (this.props.listWebURL !== prevProps.listWebURL) {  reloadData = true ; }  
+      else if (this.props.listTitle !== prevProps.listTitle) {  reloadData = true ; }  
+      else if (this.props.custCategories !== prevProps.custCategories) {  reloadData = true ; }   
+      else if (this.props.subsitesCategory !== prevProps.subsitesCategory) {  reloadData = true ; }    
+      else if (this.props.ignoreList !== prevProps.ignoreList) {  reloadData = true ; }    
+      else if (this.props.subsitesInclude !== prevProps.subsitesInclude) {  reloadData = true ; }
+      else if (this.props.fetchInfo !== prevProps.fetchInfo) {  reloadData = true ; }
+  
+      if (this.props.setTab !== prevProps.setTab) {  rebuildTiles = true ; }
+      else if (this.props.setSize !== prevProps.setSize) {  rebuildTiles = true ; }
+      else if (this.props.showHero !== prevProps.showHero) {  rebuildTiles = true ; }
+      else if (this.props.heroType !== prevProps.heroType) {  rebuildTiles = true ; }
+      else if (this.props.setRatio !== prevProps.setRatio) {  rebuildTiles = true ; }
+      else if (this.props.setImgFit !== prevProps.setImgFit) {  rebuildTiles = true ; }
+      else if (this.props.setImgCover !== prevProps.setImgCover) {  rebuildTiles = true ; }
+      else if (this.props.heroCategory !== prevProps.heroCategory) {  rebuildTiles = true ; }
+      else if (this.props.heroRatio !== prevProps.heroRatio) {  rebuildTiles = true ; }
+      else if (this.props.heroRatio !== prevProps.heroRatio) {  rebuildTiles = true ; }
 
-    if (this.props.setTab !== prevProps.setTab) {  rebuildTiles = true ; }
-    else if (this.props.setSize !== prevProps.setSize) {  rebuildTiles = true ; }
-    else if (this.props.showHero !== prevProps.showHero) {  rebuildTiles = true ; }
-    else if (this.props.heroType !== prevProps.heroType) {  rebuildTiles = true ; }
-    else if (this.props.setRatio !== prevProps.setRatio) {  rebuildTiles = true ; }
-    else if (this.props.setImgFit !== prevProps.setImgFit) {  rebuildTiles = true ; }
-    else if (this.props.setImgCover !== prevProps.setImgCover) {  rebuildTiles = true ; }
-    else if (this.props.heroCategory !== prevProps.heroCategory) {  rebuildTiles = true ; }
-    else if (this.props.heroRatio !== prevProps.heroRatio) {  rebuildTiles = true ; }
-    else if (this.props.heroRatio !== prevProps.heroRatio) {  rebuildTiles = true ; }     
+    }
+    else if ( this.props.lastPropChange === 'cats' ) { reloadData = true ; } 
+    else if ( this.props.lastPropChange === 'filters' ) { reloadData = true ; } 
+    else if ( this.props.lastPropChange === 'groups' ) { reloadData = true ; } 
+    else if ( this.props.lastPropChange === 'hubs' ) { reloadData = true ; } 
+    else if ( this.props.lastPropChange === 'items' ) { reloadData = true ; } 
+    else if ( this.props.lastPropChange === 'lists' ) { reloadData = true ; } 
 
+    else if ( this.props.lastPropChange === 'subs' ) { reloadData = true ; } 
+    else if ( this.props.lastPropChange === 'format' ) { rebuildTiles = true ; } 
+    else if ( this.props.lastPropChange === 'init' ) { rebuildTiles = true ; } 
+    else if ( this.props.lastPropChange === 'other' ) { rebuildTiles = true ; } 
+
+    /*
+    */
 
     if ( reloadData === true ) {
       this._getListItems( this.props.custCategories );
@@ -515,6 +538,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       console.log('CTRL was clicked... _changeSearchFunction');
       this.setState({
         changePivotCats: true,
+        lastStateChange: '_changeSearchOnFocus',
       });
     }
   }
@@ -526,6 +550,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     if ( this.state.changePivotCats !== false ) {
       this.setState({
         changePivotCats: false,
+        lastStateChange: '_changeSearchOnBlur',
       });
     }
   }
@@ -571,6 +596,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       lastFilteredTiles: (searchType === 'all' ? this.state.allTiles : this.state.lastFilteredTiles ),
       searchCount: searchCount,
       searchWhere: searchWhere,
+      lastStateChange: 'searchMe',
     });
 
     
@@ -669,6 +695,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       this.setState({
         filteredTiles: newFilteredTiles,
         searchCount: searchCount,
+        lastStateChange: 'searchForItems',
       });
   
       return ;
@@ -702,6 +729,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       //Enable-disable ChangePivots options
       this.setState({
         shuffleShow: !this.state.shuffleShow,
+        lastStateChange: 'onLinkClick - 1',
       });
 
     } else {
@@ -761,7 +789,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         createdInfo: createdInfo,
         pivotDefSelKey: defaultSelectedKey,
         searchShow: showSearch,
-
+        lastStateChange: 'onLinkClick - 2',
       });
 
     }
@@ -826,7 +854,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         lastFilteredTiles: this.state.allTiles,
         searchCount: this.state.allTiles.length,
         pivotDefSelKey: "-100",
-        searchWhere: ' in all categories'
+        searchWhere: ' in all categories',
+        lastStateChange: 'showAll',
       });
     }
     
@@ -866,7 +895,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         lastFilteredTiles: this.state.allTiles,
         searchCount: this.state.allTiles.length,
         pivotDefSelKey: "-100",
-        searchWhere: ' in all categories'
+        searchWhere: ' in all categories',
+        lastStateChange: 'minimizeTiles',
       });
     }
     
@@ -900,6 +930,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
     this.setState({
       setLayout: setLayout,
+      lastStateChange: 'toggleLayout',
     });
 
   } //End toggleTips  
@@ -911,6 +942,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
     this.setState({
       showTips: newshowTips,
+      lastStateChange: 'toggleTips',
     });
 
   } //End toggleTips  
@@ -1025,7 +1057,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     //const defaultSelectedIndex = tileCategories.indexOf(this.props.setTab);
     const defaultSelectedIndex = tileCategories.indexOf(lastCategory);
     let defaultSelectedKey = defaultSelectedIndex.toString();
-    defaultSelectedKey = lastCategory.toString();  // Added this because I think this needs to be the header text, not the index.
+    defaultSelectedKey = lastCategory === null || lastCategory === undefined ? '' : lastCategory.toString();  // Added this because I think this needs to be the header text, not the index.
     defaultSelectedKey = convertCategoryToIndex(defaultSelectedKey);
     console.log('_updateStateOnPropsChange defaultSelectedKey', defaultSelectedKey);
     defaultSelectedKey = lastCategory;
@@ -1112,7 +1144,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       filteredCategory: lastCategory,
       thisCatColumn: thisCatColumn,
       changePivotCats: false,
-
+      lastStateChange: '_updateStateOnPropsChange',
     });
   }
 
@@ -1167,7 +1199,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
   private async _getSubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData ) {
     let entireResponse: any = {};
-    if ( this.props.subsitesInclude === true ) {
+    let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'subs' ? true : false ;
+    if ( loadThisData === true && this.props.subsitesInclude === true ) {
         try {
             let websResponse = await web.webs();
             websResponse.map( w => { w.sourceType = this.props.subsitesCategory ; });
@@ -1178,117 +1211,98 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
             this.processCatch(errMessage);
         }
       } else {
-        entireResponse.webs = [];
+        entireResponse.webs = this.state.originalWebs;
         this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
       }
 
     }
-
-  private _getSubsitesOriginal( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData  ){
-
-    let entireResponse: any = {};
-    if ( this.props.subsitesInclude === true ) {
-      web.webs.orderBy('Title',true).get()
-      .then((websResponse) => {
-          websResponse.map( w => { w.sourceType = this.props.subsitesCategory ; });
-          entireResponse.webs = websResponse;
-          this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
-      }).catch((e) => {
-          this.processCatch(e);
-      });
-
-    } else {
-      entireResponse.webs = [];
-      this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
-    }
-
-  }
-
-
   
-  private _getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData , entireResponse ){
+    private _getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData , entireResponse ){
 
-    if ( this.props.fetchInfo.libsInclude === true || this.props.fetchInfo.listsInclude === true ) {
+      let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'lists' ? true : false ;
+      if ( loadThisData === true && ( this.props.fetchInfo.libsInclude === true || this.props.fetchInfo.listsInclude === true ) ) {
 
-      let listFilter = 'Hidden eq false';
+        let listFilter = 'Hidden eq false';
 
-      if ( this.props.fetchInfo.libsInclude === false ) {
-        listFilter += ' and BaseType eq 0';
-      } else if ( this.props.fetchInfo.listsInclude === false ) {
-        listFilter += ' and BaseType eq 1';
-      } 
+        if ( this.props.fetchInfo.libsInclude === false ) {
+          listFilter += ' and BaseType eq 0';
+        } else if ( this.props.fetchInfo.listsInclude === false ) {
+          listFilter += ' and BaseType eq 1';
+        } 
 
-      if ( this.props.fetchInfo.listHideSystem === true ) {
-        SystemLists.map( entityName => {
-          listFilter += ` and EntityTypeName ne \'${entityName}\'`;
+        if ( this.props.fetchInfo.listHideSystem === true ) {
+          SystemLists.map( entityName => {
+            listFilter += ` and EntityTypeName ne \'${entityName}\'`;
+          });
+          listFilter += ` and Title ne \'Style Library\'`; //For some reason had to hard-code filter this one out
+        }
+
+        web.lists.filter(listFilter).orderBy('Title',true).get()
+        .then((listLibResponse) => {
+            listLibResponse.map( L => { 
+              L.sourceType = L.BaseType === 0 ? this.props.fetchInfo.listCategory : this.props.fetchInfo.libsCategory;
+              L.system = SystemLists.indexOf( L.EntityTypeName ) > -1 ? 'System' : '';
+            });
+            entireResponse.lists = listLibResponse;
+            this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
+        }).catch((e) => {
+            this.processCatch(e);
         });
-        listFilter += ` and Title ne \'Style Library\'`; //For some reason had to hard-code filter this one out
+
+      } else {
+        entireResponse.lists =  this.state.originalLists;
+        this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
       }
 
-      web.lists.filter(listFilter).orderBy('Title',true).get()
-      .then((listLibResponse) => {
-          listLibResponse.map( L => { 
-            L.sourceType = L.BaseType === 0 ? this.props.fetchInfo.listCategory : this.props.fetchInfo.libsCategory;
-            L.system = SystemLists.indexOf( L.EntityTypeName ) > -1 ? 'System' : '';
-          });
-          entireResponse.lists = listLibResponse;
-          this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
-      }).catch((e) => {
-          this.processCatch(e);
-      });
-
-    } else {
-      entireResponse.lists = [];
-      this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
     }
 
-  }
+    private _getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
 
-  private _getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
+      let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'items' ? true : false ;
+      if ( loadThisData === true &&  this.props.ignoreList !== true ) {
 
-    if ( this.props.ignoreList !== true ) {
+        web.lists.getByTitle(useTileList).items
+        .select(selectCols).expand(expandThese).filter(restFilter).orderBy(restSort,true).getAll()
+        .then((listResponse) => {
+            listResponse.map( I => { 
+              if ( I.BaseType === 1 ) { I.sourceType = "Files"; }
+              else if ( this.props.listDefinition.toLowerCase().indexOf('library') > -1 ) { I.sourceType = "Files"; }
+              else if ( this.props.listDefinition.toLowerCase().indexOf('news') > -1 ) { I.sourceType = "News"; }
+              else if ( this.props.listDefinition.toLowerCase().indexOf('page') > -1 ) { I.sourceType = "Pages"; }
+              else { I.sourceType = ""; }
+            });
+            entireResponse.items = listResponse;
+            this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
+        }).catch((e) => {
+            this.processCatch(e);
+        });
 
-      web.lists.getByTitle(useTileList).items
-      .select(selectCols).expand(expandThese).filter(restFilter).orderBy(restSort,true).getAll()
-      .then((listResponse) => {
-          listResponse.map( I => { 
-            if ( I.BaseType === 1 ) { I.sourceType = "Files"; }
-            else if ( this.props.listDefinition.toLowerCase().indexOf('library') > -1 ) { I.sourceType = "Files"; }
-            else if ( this.props.listDefinition.toLowerCase().indexOf('news') > -1 ) { I.sourceType = "News"; }
-            else if ( this.props.listDefinition.toLowerCase().indexOf('page') > -1 ) { I.sourceType = "Pages"; }
-            else { I.sourceType = ""; }
-          });
-          entireResponse.items = listResponse;
-          this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
-      }).catch((e) => {
-          this.processCatch(e);
-      });
+      } else {
+        entireResponse.items =  this.state.originalListItems;
+        this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
+      }
 
-    } else {
-      entireResponse.items = [];
-      this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
     }
 
-  }
+    //getAssociatedSites
+    
+    private _getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
 
-  //getAssociatedSites
-  
-  private _getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
+      let hubResponse = [];
+      let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'hubs' ? true : false ;
+      if ( loadThisData === true &&  this.props.fetchInfo.hubsInclude === true ) {
+        getAssociatedSites( this.state.departmentId, this.finalCall.bind(this) , entireResponse, custCategories, newData );
+      } else {
+        entireResponse.hubs =  this.state.originalHubs;
+        this.finalCall ( entireResponse, custCategories, newData);
+      }
 
-    let hubResponse = [];
-    if ( this.props.fetchInfo.hubsInclude === true ) {
-      getAssociatedSites( this.state.departmentId, this.finalCall.bind(this) , entireResponse, custCategories, newData );
-    } else {
-      entireResponse.hubs = hubResponse;
-      this.finalCall ( entireResponse, custCategories, newData);
     }
 
-  }
+    private finalCall ( entireResponse : any, custCategories, newData) {
+      this.processResponse( entireResponse, custCategories, newData );
 
-  private finalCall ( entireResponse : any, custCategories, newData) {
-    this.processResponse( entireResponse, custCategories, newData );
-
-  }
+    }
 
 
 /***
@@ -1310,7 +1324,12 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       console.log(e.status);
       console.log(e.message);
       let sendMessage = e.status + " - " + e.message;
-      this.setState({  loadStatus: "ListNotFound", loadError: e.message, listError: true, });
+      this.setState({  
+        loadStatus: "ListNotFound", 
+        loadError: e.message, 
+        listError: true, 
+        lastStateChange: 'processCatch',
+      });
   
     }
   
@@ -1334,7 +1353,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       let hubResponse = entireResponse.hubs;
 
       if (subsites.length === 0 && listResponse === 0 && itemsResponse.length === 0 && hubResponse === 0 ){
-        this.setState({  loadStatus: "NoItemsFound", itemsError: true,  });
+        this.setState({  loadStatus: "NoItemsFound", itemsError: true, lastStateChange: 'processResponse - 0', });
         return ;
       }
       
@@ -1480,7 +1499,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         createdByIDs: useThisTileCollection.createdByIDs,
 
         changePivotCats: false,
-
+        lastStateChange: 'processResponse - 1',
       });
 
       saveAnalytics(this.props,this.state);
@@ -1498,23 +1517,35 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
       console.log('state received originalHubs', tileCollection );
 
+      let originalHubs = this.state.originalHubs;
       let allTiles = this.state.allTiles;
 
       allTiles.map( thisTile => {
-
         if (thisTile.sourceType === 'Hubs' ) {
           tileCollection.map( hub => {
             if ( hub.Id === thisTile.Id ) { 
               thisTile = hub;
+
+              //Update originalHubs values with newly fetched props and save back to state.
+              let original = doesObjectExistInArray( originalHubs, 'Id', hub.Id , true );
+              if ( original || original !== false ) { 
+                originalHubs[original].SiteLogoUrl = hub.imageUrl;
+                originalHubs[original].Title = hub.title;
+                originalHubs[original].Description = hub.description;
+                originalHubs[original].Created = hub.created;
+                originalHubs[original].LastItemUserModifiedDate = hub.modified;
+                originalHubs[original].SPSiteUrl = hub.href;                
+          
+              }
             }
           });
         }
-
       });
 
       this.setState({
         allTiles: allTiles,
-
+        originalHubs: originalHubs,
+        lastStateChange: 'updateStateHubs',
       });
 
     }

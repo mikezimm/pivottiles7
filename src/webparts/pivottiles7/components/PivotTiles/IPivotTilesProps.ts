@@ -73,7 +73,7 @@ export interface IFetchInfoSettings {
   listLibCat: string;
 }
 
-export type IPropChangeTypes =  'hubs' | 'subs' | 'groups' | 'lists' | 'format' | 'items' | 'other' | 'cats' | 'filters' | 'na' ; //lastPropChange
+export type IPropChangeTypes =  'hubs' | 'subs' | 'groups' | 'lists' | 'format' | 'items' | 'other' | 'cats' | 'filters' | 'init' ; //lastPropChange
 
 export interface IPivotTilesProps {
 

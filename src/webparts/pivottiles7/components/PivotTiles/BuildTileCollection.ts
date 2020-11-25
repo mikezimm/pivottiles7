@@ -14,6 +14,9 @@ import { convertLinks, parseMe } from './UtilsNew';
 import { getQuarter } from './QuickBuckets';
 
 export const jiraIcon = 'https://cdn.onlinewebfonts.com/svg/img_117214.png';
+export const defaultHubIcon = 'SharepointLogo';
+export const defaultWebIcon = 'SharepointLogo';
+export const defaultSPOIcon = 'SharepointLogo';
 
 const monthCats = getLocalMonths('en-us','short');
 const one_day = 1000 * 60 * 60 * 24;
@@ -575,11 +578,11 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
       
     } else if ( sourceType === pivotProps.subsitesCategory ) {
       if ( !color || color === '' ) { color = 'font=darkslateblue;' + defFabricSize; }
-      if ( !imageUrl || imageUrl === '' ) { imageUrl = 'SharepointLogo' ; }
+      if ( !imageUrl || imageUrl === '' ) { imageUrl = defaultWebIcon ; }
 
     } else if ( sourceType === 'Hubs' ) {
       if ( !color || color === '' ) { color = 'font=red;' + defFabricSize; }
-      if ( !imageUrl || imageUrl === '' ) { imageUrl = 'SharepointLogo' ; }
+      if ( !imageUrl || imageUrl === '' ) { imageUrl = defaultHubIcon ; }
 
     } else if ( sourceType === 'Files' ) {
       if ( !imageUrl || imageUrl === '' ) {
@@ -598,7 +601,7 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
     } else if ( !imageUrl || imageUrl === '' ) {
       if ( href.toLowerCase().indexOf('github') > -1 ) { imageUrl = 'Github' ; color = 'background=white;' ; }
       else if ( href.toLowerCase().indexOf('.sharepoint.com') > -1 ) { 
-        imageUrl = 'SharepointLogo' ; 
+        imageUrl = defaultSPOIcon ; 
         if ( !color || color === '' ) { color = 'font=rgb(0, 120, 215);' + defFabricSize ; }
 
       } else if ( href.toLowerCase().indexOf('teams') > -1 ) { 

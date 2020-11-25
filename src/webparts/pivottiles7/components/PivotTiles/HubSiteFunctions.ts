@@ -9,6 +9,8 @@ import { IHubSiteWebData, IHubSiteInfo } from  "@pnp/sp/hubsites";
 import "@pnp/sp/webs";
 import "@pnp/sp/hubsites/web";
 
+import { defaultHubIcon } from './BuildTileCollection';
+
 
 export async function getHubSiteData() {
 
@@ -98,29 +100,41 @@ export async function allAvailableHubWebs(  tileCollection: any, addTheseItemsTo
 //    console.log('UniqueId:', legacyPageContext.pageItemId);
 //    newsService.pageID = legacyPageContext.pageItemId;
 
-    for ( let i in tileCollection ) {
-        if ( tileCollection[i].sourceType === 'Hubs' ) {
-            let getThisWeb = tileCollection[i].href;
-            let thisListWeb = Web( getThisWeb );
-            let errMessage = '';
-            try {
-    
-                let thisSite : any = await thisListWeb.get();
-                tileCollection[i].imageUrl = thisSite.SiteLogoUrl ? thisSite.SiteLogoUrl : tileCollection[i].imageUrl;
-                tileCollection[i].description = thisSite.Description;
-                tileCollection[i].created = thisSite.Created;
-                tileCollection[i].modified = thisSite.LastItemModifiedDate;
-    
-                console.log('thisSite: ', thisSite );
-    
-            } catch (e) {
-                errMessage = getHelpfullError(e, true, true);
-    
-            }
+    let didThisAlreadyRun = false;
+    let hasHubs : any = false;
+
+    tileCollection.map( t => {
+        if ( t.sourceType === 'Hubs' ) { 
+            hasHubs = true;
+            if ( t.imageUrl !== defaultHubIcon ) { didThisAlreadyRun = true; } 
         }
+    });
 
-
-
+    if ( hasHubs === true && didThisAlreadyRun === false ) {
+        for ( let i in tileCollection ) {
+            if ( tileCollection[i].sourceType === 'Hubs' && tileCollection[i].imageUrl === defaultHubIcon) {
+                let getThisWeb = tileCollection[i].href;
+                let thisListWeb = Web( getThisWeb );
+                let errMessage = '';
+                try {
+        
+                    let thisSite : any = await thisListWeb.get();
+                    tileCollection[i].imageUrl = thisSite.SiteLogoUrl ? thisSite.SiteLogoUrl : tileCollection[i].imageUrl;
+                    tileCollection[i].description = thisSite.Description;
+                    tileCollection[i].created = thisSite.Created;
+                    tileCollection[i].modified = thisSite.LastItemModifiedDate;
+        
+                    console.log('thisSite: ', thisSite );
+        
+                } catch (e) {
+                    errMessage = getHelpfullError(e, true, true);
+        
+                }
+            }
+    
+        }
+    } else {
+        console.log('NOT Updating Hub Logos... looks like we already loaded them');
     }
 
     addTheseItemsToState( tileCollection );

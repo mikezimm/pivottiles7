@@ -55,7 +55,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
     // Register a handler to be notified if the theme variant changes
     this._themeProvider.themeChangedEvent.add(this, this._handleThemeChangedEvent);
 
-    this.properties.lastPropChange = 'na';
+    this.properties.lastPropChange = 'init';
     //IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other'; //lastPropChange
 
     return super.onInit().then(_ => {
@@ -451,7 +451,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
     updateOnThese.push( ...changeCats );
     updateOnThese.push( ...changeFilters );
 
-    //export type IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other' | 'cats' | 'filters' | 'na' ; //lastPropChange
+    //export type IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other' | 'cats' | 'filters' | 'init' ; //lastPropChange
     let previousChange = this.properties.lastPropChange + '';
     if ( changeHubs.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'hubs' ; } 
     else if ( changeSubs.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'subs' ; } 
