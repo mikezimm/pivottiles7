@@ -73,25 +73,32 @@
 
       "subsitesInclude": true,
       "subsitesCategory": "Subsites",
+      "hubsOthers": false,
       "ignoreList": false,
       
       "hubsInclude": false ,
       "hubsCategory": "Hubs" ,
       "hubsLazy": true ,
+      "subsOthers": false,
 
       "groupsInclude": false ,
       "groupsCategory": "Groups" ,
       "groupsLazy": true ,
-    
+      "groupsOthers": false,
+
       "usersInclude": false ,
       "usersCategory": "Users" ,
       "usersLazy": true ,
+      "usersOthers": false,
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
+      "listOthers": false,
+
       "libsInclude": false,
       "libsIconStyles": "icon=FabricFolder;font=eblue",
       "listLibCat": "",
+      "libsOthers": false,
       
       "listHideSystem": true,
 
@@ -152,27 +159,35 @@
       "custCatLogi": "",
       "custCatBrak": false,
 
-      "subsitesInclude": false,
+
+      "subsitesInclude": true,
       "subsitesCategory": "Subsites",
+      "hubsOthers": false,
       "ignoreList": false,
       
       "hubsInclude": false ,
       "hubsCategory": "Hubs" ,
       "hubsLazy": true ,
+      "subsOthers": false,
 
       "groupsInclude": false ,
       "groupsCategory": "Groups" ,
       "groupsLazy": true ,
-    
+      "groupsOthers": false,
+
       "usersInclude": false ,
       "usersCategory": "Users" ,
       "usersLazy": true ,
+      "usersOthers": false,
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
+      "listOthers": false,
+
       "libsInclude": false,
       "libsIconStyles": "icon=FabricFolder;font=eblue",
       "listLibCat": "",
+      "libsOthers": false,
       
       "listHideSystem": true,
 
@@ -233,27 +248,34 @@
       "custCatBrak": false,
 
 
-      "subsitesInclude": false,
+      "subsitesInclude": true,
       "subsitesCategory": "Subsites",
+      "hubsOthers": false,
       "ignoreList": false,
       
       "hubsInclude": false ,
       "hubsCategory": "Hubs" ,
       "hubsLazy": true ,
+      "subsOthers": false,
 
       "groupsInclude": false ,
       "groupsCategory": "Groups" ,
       "groupsLazy": true ,
-    
+      "groupsOthers": false,
+
       "usersInclude": false ,
       "usersCategory": "Users" ,
       "usersLazy": true ,
+      "usersOthers": false,
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
+      "listOthers": false,
+
       "libsInclude": false,
       "libsIconStyles": "icon=FabricFolder;font=eblue",
       "listLibCat": "",
+      "libsOthers": false,
       
       "listHideSystem": true,
       

@@ -352,6 +352,27 @@ function getStyleProp ( input: string[] , what: 'font' | 'background' | 'size' |
 }
 
 
+function pushOtherTab ( type:  responseType, pivotProps: IPivotTilesProps ) {
+  let result = true;
+
+  if ( type === 'hubs' ) { 
+    if ( pivotProps.fetchInfo.hubsOthers !== true ) { return false ; } }
+
+  if ( type === 'subs' ) { 
+    if ( pivotProps.fetchInfo.subsOthers !== true ) { return false ; } }
+
+  if ( type === 'lists' ) { 
+    if ( pivotProps.fetchInfo.listOthers !== true ) { return false ; } }
+
+  if ( type === 'groups' ) { 
+    if ( pivotProps.fetchInfo.groupsOthers !== true ) { return false ; } }
+
+  if ( type === 'users' ) { 
+    if ( pivotProps.fetchInfo.usersOthers !== true ) { return false ; } }
+  
+  return result;
+
+}
 
 
 
@@ -366,9 +387,11 @@ function getStyleProp ( input: string[] , what: 'font' | 'background' | 'size' |
  *                                                                                                                                                                  
  */
 
-function buildFinalTileCollection ( response: any, theseProps: any, custSearch, custCategories, pivotProps: IPivotTilesProps, includePeople: boolean, fixedURL, currentHero ) {
+function buildFinalTileCollection ( response: any, type:  responseType, theseProps: any, custSearch, custCategories, pivotProps: IPivotTilesProps, includePeople: boolean, fixedURL, currentHero ) {
   
   let showOtherTab = false;
+  
+  let pushOther = pushOtherTab( type, pivotProps );
 
   console.log('buildFinalTileCollection - all response items:', response );
   let tileCollection: IPivotTileItemProps[] = response.map(item => {
@@ -396,7 +419,9 @@ function buildFinalTileCollection ( response: any, theseProps: any, custSearch, 
 
     //Need to resolve when category is undefined in case that webpart prop is empty
     let testCategory = category === undefined || category === null ? false : true;
-    if ( testCategory === false || category.length === 0 ) { category = [pivotProps.otherTab] ; }
+    if ( testCategory === false || category.length === 0 ) { 
+      if ( pushOther === true ) { category = [pivotProps.otherTab] ; }
+    }
 
     //Can't do specific type here or it will break the multi-typed logic below
     let custCatLogi : any = custCategories.logic;
@@ -445,7 +470,7 @@ function buildFinalTileCollection ( response: any, theseProps: any, custSearch, 
       });
 
       //2020-11-16: changed length check === 1 because it should always have subsites category
-      if ( category.length === 0 ) { category.push ( pivotProps.otherTab ) ; }
+      if ( category.length === 0 ) {  if ( pushOther === true ) { category.push ( pivotProps.otherTab ) ;  }  }
 
     } else if ( custCategories.type === 'custom' && custCatLogi.length > 0 ) {
       /**
@@ -502,7 +527,7 @@ function buildFinalTileCollection ( response: any, theseProps: any, custSearch, 
         });
 
         //2020-11-16: changed length check === 1 because it should always have subsites category
-        if ( category.length === 0 ) { category.push ( pivotProps.otherTab ) ; }
+        if ( category.length === 0 ) {  if ( pushOther === true ) { category.push ( pivotProps.otherTab ) ;  }  }
 
     } else {
 
@@ -719,304 +744,6 @@ function buildFinalTileCollection ( response: any, theseProps: any, custSearch, 
 
 
 
-/***
- *    d8888b. db    db d888888b db      d8888b.      db      d888888b d8888b. d8888b.  .d8b.  d8888b. db    db      d888888b d888888b db      d88888b .d8888. 
- *    88  `8D 88    88   `88'   88      88  `8D      88        `88'   88  `8D 88  `8D d8' `8b 88  `8D `8b  d8'      `~~88~~'   `88'   88      88'     88'  YP 
- *    88oooY' 88    88    88    88      88   88      88         88    88oooY' 88oobY' 88ooo88 88oobY'  `8bd8'          88       88    88      88ooooo `8bo.   
- *    88~~~b. 88    88    88    88      88   88      88         88    88~~~b. 88`8b   88~~~88 88`8b      88            88       88    88      88~~~~~   `Y8b. 
- *    88   8D 88b  d88   .88.   88booo. 88  .8D      88booo.   .88.   88   8D 88 `88. 88   88 88 `88.    88            88      .88.   88booo. 88.     db   8D 
- *    Y8888P' ~Y8888P' Y888888P Y88888P Y8888D'      Y88888P Y888888P Y8888P' 88   YD YP   YP 88   YD    YP            YP    Y888888P Y88888P Y88888P `8888Y' 
- *                                                                                                                                                            
- *                                                                                                                                                            
- */
-
-
-
-
-export function buildTileCollectionFromLists(response, pivotProps: IPivotTilesProps , custCategories: ICustomCategories, fixedURL, currentHero, ){
-
-  //           let tileCollection = response.map(item=>new ClassTile(item));
-  //          https://stackoverflow.com/questions/47755247/typescript-array-map-return-object
-
-    let includePeople = false;
-
-    console.log( 'buildTileCollectionFromWebs pivotProps:', pivotProps );
-
-    let tc = createBaselineModObject();
-
-    let theseProps : any = {
-      colModified: 'LastItemModifiedDate',
-      colCreated: 'Created',
-      colTitleText: 'Title',
-      colHoverText: 'Description',
-      colImageLink: '',
-      colGoToLink: 'ParentWebUrl',
-      colCategory: null,
-      colTileStyle: null,
-      colColor: null,
-      colSize: null,
-
-    };
-
-    for (let item of response) {
-
-        let modResults = addModifiedInfoToItem( item, theseProps, tc, includePeople );
-        tc = modResults.tc;
-        item = modResults.item;
-        if ( item.description === null ) {
-          item.description = '';
-        }
-        item.description = 'Associated Site: ' + item.description;
-    }
-
-    tc = setModifiedCats( tc, pivotProps );
-
-    response = setBestFormat( response, tc, includePeople );
-
-    tc = setLastCat( tc, pivotProps );
-
-    let endTime = getTheCurrentTime();
-
-    let custSearch: any = setCustSearch ( custCategories, theseProps, includePeople );
-
-    let finalTileCollection = buildFinalTileCollection ( response, theseProps, custSearch, custCategories, pivotProps, includePeople , fixedURL, currentHero );
-
-    return {
-      tileCollection: finalTileCollection.tileCollection,
-      custCategories: custCategories,
-      createdInfo: tc.createdInfo,
-      modifiedInfo: tc.modifiedInfo,
-      categoryInfo: tc.categoryInfo,
-      createdByInfo: tc.createdByInfo,
-      modifiedByInfo: tc.modifiedByInfo,
-
-      modifiedByTitles: tc.modifiedByTitles.sort(),
-      modifiedByIDs: tc.modifiedByIDs.sort(),
-      createdByTitles: tc.createdByTitles.sort(),
-      createdByIDs: tc.createdByIDs.sort(),
-      showOtherTab: finalTileCollection.showOtherTab,
-
-    };
-
-  }  // END public static buildTileCollectionFromResponse(response, pivotProps, fixedURL, currentHero){
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/***
- *    d8888b. db    db d888888b db      d8888b.      db   d8b   db d88888b d8888b.      d888888b d888888b db      d88888b .d8888. 
- *    88  `8D 88    88   `88'   88      88  `8D      88   I8I   88 88'     88  `8D      `~~88~~'   `88'   88      88'     88'  YP 
- *    88oooY' 88    88    88    88      88   88      88   I8I   88 88ooooo 88oooY'         88       88    88      88ooooo `8bo.   
- *    88~~~b. 88    88    88    88      88   88      Y8   I8I   88 88~~~~~ 88~~~b.         88       88    88      88~~~~~   `Y8b. 
- *    88   8D 88b  d88   .88.   88booo. 88  .8D      `8b d8'8b d8' 88.     88   8D         88      .88.   88booo. 88.     db   8D 
- *    Y8888P' ~Y8888P' Y888888P Y88888P Y8888D'       `8b8' `8d8'  Y88888P Y8888P'         YP    Y888888P Y88888P Y88888P `8888Y' 
- *                                                                                                                                
- *                                                                                                                                
- */
-
-export function buildTileCollectionFromHubs(response, pivotProps: IPivotTilesProps , custCategories: ICustomCategories, fixedURL, currentHero){
-
-  //           let tileCollection = response.map(item=>new ClassTile(item));
-  //          https://stackoverflow.com/questions/47755247/typescript-array-map-return-object
-
-     let includePeople = false;
-
-     console.log( 'buildTileCollectionFromWebs pivotProps:', pivotProps );
- 
-     let tc = createBaselineModObject();
- 
-     let theseProps : any = {
-      colModified: 'LastItemUserModifiedDate',
-      colCreated: 'Created',
-      colTitleText: 'Title',
-      colHoverText: 'Description',
-      colImageLink: 'SiteLogoUrl',
-      colGoToLink: 'SPSiteUrl',
-      colCategory: null,
-      colTileStyle: null,
-      colColor: null,
-      colSize: null,
- 
-     };
- 
-     for (let item of response) {
-         item.Id = item.SiteId;
-         let modResults = addModifiedInfoToItem( item, theseProps, tc, includePeople );
-         tc = modResults.tc;
-         item = modResults.item;
-     }
- 
-     tc = setModifiedCats( tc, pivotProps );
- 
-     response = setBestFormat( response, tc, includePeople );
- 
-     tc = setLastCat( tc, pivotProps );
- 
-     let endTime = getTheCurrentTime();
- 
-     let custSearch: any = setCustSearch ( custCategories, theseProps, includePeople );
- 
-     let finalTileCollection = buildFinalTileCollection ( response, theseProps, custSearch, custCategories, pivotProps, includePeople , fixedURL, currentHero );
- 
-     return {
-       tileCollection: finalTileCollection.tileCollection,
-       custCategories: custCategories,
-       createdInfo: tc.createdInfo,
-       modifiedInfo: tc.modifiedInfo,
-       categoryInfo: tc.categoryInfo,
-       createdByInfo: tc.createdByInfo,
-       modifiedByInfo: tc.modifiedByInfo,
- 
-       modifiedByTitles: tc.modifiedByTitles.sort(),
-       modifiedByIDs: tc.modifiedByIDs.sort(),
-       createdByTitles: tc.createdByTitles.sort(),
-       createdByIDs: tc.createdByIDs.sort(),
-       showOtherTab: finalTileCollection.showOtherTab,
- 
-     };
-
-  }  // END public static buildTileCollectionFromResponse(response, pivotProps, fixedURL, currentHero){
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/***
- *    d8888b. db    db d888888b db      d8888b.      db   d8b   db d88888b d8888b.      d888888b d888888b db      d88888b .d8888. 
- *    88  `8D 88    88   `88'   88      88  `8D      88   I8I   88 88'     88  `8D      `~~88~~'   `88'   88      88'     88'  YP 
- *    88oooY' 88    88    88    88      88   88      88   I8I   88 88ooooo 88oooY'         88       88    88      88ooooo `8bo.   
- *    88~~~b. 88    88    88    88      88   88      Y8   I8I   88 88~~~~~ 88~~~b.         88       88    88      88~~~~~   `Y8b. 
- *    88   8D 88b  d88   .88.   88booo. 88  .8D      `8b d8'8b d8' 88.     88   8D         88      .88.   88booo. 88.     db   8D 
- *    Y8888P' ~Y8888P' Y888888P Y88888P Y8888D'       `8b8' `8d8'  Y88888P Y8888P'         YP    Y888888P Y88888P Y88888P `8888Y' 
- *                                                                                                                                
- *                                                                                                                                
- */
-
-export function buildTileCollectionFromWebs(response, pivotProps: IPivotTilesProps , custCategories: ICustomCategories, fixedURL, currentHero){
-
-  //           let tileCollection = response.map(item=>new ClassTile(item));
-  //          https://stackoverflow.com/questions/47755247/typescript-array-map-return-object
-
-     let includePeople = false;
-
-     console.log( 'buildTileCollectionFromWebs pivotProps:', pivotProps );
- 
-     let tc = createBaselineModObject();
- 
-     let theseProps : any = {
-      colModified: 'LastItemUserModifiedDate',
-      colCreated: 'Created',
-      colTitleText: 'Title',
-      colHoverText: 'Description',
-      colImageLink: 'SiteLogoUrl',
-      colGoToLink: 'ServerRelativeUrl',
-      colCategory: null,
-      colTileStyle: null,
-      colColor: null,
-      colSize: null,
- 
-     };
- 
-     for (let item of response) {
- 
-         let modResults = addModifiedInfoToItem( item, theseProps, tc, includePeople );
-         tc = modResults.tc;
-         item = modResults.item;
-     }
- 
-     tc = setModifiedCats( tc, pivotProps );
- 
-     response = setBestFormat( response, tc, includePeople );
- 
-     tc = setLastCat( tc, pivotProps );
- 
-     let endTime = getTheCurrentTime();
- 
-     let custSearch: any = setCustSearch ( custCategories, theseProps, includePeople );
- 
-     let finalTileCollection = buildFinalTileCollection ( response, theseProps, custSearch, custCategories, pivotProps, includePeople , fixedURL, currentHero );
- 
-     return {
-       tileCollection: finalTileCollection.tileCollection,
-       custCategories: custCategories,
-       createdInfo: tc.createdInfo,
-       modifiedInfo: tc.modifiedInfo,
-       categoryInfo: tc.categoryInfo,
-       createdByInfo: tc.createdByInfo,
-       modifiedByInfo: tc.modifiedByInfo,
- 
-       modifiedByTitles: tc.modifiedByTitles.sort(),
-       modifiedByIDs: tc.modifiedByIDs.sort(),
-       createdByTitles: tc.createdByTitles.sort(),
-       createdByIDs: tc.createdByIDs.sort(),
-       showOtherTab: finalTileCollection.showOtherTab,
- 
-     };
-
-  }  // END public static buildTileCollectionFromResponse(response, pivotProps, fixedURL, currentHero){
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   function isVisibleItem( item , theseProps, pivotProps ) {
 
     let isVisible : boolean = true;
@@ -1163,7 +890,7 @@ export function buildTileCollectionFromAllResponse( type:  responseType, respons
 
     let custSearch: any = setCustSearch ( custCategories, theseProps, includePeople );
 
-    let finalTileCollection = buildFinalTileCollection ( newResponse, theseProps, custSearch, custCategories, pivotProps, includePeople , fixedURL, currentHero );
+    let finalTileCollection = buildFinalTileCollection ( newResponse, type, theseProps, custSearch, custCategories, pivotProps, includePeople , fixedURL, currentHero );
 
     return {
       tileCollection: finalTileCollection.tileCollection,
@@ -1184,124 +911,6 @@ export function buildTileCollectionFromAllResponse( type:  responseType, respons
 
   }  // END public static buildTileCollectionFromResponse(response, pivotProps, fixedURL, currentHero){
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/***
- *    d8888b. db    db d888888b db      d8888b.      d888888b d888888b db      d88888b       .o88b.  .d88b.  db      db           d88888b d8888b.      d8888b. d88888b .d8888. d8888b. 
- *    88  `8D 88    88   `88'   88      88  `8D      `~~88~~'   `88'   88      88'          d8P  Y8 .8P  Y8. 88      88           88'     88  `8D      88  `8D 88'     88'  YP 88  `8D 
- *    88oooY' 88    88    88    88      88   88         88       88    88      88ooooo      8P      88    88 88      88           88ooo   88oobY'      88oobY' 88ooooo `8bo.   88oodD' 
- *    88~~~b. 88    88    88    88      88   88         88       88    88      88~~~~~      8b      88    88 88      88           88~~~   88`8b        88`8b   88~~~~~   `Y8b. 88~~~   
- *    88   8D 88b  d88   .88.   88booo. 88  .8D         88      .88.   88booo. 88.          Y8b  d8 `8b  d8' 88booo. 88booo.      88      88 `88.      88 `88. 88.     db   8D 88      
- *    Y8888P' ~Y8888P' Y888888P Y88888P Y8888D'         YP    Y888888P Y88888P Y88888P       `Y88P'  `Y88P'  Y88888P Y88888P      YP      88   YD      88   YD Y88888P `8888Y' 88      
- *                                                                                                                                                                                     
- *                                                                                                                                                                                     
- */
-
-
-  export function buildTileCollectionFromResponse(response, pivotProps: IPivotTilesProps , custCategories: ICustomCategories, fixedURL, currentHero){
-
-  //           let tileCollection = response.map(item=>new ClassTile(item));
-  //          https://stackoverflow.com/questions/47755247/typescript-array-map-return-object
-
-    console.log( 'buildTileCollectionFromResponse pivotProps:', pivotProps );
-
-    let includePeople = true;
-
-    let tc = createBaselineModObject();
-
-    let theseProps = pivotProps;
-
-    let newResponse : any[] = [];
-    let filterOnlyList : any = false ; // pivotProps.filterOnlyList;
-
-    for (let item of response) {
-
-      let isVisible = filterOnlyList === false ? isVisibleItem( item , theseProps, pivotProps ) : true ;
-
-      if ( isVisible === true ) {
-
-        let modResults = addModifiedInfoToItem( item, theseProps, tc, includePeople );
-        tc = modResults.tc;
-        item = modResults.item;
-        newResponse.push( item );
-      }
-
-    }
-
-    tc = setModifiedCats( tc, pivotProps );
-
-    newResponse = setBestFormat( newResponse, tc, includePeople );
-
-    tc = setLastCat( tc, pivotProps );
-
-    let endTime = getTheCurrentTime();
-
-    let custSearch: any = setCustSearch ( custCategories, theseProps, includePeople );
-
-    let finalTileCollection = buildFinalTileCollection ( newResponse, theseProps, custSearch, custCategories, pivotProps, includePeople , fixedURL, currentHero );
-
-    return {
-      tileCollection: finalTileCollection.tileCollection,
-      custCategories: custCategories,
-      createdInfo: tc.createdInfo,
-      modifiedInfo: tc.modifiedInfo,
-      categoryInfo: tc.categoryInfo,
-      createdByInfo: tc.createdByInfo,
-      modifiedByInfo: tc.modifiedByInfo,
-
-      modifiedByTitles: tc.modifiedByTitles.sort(),
-      modifiedByIDs: tc.modifiedByIDs.sort(),
-      createdByTitles: tc.createdByTitles.sort(),
-      createdByIDs: tc.createdByIDs.sort(),
-      showOtherTab: finalTileCollection.showOtherTab,
-
-    };
-
-  }  // END public static buildTileCollectionFromResponse(response, pivotProps, fixedURL, currentHero){
-    
-
-
-
-
-
-
 
 
 

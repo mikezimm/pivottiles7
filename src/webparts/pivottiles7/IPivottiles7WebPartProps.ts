@@ -72,28 +72,35 @@ export interface IPivottiles7WebPartProps {
   hubsInclude: boolean ;
   hubsCategory: string ;
   hubsLazy: boolean ;
+  hubsOthers: boolean ;
 
   groupsInclude: boolean ;
   groupsCategory: string ;
   groupsLazy: boolean ;
   groupsList: string ;
+  groupsOthers: boolean ;
 
   usersInclude: boolean ;
   usersCategory: string ;
   usersLazy: boolean ;
+  usersOthers: boolean ;
 
   subsitesInclude: boolean;
   subsitesCategory: string;
+  subsOthers: boolean ;
 
   ignoreList: boolean;
   
   listsInclude: boolean;
   listIconStyles: string;
   listFilter: string;
+  listOthers: boolean ;
+
   libsInclude: boolean;
   libsIconStyles: string;
   libsFilter: string;
   listHideSystem: boolean;
+  libsOthers: boolean ;
 
   listLibCat: string;
           // listsInclude, libsInclude, listLibCat, listIconStyles, libsIconStyles

@@ -44,10 +44,7 @@ import { convertCategoryToIndex, fixURLs } from './UtilsNew';
 
 import { buildTileCategoriesFromResponse } from './BuildTileCategories';
 
-import { buildTileCollectionFromResponse, buildTileCollectionFromWebs, 
-  buildTileCollectionFromLists, buildTileCollectionFromHubs,
-  buildTileCollectionFromAllResponse
-} from './BuildTileCollection';
+import {  buildTileCollectionFromAllResponse } from './BuildTileCollection';
 
 import { CustTime , custTimeOption, } from './QuickBuckets';
 
@@ -56,6 +53,8 @@ import { getAssociatedSites , getHubSiteData, getHubSiteData2, allAvailableHubWe
 import { ISearchQuery, SearchResults, ISearchResult } from "@pnp/sp/search";
 
 import { IHubSiteWebData, IHubSiteInfo } from  "@pnp/sp/hubsites";
+
+import { getHelpfullError } from '../../../../services/ErrorHandler';
 
 //import DirectoryHook from '../Directory/DirectoryHook';
 
@@ -1155,8 +1154,26 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
   }
 
+  private async _getSubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData ) {
+    let entireResponse: any = {};
+    if ( this.props.subsitesInclude === true ) {
+        try {
+            let websResponse = await web.webs();
+            websResponse.map( w => { w.sourceType = this.props.subsitesCategory ; });
+            entireResponse.webs = websResponse;
+            this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
+        } catch (e) {
+            let errMessage = getHelpfullError(e, true, true);
+            this.processCatch(errMessage);
+        }
+      } else {
+        entireResponse.webs = [];
+        this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
+      }
 
-  private _getSubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData  ){
+    }
+
+  private _getSubsitesOriginal( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData  ){
 
     let entireResponse: any = {};
     if ( this.props.subsitesInclude === true ) {
@@ -1228,7 +1245,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
             else if ( this.props.listDefinition.toLowerCase().indexOf('library') > -1 ) { I.sourceType = "Files"; }
             else if ( this.props.listDefinition.toLowerCase().indexOf('news') > -1 ) { I.sourceType = "News"; }
             else if ( this.props.listDefinition.toLowerCase().indexOf('page') > -1 ) { I.sourceType = "Pages"; }
-            else { I.sourceType = "Items"; }
+            else { I.sourceType = ""; }
           });
           entireResponse.items = listResponse;
           this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );

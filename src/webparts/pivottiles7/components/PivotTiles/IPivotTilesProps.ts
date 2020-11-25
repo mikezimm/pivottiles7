@@ -36,30 +36,35 @@ export interface IFetchInfoSettings {
   hubsInclude: boolean ;
   hubsCategory: string ;
   hubsLazy: boolean ;
+  hubsOthers: boolean ;
 
   groupsInclude: boolean ;
   groupsCategory: string ;
   groupsLazy: boolean ;
-  groupsList: string[];
+  groupsList: string[] ;
+  groupsOthers: boolean ;
 
   usersInclude: boolean ;
   usersCategory: string ;
   usersLazy: boolean ;
+  usersOthers: boolean ;
 
   subsitesInclude: boolean ;
   subsitesCategory: string ;
   ignoreList: boolean ;
+  subsOthers: boolean ;
 
   listsInclude: boolean;
   listIconStyles: string;
   listFilter: string;
   listCategory: string;
+  listOthers: boolean ;
 
   libsInclude: boolean;
   libsIconStyles: string;
   libsFilter: string;
   libsCategory: string;
-
+  libsOthers: boolean ;
 
   listHideSystem: boolean;
 

@@ -179,31 +179,37 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       hubsInclude: this.properties.hubsInclude ,
       hubsCategory: this.properties.hubsCategory ,
       hubsLazy: this.properties.hubsLazy ,
-    
+      hubsOthers: this.properties.hubsOthers ,
+
       groupsInclude: this.properties.groupsInclude ,
       groupsCategory: this.properties.groupsCategory ,
       groupsLazy: this.properties.groupsLazy ,
       groupsList: groupList ,
+      groupsOthers: this.properties.groupsOthers ,
 
       usersInclude: this.properties.usersInclude ,
       usersCategory: this.properties.usersCategory ,
       usersLazy: this.properties.usersLazy ,
+      usersOthers: this.properties.usersOthers ,
 
       subsitesInclude: this.properties.subsitesInclude ,
       subsitesCategory: this.properties.subsitesCategory ,
       ignoreList: this.properties.ignoreList ,
+      subsOthers: this.properties.subsOthers ,
 
       listsInclude: this.properties.listsInclude ,
       listIconStyles: this.properties.listIconStyles ,
       listFilter: this.properties.listFilter ,
       listCategory: 'Lists',
+      listOthers: this.properties.listOthers ,
 
       libsInclude: this.properties.libsInclude ,
       libsIconStyles: this.properties.libsIconStyles ,
       libsFilter: this.properties.libsFilter ,
       libsCategory: 'Libraries',
-      listHideSystem: this.properties.listHideSystem ,
+      libsOthers: this.properties.libsOthers ,
 
+      listHideSystem: this.properties.listHideSystem ,
       listLibCat: this.properties.listLibCat ,
     };
 
@@ -422,6 +428,8 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       'libsInclude', 'libsIconStyles', 'libsFilter', 'listHideSystem', 
       'hubsInclude', 'hubsCategory',
       'setFilter', 'filterTitle', 'filterDescription', 'filterOnlyList', 
+
+      'hubsOthers', 'subsOthers', 'listOthers', 'libsOthers', 'usersOthers', 'groupsOthers', 
 
 
     ];
