@@ -243,9 +243,12 @@ export default class PivotTileItem extends React.Component<IPivotTileItemProps, 
     } else {
 
       let sizeStyle : React.CSSProperties = {};
+
+      //Special styling if icon is the Jira Icon
       if ( this.props.imageUrl === jiraIcon ) {
-        sizeStyle = { height: this.props.imageHeight / 2, top: this.props.imageHeight / 3 } ;
+        sizeStyle = { height: this.props.imageHeight / 2, top: this.props.imageHeight / 3.4 } ;
       }
+
       result = <Image 
         style={ sizeStyle }
         className={[

@@ -114,6 +114,7 @@ public constructor(props:IInfoAboutMeProps){
             let thisPage = null;
 
             let underScoreIssue = <a href="https://github.com/mikezimm/Pivot-Tiles/issues/30" target="_blank">Issue #30</a>;
+            
 
             thisPage = <div>
                 <WebPartLinks

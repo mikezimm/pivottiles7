@@ -159,9 +159,11 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
   if ( hasLists === true ) {
     tileCategories.push( pivotProps.fetchInfo.listCategory);
   }
+
   if ( hasLibraries === true ) {
     tileCategories.push( pivotProps.fetchInfo.libsCategory );
   }
+  
   if ( hasSystem === true ) {
     tileCategories.push('System');
   }
