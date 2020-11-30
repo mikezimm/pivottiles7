@@ -551,7 +551,7 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
     }
 
     let descriptionSuffix = '';
-    if ( item.sourceType === pivotProps.fetchInfo.libsCategory || item.sourceType === pivotProps.fetchInfo.listCategory || item.sourceType === pivotProps.subsitesCategory ) {
+    if ( item.sourceType === pivotProps.fetchInfo.libsCategory || item.sourceType === pivotProps.fetchInfo.listCategory || item.sourceType === pivotProps.fetchInfo.subsitesCategory ) {
       descriptionSuffix =  [ item.sourceType, item.createdNote, item.modifiedNote ].join('; ');
     }
 
@@ -576,11 +576,11 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
       if ( !imageUrl || imageUrl === '' ) { imageUrl = getStyleProp([ pivotProps.fetchInfo.listIconStyles ], 'icon' ) ; }
       if ( !imageUrl || imageUrl === '' ) { imageUrl = 'BulletedList2' ; }   
       
-    } else if ( sourceType === pivotProps.subsitesCategory ) {
+    } else if ( sourceType === pivotProps.fetchInfo.subsitesCategory ) {
       if ( !color || color === '' ) { color = 'font=darkslateblue;' + defFabricSize; }
       if ( !imageUrl || imageUrl === '' ) { imageUrl = defaultWebIcon ; }
 
-    } else if ( sourceType === 'Hubs' ) {
+    } else if ( sourceType === pivotProps.fetchInfo.hubsCategory ) {
       if ( !color || color === '' ) { color = 'font=red;' + defFabricSize; }
       if ( !imageUrl || imageUrl === '' ) { imageUrl = defaultHubIcon ; }
 
@@ -879,7 +879,7 @@ export function buildTileCollectionFromAllResponse( type:  responseType, respons
   //           let tileCollection = response.map(item=>new ClassTile(item));
   //          https://stackoverflow.com/questions/47755247/typescript-array-map-return-object
 
-    console.log( 'buildTileCollectionFromResponse pivotProps:', pivotProps );
+    // console.log( 'buildTileCollectionFromResponse pivotProps:', pivotProps );
 
     let includePeople =  type === 'items' ? true : false ;
 

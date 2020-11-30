@@ -83,7 +83,7 @@ export function getPrincipalTypeString( type: PrincipalType ) {
         }
 
         /**
-         * resort titles back to original order
+         * resort titles back to original order because the response seems to be sorted by title if sort is not defined
          */
 
         let sortedTitles = [];

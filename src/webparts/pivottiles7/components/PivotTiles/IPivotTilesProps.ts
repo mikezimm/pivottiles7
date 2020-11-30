@@ -161,8 +161,6 @@ export interface IPivotTilesProps {
   analyticsList: string;
   analyticsWeb: string;
 
-  subsitesInclude: boolean;
-  subsitesCategory: string;
   ignoreList: boolean;
 
   fetchInfo: IFetchInfoSettings;

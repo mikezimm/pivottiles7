@@ -316,8 +316,6 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
         colCreatedById: "Author/ID",
         colCreatedByTitle: "Author/Title",
 
-        subsitesInclude: this.properties.subsitesInclude ,
-        subsitesCategory: this.properties.subsitesCategory ,
         ignoreList: this.properties.ignoreList ,
 
         fetchInfo: fetchInfo,

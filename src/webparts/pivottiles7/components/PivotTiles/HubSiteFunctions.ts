@@ -15,7 +15,7 @@ import { defaultHubIcon } from './BuildTileCollection';
 export async function getHubSiteData() {
 
     const webData: IHubSiteInfo = await sp.hubSites();
-    console.log('IHubSiteInfo:', webData );
+//    console.log('IHubSiteInfo:', webData );
 
 }
 
@@ -23,7 +23,7 @@ export async function getHubSiteData2() {
 
     //IHubSiteWebData
     const webData: any = await sp.web.hubSiteData();
-    console.log('IHubSiteWebData:', webData );
+//   console.log('IHubSiteWebData:', webData );
 
 }
 
@@ -43,7 +43,7 @@ export interface MySearchResults extends ISearchResult {
 
 }
 
-export function getAssociatedSites(departmentId: string, callback: any, entireResponse: any , custCategories, newData ) {
+export function getAssociatedSites(departmentId: string, callback: any, entireResponse: any , custCategories, hubsCategory, newData ) {
 
     //var departmentId = departmentId;
     // do a null check of department id
@@ -63,7 +63,7 @@ export function getAssociatedSites(departmentId: string, callback: any, entireRe
             entireResponse.hubs = r.PrimarySearchResults;
 
             entireResponse.hubs.map( h => {
-                h.sourceType = 'Hubs';
+                h.sourceType = hubsCategory;
             });
             callback( entireResponse, custCategories, newData );
     
@@ -89,7 +89,7 @@ import { IUser } from '../IReUsableInterfaces';
 const allColumns = ['Title','Id','Created','Modified','Author/Title','Author/ID','Author/Name','Editor/Title','Editor/ID','Editor/Name',
     'Primary/Title', 'Primary/ID', 'Secondary/Title', 'Secondary/ID'];
 
-export async function allAvailableHubWebs(  tileCollection: any, addTheseItemsToState: any, ) {
+export async function allAvailableHubWebs(  tileCollection: any,  hubsCategory, addTheseItemsToState: any, ) {
 
     let expColumns = getExpandColumns(allColumns);
     let selColumns = getSelectColumns(allColumns);
@@ -104,10 +104,10 @@ export async function allAvailableHubWebs(  tileCollection: any, addTheseItemsTo
     let hasHubs : any = false;
 
     tileCollection.map( t => {
-        if ( t.sourceType === 'Hubs' ) { 
+        if ( t.sourceType === hubsCategory ) { 
             hasHubs = true;
             if ( t.imageUrl !== defaultHubIcon ) { didThisAlreadyRun = true; } 
-            console.log('allAvailableHubWebs: hubCheck', t.title , didThisAlreadyRun , t.imageUrl );
+//            console.log('allAvailableHubWebs: hubCheck', t.title , didThisAlreadyRun , t.imageUrl );
         }
     });
 
@@ -115,7 +115,7 @@ export async function allAvailableHubWebs(  tileCollection: any, addTheseItemsTo
         let newTileCollection = JSON.parse(JSON.stringify( tileCollection )) ;
 
         for ( let i in newTileCollection ) {
-            if ( newTileCollection[i].sourceType === 'Hubs' && newTileCollection[i].imageUrl === defaultHubIcon) {
+            if ( newTileCollection[i].sourceType === hubsCategory && newTileCollection[i].imageUrl === defaultHubIcon) {
                 let getThisWeb = newTileCollection[i].href;
                 let thisListWeb = Web( getThisWeb );
                 let errMessage = '';

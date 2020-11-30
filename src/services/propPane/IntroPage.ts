@@ -260,7 +260,7 @@ export class IntroPage {
               label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.subsitesCategory ),
               offText: 'Off',
               onText: 'On',
-              disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
+              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.subsitesInclude !== true ? true : false,
           }),
 
         ]}, // this group
@@ -291,7 +291,7 @@ export class IntroPage {
               label: 'Hide System lists',
               offText: 'Off',
               onText: 'On',
-              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true ? false : true,
           }),
 
           PropertyPaneTextField('listFilter', {
@@ -303,7 +303,7 @@ export class IntroPage {
             label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', 'Lists' ),
             offText: 'Off',
             onText: 'On',
-            disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
+            disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.libsInclude !== true ? true : false,
         }),
 
         ]}, // this group
@@ -353,7 +353,7 @@ export class IntroPage {
               label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', 'Libraries' ),
               offText: 'Off',
               onText: 'On',
-              disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
+              disabled: webPartProps.custCatType === 'tileCategory'  || webPartProps.libsInclude !== true ? true : false,
           }),
 
         ]}, // this group
@@ -384,7 +384,7 @@ export class IntroPage {
               label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.hubsCategory ),
               offText: 'Off',
               onText: 'On',
-              disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
+              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.hubsInclude !== true ? true : false,
           }),
 
         ]}, // this group
@@ -419,7 +419,7 @@ export class IntroPage {
               label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.groupsCategory ),
               offText: 'Off',
               onText: 'On',
-              disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
+              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.groupsInclude !== true ? true : false,
           }),
 
         ]}, // this group

@@ -42,7 +42,7 @@ import { IPivotTilesState } from './IPivotTilesState';
  */
 
 export function tileBuilder(parentProps,parentState){
-  console.log('tileBuilder',parentProps,parentState);
+  //console.log('tileBuilder',parentProps,parentState);
   const tileBuild = parentState.filteredTiles.map(newTile => (
       oneTileBuilder(parentProps,parentState, 'normal', newTile )
   ));
