@@ -367,7 +367,7 @@ function pushOtherTab ( type:  responseType, pivotProps: IPivotTilesProps ) {
     if ( pivotProps.fetchInfo.subsOthers !== true ) { return false ; } }
 
   if ( type === 'lists' ) { 
-    if ( pivotProps.fetchInfo.listOthers !== true ) { return false ; } }
+    if ( pivotProps.fetchInfo.listOthers !== true && pivotProps.fetchInfo.libsOthers !== true ) { return false ; } }
 
   if ( type === 'groups' ) { 
     if ( pivotProps.fetchInfo.groupsOthers !== true ) { return false ; } }

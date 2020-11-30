@@ -107,24 +107,27 @@ export async function allAvailableHubWebs(  tileCollection: any, addTheseItemsTo
         if ( t.sourceType === 'Hubs' ) { 
             hasHubs = true;
             if ( t.imageUrl !== defaultHubIcon ) { didThisAlreadyRun = true; } 
+            console.log('allAvailableHubWebs: hubCheck', t.title , didThisAlreadyRun , t.imageUrl );
         }
     });
 
     if ( hasHubs === true && didThisAlreadyRun === false ) {
-        for ( let i in tileCollection ) {
-            if ( tileCollection[i].sourceType === 'Hubs' && tileCollection[i].imageUrl === defaultHubIcon) {
-                let getThisWeb = tileCollection[i].href;
+        let newTileCollection = JSON.parse(JSON.stringify( tileCollection )) ;
+
+        for ( let i in newTileCollection ) {
+            if ( newTileCollection[i].sourceType === 'Hubs' && newTileCollection[i].imageUrl === defaultHubIcon) {
+                let getThisWeb = newTileCollection[i].href;
                 let thisListWeb = Web( getThisWeb );
                 let errMessage = '';
                 try {
         
                     let thisSite : any = await thisListWeb.get();
-                    tileCollection[i].imageUrl = thisSite.SiteLogoUrl ? thisSite.SiteLogoUrl : tileCollection[i].imageUrl;
-                    tileCollection[i].description = thisSite.Description;
-                    tileCollection[i].created = thisSite.Created;
-                    tileCollection[i].modified = thisSite.LastItemModifiedDate;
+                    newTileCollection[i].imageUrl = thisSite.SiteLogoUrl ? thisSite.SiteLogoUrl : newTileCollection[i].imageUrl;
+                    newTileCollection[i].description = thisSite.Description;
+                    newTileCollection[i].created = thisSite.Created;
+                    newTileCollection[i].modified = thisSite.LastItemModifiedDate;
         
-                    console.log('thisSite: ', thisSite );
+                    console.log('thisSite: ', newTileCollection[i].title , newTileCollection[i].imageUrl );
         
                 } catch (e) {
                     errMessage = getHelpfullError(e, true, true);
@@ -133,11 +136,11 @@ export async function allAvailableHubWebs(  tileCollection: any, addTheseItemsTo
             }
     
         }
+        addTheseItemsToState( newTileCollection );
+
     } else {
         console.log('NOT Updating Hub Logos... looks like we already loaded them');
     }
-
-    addTheseItemsToState( tileCollection );
 
     //return allItems;
 

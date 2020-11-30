@@ -4,6 +4,22 @@ import { ICustomTypes } from './components/PivotTiles/IPivotTilesProps';
 
 import { PageContext } from '@microsoft/sp-page-context';
 
+// changes = changeHubs, changeSubs, changeGroups, changeLists, changeFormats, changeItems, changeCats, changeFilters
+export const changeHubs = [ 'hubsLazy', 'hubsInclude', 'hubsCategory','hubsOthers', ];
+export const changeSubs = [ 'subsitesInclude', 'subsitesCategory', 'subsOthers',  ];
+export const changeGroups = [ 'groupsInclude', 'groupsCategory', 'groupsLazy', 'groupsList' , 'groupsOthers', ];
+export const changeLists = [ 'listsInclude', 'listIconStyles', 'listFilter', 'listLibCat', 'listCategory',
+  'libsInclude', 'libsIconStyles', 'libsFilter', 'listHideSystem', 'listOthers', 'libsCategory', 'libsOthers', ];
+
+export const changeFormats = [ 'setSize','setTab','otherTab','setPivSize','heroCategory','heroRatio','showHero','setPivFormat','setImgFit','setImgCover','target',
+  'imageWidth','imageHeight','textPadding','setHeroFit','setHeroCover','onHoverZoom', 'enableChangePivots',];
+
+export const changeItems = [ 'ignoreList', 'definitionToggle', 'listDefinition', 'listTitle', 'listWebURL' ];
+export const changeCats = [ 'custCatType', 'custCatCols', 'custCatLogi', 'custCatBrak', ];
+
+export const changeFilters = [  'setFilter', 'filterTitle', 'filterDescription', 'filterOnlyList', ];
+
+
 export interface IPivottiles7WebPartProps {
 
   //Main webpart properties
@@ -12,6 +28,7 @@ export interface IPivottiles7WebPartProps {
   pageContext: PageContext;
 
   lastPropChange: IPropChangeTypes; //IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other'; //lastPropChange
+  lastPropDetailChange: string;
 
   //Hero tile properties
   showHero: boolean;

@@ -84,6 +84,7 @@
       "groupsInclude": false ,
       "groupsCategory": "Groups" ,
       "groupsLazy": true ,
+      "groupsList": "",
       "groupsOthers": false,
 
       "usersInclude": false ,
@@ -93,15 +94,20 @@
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
+      "listFilter": "",
+      "listCategory": "",
       "listOthers": false,
 
       "libsInclude": false,
       "libsIconStyles": "icon=FabricFolder;font=eblue",
-      "listLibCat": "",
+      "libsFilter": "",
+      "libsCategory": "Libraries",
       "libsOthers": false,
+
+      "listLibCat": "",
       
       "listHideSystem": true,
-
+      
       "colTileStyle": ""
     }
   },
@@ -159,7 +165,6 @@
       "custCatLogi": "",
       "custCatBrak": false,
 
-
       "subsitesInclude": true,
       "subsitesCategory": "Subsites",
       "hubsOthers": false,
@@ -173,6 +178,7 @@
       "groupsInclude": false ,
       "groupsCategory": "Groups" ,
       "groupsLazy": true ,
+      "groupsList": "",
       "groupsOthers": false,
 
       "usersInclude": false ,
@@ -182,15 +188,20 @@
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
+      "listFilter": "",
+      "listCategory": "",
       "listOthers": false,
 
       "libsInclude": false,
       "libsIconStyles": "icon=FabricFolder;font=eblue",
-      "listLibCat": "",
+      "libsFilter": "",
+      "libsCategory": "Libraries",
       "libsOthers": false,
+
+      "listLibCat": "",
       
       "listHideSystem": true,
-
+      
       "colTileStyle": ""
     }
   },
@@ -242,11 +253,11 @@
       "colOpenBehaviour": "New Tab",
       "colImageLink": "TileBgImageUrl",
       "colSort": "Order1",
+
       "custCatType": "tileCategory",
       "custCatCols": "",
       "custCatLogi": "",
       "custCatBrak": false,
-
 
       "subsitesInclude": true,
       "subsitesCategory": "Subsites",
@@ -261,6 +272,7 @@
       "groupsInclude": false ,
       "groupsCategory": "Groups" ,
       "groupsLazy": true ,
+      "groupsList": "",
       "groupsOthers": false,
 
       "usersInclude": false ,
@@ -270,13 +282,18 @@
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
+      "listFilter": "",
+      "listCategory": "",
       "listOthers": false,
 
       "libsInclude": false,
       "libsIconStyles": "icon=FabricFolder;font=eblue",
-      "listLibCat": "",
+      "libsFilter": "",
+      "libsCategory": "Libraries",
       "libsOthers": false,
-      
+
+      "listLibCat": "",
+
       "listHideSystem": true,
       
       "colTileStyle": ""

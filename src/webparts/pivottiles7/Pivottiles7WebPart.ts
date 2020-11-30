@@ -20,7 +20,10 @@ import {
 import { sp } from '@pnp/sp';
 import { Web } from '@pnp/sp/presets/all';
 
-import { IPivottiles7WebPartProps } from './IPivottiles7WebPartProps';
+import { IPivottiles7WebPartProps,
+  changeHubs, changeSubs, changeGroups, changeLists, changeFormats, changeItems, changeCats, changeFilters
+  } from './IPivottiles7WebPartProps';
+
 import PivotTiles from './components/PivotTiles/PivotTiles';
 import { IPivotTilesProps, IFetchInfoSettings, ICustomCategories, ICustomLogic, IPropChangeTypes } from './components/PivotTiles/IPivotTilesProps';
 import { IPivotTileItemProps,  } from './components/TileItems/IPivotTileItemProps';
@@ -177,7 +180,10 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
     let groupString = this.properties.groupsList;
     if ( !groupString || groupString === '' ) { groupList = [] ; } 
     else {
-      groupList = groupString.split(';').map( g => { return g.trim(); } );
+      groupString.split(';').map( g => { 
+        let gName = g.trim();
+        if ( gName.length > 0 ) { groupList.push( gName ) ; }
+      } );
     }
 
     let fetchInfo : IFetchInfoSettings = {
@@ -232,6 +238,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
           //IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other'; //lastPropChange
         lastPropChange: this.properties.lastPropChange,
+        lastPropDetailChange: this.properties.lastPropDetailChange,
 
         context: this.context,
 
@@ -427,20 +434,6 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     }
 
-    let changeHubs = [ 'hubsInclude', 'hubsInclude', 'hubsCategory','hubsOthers', ];
-    let changeSubs = [ 'subsitesInclude', 'subsitesCategory', 'subsOthers',  ];
-    let changeGroups = [ 'groupsInclude', 'groupsOthers' , 'usersOthers', ];
-    let changeLists = [ 'listsInclude', 'listIconStyles', 'listFilter', 'listLibCat', 
-      'libsInclude', 'libsIconStyles', 'libsFilter', 'listHideSystem', 'listOthers', 'libsOthers', ];
-
-    let changeFormats = [ 'setSize','setTab','otherTab','setPivSize','heroCategory','heroRatio','showHero','setPivFormat','setImgFit','setImgCover','target',
-      'imageWidth','imageHeight','textPadding','setHeroFit','setHeroCover','onHoverZoom', 'enableChangePivots',];
-
-    let changeItems = [ 'subsitesInclude', 'ignoreList', 'ignoreList', 'definitionToggle', 'listDefinition', 'listTitle', 'listWebURL' ];
-    let changeCats = [ 'custCatType', 'custCatCols', 'custCatLogi', 'custCatBrak', ];
-
-    let changeFilters = [  'setFilter', 'filterTitle', 'filterDescription', 'filterOnlyList', ];
-
     let updateOnThese = [];
     updateOnThese.push( ...changeHubs );
     updateOnThese.push( ...changeSubs );
@@ -465,6 +458,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     if (updateOnThese.indexOf(propertyPath) > -1 || previousChange !== this.properties.lastPropChange ) {
       this.properties[propertyPath] = newValue;   
+      this.properties.lastPropDetailChange = propertyPath;
       this.context.propertyPane.refresh();
 
     } else { //This can be removed if it works
