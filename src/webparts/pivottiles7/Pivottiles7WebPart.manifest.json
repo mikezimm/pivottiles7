@@ -66,6 +66,7 @@
       "colImageLink": "File/ServerRelativeUrl",
       "colSort": "Title",
 
+      "filterEverything": true,
       "custCatType": "tileCategory",
       "custCatCols": "",
       "custCatLogi": "",
@@ -78,12 +79,13 @@
       
       "hubsInclude": false ,
       "hubsCategory": "Hubs" ,
-      "hubsLazy": true ,
+      "hubsLazy": false ,
       "subsOthers": false,
 
       "groupsInclude": false ,
       "groupsCategory": "Groups" ,
       "groupsLazy": true ,
+      "groupsList": "",
       "groupsOthers": false,
 
       "usersInclude": false ,
@@ -93,15 +95,20 @@
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
+      "listFilter": "",
+      "listCategory": "",
       "listOthers": false,
 
       "libsInclude": false,
       "libsIconStyles": "icon=FabricFolder;font=eblue",
-      "listLibCat": "",
+      "libsFilter": "",
+      "libsCategory": "Libraries",
       "libsOthers": false,
+
+      "listLibCat": "",
       
       "listHideSystem": true,
-
+      
       "colTileStyle": ""
     }
   },
@@ -154,11 +161,11 @@
       "colImageLink": "File/ServerRelativeUrl",
       "colSort": "",
       
+      "filterEverything": true,
       "custCatType": "tileCategory",
       "custCatCols": "",
       "custCatLogi": "",
       "custCatBrak": false,
-
 
       "subsitesInclude": true,
       "subsitesCategory": "Subsites",
@@ -167,12 +174,13 @@
       
       "hubsInclude": false ,
       "hubsCategory": "Hubs" ,
-      "hubsLazy": true ,
+      "hubsLazy": false ,
       "subsOthers": false,
 
       "groupsInclude": false ,
       "groupsCategory": "Groups" ,
       "groupsLazy": true ,
+      "groupsList": "",
       "groupsOthers": false,
 
       "usersInclude": false ,
@@ -182,15 +190,20 @@
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
+      "listFilter": "",
+      "listCategory": "",
       "listOthers": false,
 
       "libsInclude": false,
       "libsIconStyles": "icon=FabricFolder;font=eblue",
-      "listLibCat": "",
+      "libsFilter": "",
+      "libsCategory": "Libraries",
       "libsOthers": false,
+
+      "listLibCat": "",
       
       "listHideSystem": true,
-
+      
       "colTileStyle": ""
     }
   },
@@ -242,11 +255,12 @@
       "colOpenBehaviour": "New Tab",
       "colImageLink": "TileBgImageUrl",
       "colSort": "Order1",
+
+      "filterEverything": true,
       "custCatType": "tileCategory",
       "custCatCols": "",
       "custCatLogi": "",
       "custCatBrak": false,
-
 
       "subsitesInclude": true,
       "subsitesCategory": "Subsites",
@@ -255,12 +269,13 @@
       
       "hubsInclude": false ,
       "hubsCategory": "Hubs" ,
-      "hubsLazy": true ,
+      "hubsLazy": false ,
       "subsOthers": false,
 
       "groupsInclude": false ,
       "groupsCategory": "Groups" ,
       "groupsLazy": true ,
+      "groupsList": "",
       "groupsOthers": false,
 
       "usersInclude": false ,
@@ -270,13 +285,18 @@
 
       "listsInclude": false,
       "listIconStyles": "icon=BulletedList2;font=green",
+      "listFilter": "",
+      "listCategory": "",
       "listOthers": false,
 
       "libsInclude": false,
       "libsIconStyles": "icon=FabricFolder;font=eblue",
-      "listLibCat": "",
+      "libsFilter": "",
+      "libsCategory": "Libraries",
       "libsOthers": false,
-      
+
+      "listLibCat": "",
+
       "listHideSystem": true,
       
       "colTileStyle": ""

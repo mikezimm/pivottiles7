@@ -29,6 +29,7 @@ export interface IPivotTileItemProps {
   //Hero tile properties
   heroType: string;
   heroCategory: string;
+  id: string;
 
   //Image & main tile properties
   onHoverZoom: string;

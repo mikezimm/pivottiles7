@@ -56,7 +56,7 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
 
     for (let tile of response) {
 
-      if ( tile.category.indexOf(pivotProps.subsitesCategory) > -1 ) { hasSubsites = true ; }
+      if ( tile.category.indexOf(pivotProps.fetchInfo.subsitesCategory) > -1 ) { hasSubsites = true ; }
 
       if ( tile.sourceType ) {
         if ( tile.sourceType.indexOf( pivotProps.fetchInfo.listCategory ) > -1 ) { hasLists = true ; }
@@ -149,11 +149,11 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
 
   //2020-11-16:  Add this to add Subsites tab
   if ( hasSubsites === true ) {
-    tileCategories.push( pivotProps.subsitesCategory );
+    tileCategories.push( pivotProps.fetchInfo.subsitesCategory );
   }
 
   if ( hasHubs === true ) {
-    tileCategories.push( 'Hubs' );
+    tileCategories.push( pivotProps.fetchInfo.hubsCategory );
   }
 
   if ( hasLists === true ) {

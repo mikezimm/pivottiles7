@@ -9,11 +9,13 @@ import { IHubSiteWebData, IHubSiteInfo } from  "@pnp/sp/hubsites";
 import "@pnp/sp/webs";
 import "@pnp/sp/hubsites/web";
 
+import { defaultHubIcon , defaultHubIcon2 } from './BuildTileCollection';
+
 
 export async function getHubSiteData() {
 
     const webData: IHubSiteInfo = await sp.hubSites();
-    console.log('IHubSiteInfo:', webData );
+//    console.log('IHubSiteInfo:', webData );
 
 }
 
@@ -21,7 +23,7 @@ export async function getHubSiteData2() {
 
     //IHubSiteWebData
     const webData: any = await sp.web.hubSiteData();
-    console.log('IHubSiteWebData:', webData );
+//   console.log('IHubSiteWebData:', webData );
 
 }
 
@@ -41,7 +43,7 @@ export interface MySearchResults extends ISearchResult {
 
 }
 
-export function getAssociatedSites(departmentId: string, callback: any, entireResponse: any , custCategories, newData ) {
+export function getAssociatedSites(departmentId: string, callback: any, entireResponse: any , custCategories, hubsCategory, newData ) {
 
     //var departmentId = departmentId;
     // do a null check of department id
@@ -61,7 +63,7 @@ export function getAssociatedSites(departmentId: string, callback: any, entireRe
             entireResponse.hubs = r.PrimarySearchResults;
 
             entireResponse.hubs.map( h => {
-                h.sourceType = 'Hubs';
+                h.sourceType = hubsCategory;
             });
             callback( entireResponse, custCategories, newData );
     
@@ -87,7 +89,7 @@ import { IUser } from '../IReUsableInterfaces';
 const allColumns = ['Title','Id','Created','Modified','Author/Title','Author/ID','Author/Name','Editor/Title','Editor/ID','Editor/Name',
     'Primary/Title', 'Primary/ID', 'Secondary/Title', 'Secondary/ID'];
 
-export async function allAvailableHubWebs(  tileCollection: any, addTheseItemsToState: any, ) {
+export async function allAvailableHubWebs(  tileCollection: any,  hubsCategory, addTheseItemsToState: any, ) {
 
     let expColumns = getExpandColumns(allColumns);
     let selColumns = getSelectColumns(allColumns);
@@ -98,32 +100,47 @@ export async function allAvailableHubWebs(  tileCollection: any, addTheseItemsTo
 //    console.log('UniqueId:', legacyPageContext.pageItemId);
 //    newsService.pageID = legacyPageContext.pageItemId;
 
-    for ( let i in tileCollection ) {
-        if ( tileCollection[i].sourceType === 'Hubs' ) {
-            let getThisWeb = tileCollection[i].href;
-            let thisListWeb = Web( getThisWeb );
-            let errMessage = '';
-            try {
-    
-                let thisSite : any = await thisListWeb.get();
-                tileCollection[i].imageUrl = thisSite.SiteLogoUrl ? thisSite.SiteLogoUrl : tileCollection[i].imageUrl;
-                tileCollection[i].description = thisSite.Description;
-                tileCollection[i].created = thisSite.Created;
-                tileCollection[i].modified = thisSite.LastItemModifiedDate;
-    
-                console.log('thisSite: ', thisSite );
-    
-            } catch (e) {
-                errMessage = getHelpfullError(e, true, true);
-    
-            }
+    let didThisAlreadyRun = false;
+    let hasHubs : any = false;
+
+    tileCollection.map( t => {
+        if ( t.sourceType === hubsCategory ) { 
+            hasHubs = true;
+            if ( t.imageUrl.indexOf('data:image/png;base64,') !== 0 ) { didThisAlreadyRun = true; } 
+//            console.log('allAvailableHubWebs: hubCheck', t.title , didThisAlreadyRun , t.imageUrl );
         }
+    });
 
+    if ( hasHubs === true && didThisAlreadyRun === false ) {
+        let newTileCollection = JSON.parse(JSON.stringify( tileCollection )) ;
 
+        for ( let i in newTileCollection ) {
+            if ( newTileCollection[i].sourceType === hubsCategory && newTileCollection[i].imageUrl.indexOf('data:image/png;base64,') === 0 ) {
+                let getThisWeb = newTileCollection[i].href;
+                let thisListWeb = Web( getThisWeb );
+                let errMessage = '';
+                try {
+        
+                    let thisSite : any = await thisListWeb.get();
+                    newTileCollection[i].imageUrl = thisSite.SiteLogoUrl ? thisSite.SiteLogoUrl : newTileCollection[i].imageUrl;
+                    newTileCollection[i].description = thisSite.Description;
+                    newTileCollection[i].created = thisSite.Created;
+                    newTileCollection[i].modified = thisSite.LastItemModifiedDate;
+        
+                    console.log('thisSite: ', newTileCollection[i].title , newTileCollection[i].imageUrl.substring(0, 100) );
+        
+                } catch (e) {
+                    errMessage = getHelpfullError(e, true, true);
+        
+                }
+            }
+    
+        }
+        addTheseItemsToState( newTileCollection );
 
+    } else {
+        console.log('NOT Updating Hub Logos... looks like we already loaded them');
     }
-
-    addTheseItemsToState( tileCollection );
 
     //return allItems;
 

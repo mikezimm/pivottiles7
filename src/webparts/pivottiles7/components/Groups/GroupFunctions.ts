@@ -82,6 +82,16 @@ export function getPrincipalTypeString( type: PrincipalType ) {
             newGroups.isLoading = false;
         }
 
+        /**
+         * resort titles back to original order because the response seems to be sorted by title if sort is not defined
+         */
+
+        let sortedTitles = [];
+        newGroups.propTitles.map( title => {
+            if ( newGroups.titles.indexOf( title ) > -1 ) { sortedTitles.push(title) ; }
+        });
+        newGroups.titles = sortedTitles;
+        
         newGroups.groups = allGroups;
         addTheseGroupsToState(newGroups,  errMessage);
         return { myGroups: newGroups, errMessage };

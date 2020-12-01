@@ -119,8 +119,7 @@ public constructor(props:IErrorsProps){
             messageRows.push( <tr><td><b>eval</b> errors</td><td></td><td>eval is not <b>correct syntax</b>.  Only object references at that point in code work.</td></tr> );
 
             messageRows.push( <tr><td><b>Title/Desc contains</b> filter not working</td><td></td><td>This is case sensitive filter.  If you use both Title and Desc, both filters must be true to be visible.</td></tr> );
-
-            
+            messageRows.push( <tr><td><b>Gap in Pivots</b></td><td></td><td>If semicolon or comma separated custom categories and add extra ;, it creates a blank category.  Remove the extra ; or enjoy the ability to space categories apart.</td></tr> );
             thisPage = <div>
                 <h2></h2>
                 <table className={styles.infoTable} style={{ width: '100%' }}>

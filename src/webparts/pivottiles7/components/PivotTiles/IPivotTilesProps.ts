@@ -73,6 +73,8 @@ export interface IFetchInfoSettings {
   listLibCat: string;
 }
 
+export type IPropChangeTypes =  'hubs' | 'subs' | 'groups' | 'lists' | 'format' | 'items' | 'other' | 'cats' | 'filters' | 'init' ; //lastPropChange
+
 export interface IPivotTilesProps {
 
   themeVariant: IReadonlyTheme | undefined;
@@ -84,6 +86,9 @@ export interface IPivotTilesProps {
   context: WebPartContext;
   tenant: string;
   urlVars: {};
+
+  lastPropChange: IPropChangeTypes;
+  lastPropDetailChange: string;
 
   WebpartElement: HTMLElement;   //Size courtesy of https://www.netwoven.com/2018/11/13/resizing-of-spfx-react-web-parts-in-different-scenarios/
 
@@ -125,7 +130,7 @@ export interface IPivotTilesProps {
   setFilter: string;
   filterTitle: string;
   filterDescription: string;
-  filterOnlyList: boolean;
+  filterEverything: boolean;
   propURLQuery: boolean;
   getAll: boolean;
 
@@ -156,8 +161,6 @@ export interface IPivotTilesProps {
   analyticsList: string;
   analyticsWeb: string;
 
-  subsitesInclude: boolean;
-  subsitesCategory: string;
   ignoreList: boolean;
 
   fetchInfo: IFetchInfoSettings;

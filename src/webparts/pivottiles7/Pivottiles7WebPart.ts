@@ -20,10 +20,13 @@ import {
 import { sp } from '@pnp/sp';
 import { Web } from '@pnp/sp/presets/all';
 
-import { IPivottiles7WebPartProps } from './IPivottiles7WebPartProps';
+import { IPivottiles7WebPartProps,
+  changeHubs, changeSubs, changeGroups, changeLists, changeFormats, changeItems, changeCats, changeFilters
+  } from './IPivottiles7WebPartProps';
+
 import PivotTiles from './components/PivotTiles/PivotTiles';
-import { IPivotTilesProps, IFetchInfoSettings, ICustomCategories, ICustomLogic } from './components/PivotTiles/IPivotTilesProps';
-import { IPivotTileItemProps } from './components/TileItems/IPivotTileItemProps';
+import { IPivotTilesProps, IFetchInfoSettings, ICustomCategories, ICustomLogic, IPropChangeTypes } from './components/PivotTiles/IPivotTilesProps';
+import { IPivotTileItemProps,  } from './components/TileItems/IPivotTileItemProps';
 import { string, any } from 'prop-types';
 import { propertyPaneBuilder } from '../../services/propPane/PropPaneBuilder';
 import { availableListMapping } from './AvailableListMapping';
@@ -54,6 +57,9 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     // Register a handler to be notified if the theme variant changes
     this._themeProvider.themeChangedEvent.add(this, this._handleThemeChangedEvent);
+
+    this.properties.lastPropChange = 'init';
+    //IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other'; //lastPropChange
 
     return super.onInit().then(_ => {
       // other init code may be present
@@ -174,7 +180,10 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
     let groupString = this.properties.groupsList;
     if ( !groupString || groupString === '' ) { groupList = [] ; } 
     else {
-      groupList = groupString.split(';').map( g => { return g.trim(); } );
+      groupString.split(';').map( g => { 
+        let gName = g.trim();
+        if ( gName.length > 0 ) { groupList.push( gName ) ; }
+      } );
     }
 
     let fetchInfo : IFetchInfoSettings = {
@@ -227,6 +236,10 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       {
         themeVariant: this._themeVariant,
 
+          //IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other'; //lastPropChange
+        lastPropChange: this.properties.lastPropChange,
+        lastPropDetailChange: this.properties.lastPropDetailChange,
+
         context: this.context,
 
         //Size courtesy of https://www.netwoven.com/2018/11/13/resizing-of-spfx-react-web-parts-in-different-scenarios/
@@ -259,7 +272,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
         filterTitle: this.properties.filterTitle ? this.properties.filterTitle : '',
         filterDescription: this.properties.filterDescription ? this.properties.filterDescription : '',
-        filterOnlyList: this.properties.filterOnlyList === true ? true : false,
+        filterEverything: this.properties.filterEverything === true ? true : false,
 
         propURLQuery: this.properties.propURLQuery,
         setTab: this.properties.setTab,
@@ -303,8 +316,6 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
         colCreatedById: "Author/ID",
         colCreatedByTitle: "Author/Title",
 
-        subsitesInclude: this.properties.subsitesInclude ,
-        subsitesCategory: this.properties.subsitesCategory ,
         ignoreList: this.properties.ignoreList ,
 
         fetchInfo: fetchInfo,
@@ -421,24 +432,31 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     }
 
-    let updateOnThese = [
-      'setSize','setTab','otherTab','setPivSize','heroCategory','heroRatio','showHero','setPivFormat','setImgFit','setImgCover','target',
-      'imageWidth','imageHeight','textPadding','setHeroFit','setHeroCover','onHoverZoom', 'enableChangePivots', 'definitionToggle',
-      'custCatType', 'custCatCols', 'custCatLogi', 'custCatBrak',
-      'subsitesCategory', 'ignoreList', 'ignoreList', 
+    let updateOnThese = [];
+    updateOnThese.push( ...changeHubs );
+    updateOnThese.push( ...changeSubs );
+    updateOnThese.push( ...changeGroups );
+    updateOnThese.push( ...changeLists );
+    updateOnThese.push( ...changeFormats );
+    updateOnThese.push( ...changeItems );
+    updateOnThese.push( ...changeCats );
+    updateOnThese.push( ...changeFilters );
 
-      'listsInclude', 'listIconStyles', 'listFilter', 'listLibCat', 
-      'libsInclude', 'libsIconStyles', 'libsFilter', 'listHideSystem', 
-      'hubsInclude', 'hubsCategory',
-      'setFilter', 'filterTitle', 'filterDescription', 'filterOnlyList', 
+    //export type IPropChangeTypes =  'hubs' | 'subs' | 'group' | 'lists' | 'format' | 'items' | 'other' | 'cats' | 'filters' | 'init' ; //lastPropChange
+    let previousChange = this.properties.lastPropChange + '';
+    if ( changeHubs.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'hubs' ; } 
+    else if ( changeSubs.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'subs' ; } 
+    else if ( changeGroups.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'groups' ; } 
+    else if ( changeLists.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'lists' ; } 
+    else if ( changeFormats.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'format' ; } 
+    else if ( changeItems.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'items' ; } 
+    else if ( changeCats.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'cats' ; } 
+    else if ( changeFilters.indexOf( propertyPath ) > - 1 ) { this.properties.lastPropChange = 'filters' ; } 
+    else { this.properties.lastPropChange = 'other' ; }
 
-      'hubsOthers', 'subsOthers', 'listOthers', 'libsOthers', 'usersOthers', 'groupsOthers', 
-
-
-    ];
-
-    if (updateOnThese.indexOf(propertyPath) > -1 ) {
+    if (updateOnThese.indexOf(propertyPath) > -1 || previousChange !== this.properties.lastPropChange ) {
       this.properties[propertyPath] = newValue;   
+      this.properties.lastPropDetailChange = propertyPath;
       this.context.propertyPane.refresh();
 
     } else { //This can be removed if it works

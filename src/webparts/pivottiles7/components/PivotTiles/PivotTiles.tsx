@@ -4,6 +4,9 @@ import tileStyles from './../TileItems/PivotTileItem.module.scss';
 
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
+import { changeHubs, changeSubs, changeGroups, changeLists, changeFormats, changeItems, changeCats, changeFilters
+  } from '../../IPivottiles7WebPartProps';
+
 import { IPivotTilesProps, ICustomCategories, ICustomLogic } from './IPivotTilesProps';
 import { IPivotTilesState } from './IPivotTilesState';
 import { IPivotTileItemProps } from './../TileItems/IPivotTileItemProps';
@@ -38,13 +41,15 @@ import * as tileBuilders from './TileBuilder';
 
 import { saveTheTime, getTheCurrentTime, saveAnalytics } from '../../../../services/createAnalytics';
 
+import { doesObjectExistInArray } from '../../../../services/arrayServices';
+
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
 
 import { convertCategoryToIndex, fixURLs } from './UtilsNew';
 
 import { buildTileCategoriesFromResponse } from './BuildTileCategories';
 
-import {  buildTileCollectionFromAllResponse } from './BuildTileCollection';
+import {  buildTileCollectionFromAllResponse, defaultHubIcon } from './BuildTileCollection';
 
 import { CustTime , custTimeOption, } from './QuickBuckets';
 
@@ -89,6 +94,8 @@ const SystemLists = ["WorkflowTasks", "Style Library",
 
 export default class PivotTiles extends React.Component<IPivotTilesProps, IPivotTilesState> {
 
+   
+  private currentPageUrl = this.props.pageContext.web.absoluteUrl + this.props.pageContext.site.serverRequestPath;
 
   /***
  *     .o88b.  .d88b.  d8b   db .d8888. d888888b d8888b. db    db  .o88b. d888888b  .d88b.  d8888b. 
@@ -113,11 +120,21 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 //    let hubInfo = getAssociatedSites( departmentId, null ) ;
  //   console.log('hubInfo', hubInfo ) ;
 
+    let urlVars : any = this.props.urlVars;
+    let debugMode = urlVars.debug === 'true' ? true : false;
+    let isWorkbench = this.currentPageUrl.indexOf('_workbench.aspx') > 0 ? true : false;
+
+    let showDevHeader = debugMode === true || isWorkbench === true ? true : false;
+
+    console.log('devHeader:', urlVars, debugMode, isWorkbench, showDevHeader );
+
     this.state = { 
 
       //Size courtesy of https://www.netwoven.com/2018/11/13/resizing-of-spfx-react-web-parts-in-different-scenarios/
       WebpartHeight: this.props.WebpartElement.getBoundingClientRect().height ,
       WebpartWidth:  this.props.WebpartElement.getBoundingClientRect().width ,
+
+      lastStateChange: 'constructor',
 
       allTiles:[],
       filteredTiles:[],
@@ -153,6 +170,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       originalLists: [],
       originalHubs: [],
       departmentId: departmentId,
+      showDevHeader: showDevHeader,
     };
 
     console.log('PivotTiles.tsx Constructor: this.props', this.props);
@@ -205,42 +223,86 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
     //alert('componentDidUpdate 1');
 
+    console.log( 'CDU:  LAST-STATE-CHANGE:', this.props.lastPropDetailChange, this.state.lastStateChange );
+
     let rebuildTiles : boolean = false;
 
     let reloadData : boolean = false;
 
-    if (this.props.setFilter !== prevProps.setFilter) {  reloadData = true ; }  
-    else if (this.props.filterTitle !== prevProps.filterTitle) {  reloadData = true ; }  
-    else if (this.props.filterDescription !== prevProps.filterDescription) {  reloadData = true ; }  
-    else if (this.props.filterOnlyList !== prevProps.filterOnlyList) {  reloadData = true ; }  
-    else if (this.props.listDefinition !== prevProps.listDefinition) {  reloadData = true ; }  
-    else if (this.props.listWebURL !== prevProps.listWebURL) {  reloadData = true ; }  
-    else if (this.props.listTitle !== prevProps.listTitle) {  reloadData = true ; }  
-    else if (this.props.custCategories !== prevProps.custCategories) {  reloadData = true ; }   
-    else if (this.props.subsitesCategory !== prevProps.subsitesCategory) {  reloadData = true ; }    
-    else if (this.props.ignoreList !== prevProps.ignoreList) {  reloadData = true ; }    
-    else if (this.props.subsitesInclude !== prevProps.subsitesInclude) {  reloadData = true ; }
-    else if (this.props.fetchInfo !== prevProps.fetchInfo) {  reloadData = true ; }
+    let theTrigger : any = null;
 
-    if (this.props.setTab !== prevProps.setTab) {  rebuildTiles = true ; }
-    else if (this.props.setSize !== prevProps.setSize) {  rebuildTiles = true ; }
-    else if (this.props.showHero !== prevProps.showHero) {  rebuildTiles = true ; }
-    else if (this.props.heroType !== prevProps.heroType) {  rebuildTiles = true ; }
-    else if (this.props.setRatio !== prevProps.setRatio) {  rebuildTiles = true ; }
-    else if (this.props.setImgFit !== prevProps.setImgFit) {  rebuildTiles = true ; }
-    else if (this.props.setImgCover !== prevProps.setImgCover) {  rebuildTiles = true ; }
-    else if (this.props.heroCategory !== prevProps.heroCategory) {  rebuildTiles = true ; }
-    else if (this.props.heroRatio !== prevProps.heroRatio) {  rebuildTiles = true ; }
-    else if (this.props.heroRatio !== prevProps.heroRatio) {  rebuildTiles = true ; }     
+    if ( prevProps.lastPropChange === this.props.lastPropChange ) { 
+      //Then check individual props
+      if (this.props.setFilter !== prevProps.setFilter) {  reloadData = true ; theTrigger = 'setFilter'; }  
+      else if (this.props.filterTitle !== prevProps.filterTitle) {  reloadData = true ; theTrigger = 'filterTitle'; }  
+      else if (this.props.filterDescription !== prevProps.filterDescription) {  reloadData = true ; theTrigger = 'filterDescription'; }  
+      else if (this.props.filterEverything !== prevProps.filterEverything) {  reloadData = true ; theTrigger = 'filterEverything'; }  
+      else if (this.props.listDefinition !== prevProps.listDefinition) {  reloadData = true ; theTrigger = 'listDefinition'; }  
+      else if (this.props.listWebURL !== prevProps.listWebURL) {  reloadData = true ; theTrigger = 'listWebURL'; }  
+      else if (this.props.listTitle !== prevProps.listTitle) {  reloadData = true ; theTrigger = 'listTitle'; }  
+      else if ( JSON.stringify(this.props.custCategories) !== JSON.stringify(prevProps.custCategories)) {  reloadData = true ; theTrigger = 'custCategories'; }    
+      else if (this.props.ignoreList !== prevProps.ignoreList) {  reloadData = true ; theTrigger = 'ignoreList'; }    
+      else if ( JSON.stringify(this.props.fetchInfo) !== JSON.stringify(prevProps.fetchInfo) ) {  reloadData = true ; theTrigger = 'fetchInfo'; }
 
+      console.log( 'CDU: theTrigger section 1:', theTrigger );
 
-    if ( reloadData === true ) {
-      this._getListItems( this.props.custCategories );
+      if (this.props.setTab !== prevProps.setTab) {  rebuildTiles = true ; }
+      else if (this.props.setSize !== prevProps.setSize) {  rebuildTiles = true ; theTrigger = 'setSize'; }
+      else if (this.props.showHero !== prevProps.showHero) {  rebuildTiles = true ; theTrigger = 'showHero'; }
+      else if (this.props.heroType !== prevProps.heroType) {  rebuildTiles = true ; theTrigger = 'heroType'; }
+      else if (this.props.setRatio !== prevProps.setRatio) {  rebuildTiles = true ; theTrigger = 'setRatio'; }
+      else if (this.props.setImgFit !== prevProps.setImgFit) {  rebuildTiles = true ; theTrigger = 'setImgFit'; }
+      else if (this.props.setImgCover !== prevProps.setImgCover) {  rebuildTiles = true ; theTrigger = 'setImgCover'; }
+      else if (this.props.heroCategory !== prevProps.heroCategory) {  rebuildTiles = true ; theTrigger = 'heroCategory'; }
+      else if (this.props.heroRatio !== prevProps.heroRatio) {  rebuildTiles = true ; theTrigger = 'heroRatio'; }
+      else if (this.props.heroRatio !== prevProps.heroRatio) {  rebuildTiles = true ; theTrigger = 'heroRatio'; }
 
-    } else if (rebuildTiles === true) {
-      this._updateStateOnPropsChange({});
+      console.log( 'CDU: theTrigger section 2:', theTrigger );
+
+    } else if ( prevProps.lastPropChange !== this.props.lastPropChange ) {
+      if ( this.props.lastPropChange === 'cats' ) { reloadData = true ; theTrigger = 'cats'; } 
+      else if ( this.props.lastPropChange === 'filters' ) { reloadData = true ; theTrigger = 'filters'; } 
+      else if ( this.props.lastPropChange === 'groups' ) { reloadData = true ; theTrigger = 'groups'; } 
+      else if ( this.props.lastPropChange === 'hubs' ) { reloadData = true ; theTrigger = 'hubs'; } 
+      else if ( this.props.lastPropChange === 'items' ) { reloadData = true ; theTrigger = 'items'; } 
+      else if ( this.props.lastPropChange === 'lists' ) { reloadData = true ; theTrigger = 'lists'; } 
+  
+      else if ( this.props.lastPropChange === 'subs' ) { reloadData = true ; theTrigger = 'subs'; } 
+      else if ( this.props.lastPropChange === 'format' ) { rebuildTiles = true ; theTrigger = 'format'; } 
+      else if ( this.props.lastPropChange === 'init' ) { rebuildTiles = true ; theTrigger = 'init'; } 
+      else if ( this.props.lastPropChange === 'other' ) { rebuildTiles = true ; theTrigger = 'other'; } 
+      console.log( 'CDU: theTrigger section 3:', theTrigger );
     }
 
+    /* 
+    */
+
+    // if (this.props.fetchInfo !== prevProps.fetchInfo) {  reloadData = true ; }
+
+    /**
+     * hubs changing are the only complicated situation because Hubs require secondary call to fetch all site icons
+     */
+    let wasHubChange : any = false;
+    if (this.props.fetchInfo !== prevProps.fetchInfo) {
+      Object.keys(this.props.fetchInfo).map( key => {
+        if ( JSON.stringify(this.props.fetchInfo[key]) !== JSON.stringify(prevProps.fetchInfo[key]) ) { console.log('thisFetchInfoProp Changed: ' + key, this.props.fetchInfo[key] ) ; }
+      });
+
+      changeHubs.map( change => {
+        if ( this.props.fetchInfo[change] !== prevProps.fetchInfo[change] ) { wasHubChange = true ; }
+      }) ;
+    }
+
+    if ( wasHubChange === true || this.state.lastStateChange !== 'updateStateHubs' ) {
+      if ( reloadData === true ) {
+        console.log('CDU reloadData: ', wasHubChange, wasHubChange, this.state.lastStateChange, theTrigger );
+        this._getListItems( this.props.custCategories );
+  
+      } else if (rebuildTiles === true) {
+        console.log('CDU rebuildTiles: ', wasHubChange, rebuildTiles, this.state.lastStateChange, theTrigger );
+        this._updateStateOnPropsChange({});
+      }
+    }
   }
 
 
@@ -335,9 +397,9 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     const defIndex = (this.state.pivotDefSelKey === '') ? convertCategoryToIndex(this.props.setTab) : convertCategoryToIndex(this.state.pivotDefSelKey);
 
     console.log('render(): this.state', this.state);
-    console.log('render(): this.props.setTab', this.props.setTab);
-    console.log('render(): this.state.pivotDefSelKey', this.state.pivotDefSelKey);
-    console.log('render(): defIndex', defIndex);
+//    console.log('render(): this.props.setTab', this.props.setTab);
+//    console.log('render(): this.state.pivotDefSelKey', this.state.pivotDefSelKey);
+//    console.log('render(): defIndex', defIndex);
 
     let tipError = false;
     if (this.state.itemsError || this.state.listError || this.state.heroError){ tipError = true; }
@@ -414,10 +476,13 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
      *                                                            
      */
 
-     let searchBoxStyles = this.state.changePivotCats !== true ? { root: { maxWidth: 300 } } :  { root: { maxWidth: 300, background: 'yellow' } } ;
+    let searchBoxStyles = this.state.changePivotCats !== true ? { root: { maxWidth: 300 } } :  { root: { maxWidth: 300, background: 'yellow' } } ;
+    let devHeader = this.state.showDevHeader === true ? <div><b>Props: </b> { this.props.lastPropChange + ', ' + this.props.lastPropDetailChange } - <b>State: lastStateChange: </b> { this.state.lastStateChange  } </div> : null ;
 
     return (
+      
       <div>
+        { devHeader }
         { earlyAccess }
         { ( (this.props.showHero === true && this.props.heroType === "header" &&  this.state.heroStatus === "Ready") ? ( heroFullLineBuild ) : ""  ) }
 
@@ -508,6 +573,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       console.log('CTRL was clicked... _changeSearchFunction');
       this.setState({
         changePivotCats: true,
+        lastStateChange: '_changeSearchOnFocus',
       });
     }
   }
@@ -519,6 +585,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     if ( this.state.changePivotCats !== false ) {
       this.setState({
         changePivotCats: false,
+        lastStateChange: '_changeSearchOnBlur',
       });
     }
   }
@@ -564,6 +631,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       lastFilteredTiles: (searchType === 'all' ? this.state.allTiles : this.state.lastFilteredTiles ),
       searchCount: searchCount,
       searchWhere: searchWhere,
+      lastStateChange: 'searchMe',
     });
 
     
@@ -662,6 +730,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       this.setState({
         filteredTiles: newFilteredTiles,
         searchCount: searchCount,
+        lastStateChange: 'searchForItems',
       });
   
       return ;
@@ -695,6 +764,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       //Enable-disable ChangePivots options
       this.setState({
         shuffleShow: !this.state.shuffleShow,
+        lastStateChange: 'onLinkClick - 1',
       });
 
     } else {
@@ -718,7 +788,9 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 //      newFiltered = this.getOnClickFilteredTiles(pivotProps, pivotState, newCollection, heroIds, newHeros, thisCatColumn, lastCategory)
       let showSearch = true;
 
-      if ( item.props.headerText !== this.props.fetchInfo.groupsCategory 
+      if ( item.props.headerText === '' ) {
+        //You clicked on empty category... show no tiles
+      } else if ( item.props.headerText !== this.props.fetchInfo.groupsCategory 
         && item.props.headerText !== this.props.fetchInfo.usersCategory ) { //Skip finding tiles if you click Groups or Users
         newFilteredTiles = this.getOnClickFilteredTiles(this.state.allTiles, this.state.heroIds, this.state.heroTiles, this.state.thisCatColumn, item.props.headerText);
 
@@ -734,11 +806,12 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       else if (thisCatColumn === 'createdBy'){ createdByInfo.lastCategory = item.props.headerText; }
       else if (thisCatColumn === 'modifiedBy'){ modifiedByInfo.lastCategory = item.props.headerText; }
 
-      console.log('onLinkClick: this.state', this.state);
-      console.log('onLinkClick: item.props.headerText', item.props.headerText);
-      console.log('onLinkClick: defaultSelectedIndex', defaultSelectedIndex);
-      console.log('onLinkClick: defaultSelectedKey', defaultSelectedKey);
-      this.setState({
+//      console.log('onLinkClick: this.state', this.state);
+//      console.log('onLinkClick: item.props.headerText', item.props.headerText);
+//      console.log('onLinkClick: defaultSelectedIndex', defaultSelectedIndex);
+//      console.log('onLinkClick: defaultSelectedKey', defaultSelectedKey);
+
+this.setState({
         filteredCategory: item.props.headerText,
         filteredTiles: newFilteredTiles,
         lastFilteredTiles: newFilteredTiles,
@@ -752,7 +825,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         createdInfo: createdInfo,
         pivotDefSelKey: defaultSelectedKey,
         searchShow: showSearch,
-
+        lastStateChange: 'onLinkClick - 2',
       });
 
     }
@@ -817,7 +890,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         lastFilteredTiles: this.state.allTiles,
         searchCount: this.state.allTiles.length,
         pivotDefSelKey: "-100",
-        searchWhere: ' in all categories'
+        searchWhere: ' in all categories',
+        lastStateChange: 'showAll',
       });
     }
     
@@ -857,7 +931,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         lastFilteredTiles: this.state.allTiles,
         searchCount: this.state.allTiles.length,
         pivotDefSelKey: "-100",
-        searchWhere: ' in all categories'
+        searchWhere: ' in all categories',
+        lastStateChange: 'minimizeTiles',
       });
     }
     
@@ -891,6 +966,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
     this.setState({
       setLayout: setLayout,
+      lastStateChange: 'toggleLayout',
     });
 
   } //End toggleTips  
@@ -902,6 +978,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
     this.setState({
       showTips: newshowTips,
+      lastStateChange: 'toggleTips',
     });
 
   } //End toggleTips  
@@ -920,7 +997,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
   //http://react.tips/how-to-create-reactjs-components-dynamically/ - based on createImage
   public createPivot(pivT) {
-    console.log('createPivot: ', pivT);
+//    console.log('createPivot: ', pivT);
     const thisItemKey :string = convertCategoryToIndex(pivT);
       return (
         <PivotItem headerText={pivT} itemKey={thisItemKey}/>
@@ -940,7 +1017,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     }
 
     let piv = tempPivotTitles.map(this.createPivot);
-    console.log('createPivots: ', piv);
+//    console.log('createPivots: ', piv);
     return (
       piv
     );
@@ -1016,7 +1093,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     //const defaultSelectedIndex = tileCategories.indexOf(this.props.setTab);
     const defaultSelectedIndex = tileCategories.indexOf(lastCategory);
     let defaultSelectedKey = defaultSelectedIndex.toString();
-    defaultSelectedKey = lastCategory.toString();  // Added this because I think this needs to be the header text, not the index.
+    defaultSelectedKey = lastCategory === null || lastCategory === undefined ? '' : lastCategory.toString();  // Added this because I think this needs to be the header text, not the index.
     defaultSelectedKey = convertCategoryToIndex(defaultSelectedKey);
     console.log('_updateStateOnPropsChange defaultSelectedKey', defaultSelectedKey);
     defaultSelectedKey = lastCategory;
@@ -1103,7 +1180,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       filteredCategory: lastCategory,
       thisCatColumn: thisCatColumn,
       changePivotCats: false,
-
+      lastStateChange: '_updateStateOnPropsChange',
     });
   }
 
@@ -1158,10 +1235,11 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
   private async _getSubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData ) {
     let entireResponse: any = {};
-    if ( this.props.subsitesInclude === true ) {
+    let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'subs' ? true : false ;
+    if ( loadThisData === true && this.props.fetchInfo.subsitesInclude === true ) {
         try {
             let websResponse = await web.webs();
-            websResponse.map( w => { w.sourceType = this.props.subsitesCategory ; });
+            websResponse.map( w => { w.sourceType = this.props.fetchInfo.subsitesCategory ; });
             entireResponse.webs = websResponse;
             this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
         } catch (e) {
@@ -1169,117 +1247,98 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
             this.processCatch(errMessage);
         }
       } else {
-        entireResponse.webs = [];
+        entireResponse.webs = this.props.fetchInfo.subsitesInclude === true ? this.state.originalWebs : [];
         this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
       }
 
     }
-
-  private _getSubsitesOriginal( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData  ){
-
-    let entireResponse: any = {};
-    if ( this.props.subsitesInclude === true ) {
-      web.webs.orderBy('Title',true).get()
-      .then((websResponse) => {
-          websResponse.map( w => { w.sourceType = this.props.subsitesCategory ; });
-          entireResponse.webs = websResponse;
-          this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
-      }).catch((e) => {
-          this.processCatch(e);
-      });
-
-    } else {
-      entireResponse.webs = [];
-      this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
-    }
-
-  }
-
-
   
-  private _getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData , entireResponse ){
+    private _getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData , entireResponse ){
 
-    if ( this.props.fetchInfo.libsInclude === true || this.props.fetchInfo.listsInclude === true ) {
+      let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'lists' ? true : false ;
+      if ( loadThisData === true && ( this.props.fetchInfo.libsInclude === true || this.props.fetchInfo.listsInclude === true ) ) {
 
-      let listFilter = 'Hidden eq false';
+        let listFilter = 'Hidden eq false';
 
-      if ( this.props.fetchInfo.libsInclude === false ) {
-        listFilter += ' and BaseType eq 0';
-      } else if ( this.props.fetchInfo.listsInclude === false ) {
-        listFilter += ' and BaseType eq 1';
-      } 
+        if ( this.props.fetchInfo.libsInclude === false ) {
+          listFilter += ' and BaseType eq 0';
+        } else if ( this.props.fetchInfo.listsInclude === false ) {
+          listFilter += ' and BaseType eq 1';
+        } 
 
-      if ( this.props.fetchInfo.listHideSystem === true ) {
-        SystemLists.map( entityName => {
-          listFilter += ` and EntityTypeName ne \'${entityName}\'`;
+        if ( this.props.fetchInfo.listHideSystem === true ) {
+          SystemLists.map( entityName => {
+            listFilter += ` and EntityTypeName ne \'${entityName}\'`;
+          });
+          listFilter += ` and Title ne \'Style Library\'`; //For some reason had to hard-code filter this one out
+        }
+
+        web.lists.filter(listFilter).orderBy('Title',true).get()
+        .then((listLibResponse) => {
+            listLibResponse.map( L => { 
+              L.sourceType = L.BaseType === 0 ? this.props.fetchInfo.listCategory : this.props.fetchInfo.libsCategory;
+              L.system = SystemLists.indexOf( L.EntityTypeName ) > -1 ? 'System' : '';
+            });
+            entireResponse.lists = listLibResponse;
+            this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
+        }).catch((e) => {
+            this.processCatch(e);
         });
-        listFilter += ` and Title ne \'Style Library\'`; //For some reason had to hard-code filter this one out
+
+      } else {
+        entireResponse.lists =  this.props.fetchInfo.libsInclude === true || this.props.fetchInfo.listsInclude === true ? this.state.originalLists : [];
+        this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
       }
 
-      web.lists.filter(listFilter).orderBy('Title',true).get()
-      .then((listLibResponse) => {
-          listLibResponse.map( L => { 
-            L.sourceType = L.BaseType === 0 ? this.props.fetchInfo.listCategory : this.props.fetchInfo.libsCategory;
-            L.system = SystemLists.indexOf( L.EntityTypeName ) > -1 ? 'System' : '';
-          });
-          entireResponse.lists = listLibResponse;
-          this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
-      }).catch((e) => {
-          this.processCatch(e);
-      });
-
-    } else {
-      entireResponse.lists = [];
-      this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
     }
 
-  }
+    private _getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
 
-  private _getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
+      let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'items' ? true : false ;
+      if ( loadThisData === true &&  this.props.ignoreList !== true ) {
 
-    if ( this.props.ignoreList !== true ) {
+        web.lists.getByTitle(useTileList).items
+        .select(selectCols).expand(expandThese).filter(restFilter).orderBy(restSort,true).getAll()
+        .then((listResponse) => {
+            listResponse.map( I => { 
+              if ( I.BaseType === 1 ) { I.sourceType = "Files"; }
+              else if ( this.props.listDefinition.toLowerCase().indexOf('library') > -1 ) { I.sourceType = "Files"; }
+              else if ( this.props.listDefinition.toLowerCase().indexOf('news') > -1 ) { I.sourceType = "News"; }
+              else if ( this.props.listDefinition.toLowerCase().indexOf('page') > -1 ) { I.sourceType = "Pages"; }
+              else { I.sourceType = ""; }
+            });
+            entireResponse.items = listResponse;
+            this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
+        }).catch((e) => {
+            this.processCatch(e);
+        });
 
-      web.lists.getByTitle(useTileList).items
-      .select(selectCols).expand(expandThese).filter(restFilter).orderBy(restSort,true).getAll()
-      .then((listResponse) => {
-          listResponse.map( I => { 
-            if ( I.BaseType === 1 ) { I.sourceType = "Files"; }
-            else if ( this.props.listDefinition.toLowerCase().indexOf('library') > -1 ) { I.sourceType = "Files"; }
-            else if ( this.props.listDefinition.toLowerCase().indexOf('news') > -1 ) { I.sourceType = "News"; }
-            else if ( this.props.listDefinition.toLowerCase().indexOf('page') > -1 ) { I.sourceType = "Pages"; }
-            else { I.sourceType = ""; }
-          });
-          entireResponse.items = listResponse;
-          this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
-      }).catch((e) => {
-          this.processCatch(e);
-      });
+      } else {
+        entireResponse.items =  this.props.fetchInfo.ignoreList !== true ? this.state.originalListItems : [];
+        this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
+      }
 
-    } else {
-      entireResponse.items = [];
-      this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
     }
 
-  }
+    //getAssociatedSites
+    
+    private _getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
 
-  //getAssociatedSites
-  
-  private _getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse  ){
+      let hubResponse = [];
+      let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'hubs' ? true : false ;
+      if ( loadThisData === true &&  this.props.fetchInfo.hubsInclude === true ) {
+        getAssociatedSites( this.state.departmentId, this.finalCall.bind(this) , entireResponse, custCategories, this.props.fetchInfo.hubsCategory, newData );
+      } else {
+        entireResponse.hubs =  this.props.fetchInfo.hubsInclude === true ? this.state.originalHubs : [];
+        this.finalCall ( entireResponse, custCategories, newData);
+      }
 
-    let hubResponse = [];
-    if ( this.props.fetchInfo.hubsInclude === true ) {
-      getAssociatedSites( this.state.departmentId, this.finalCall.bind(this) , entireResponse, custCategories, newData );
-    } else {
-      entireResponse.hubs = hubResponse;
-      this.finalCall ( entireResponse, custCategories, newData);
     }
 
-  }
+    private finalCall ( entireResponse : any, custCategories, newData) {
+      this.processResponse( entireResponse, custCategories, newData );
 
-  private finalCall ( entireResponse : any, custCategories, newData) {
-    this.processResponse( entireResponse, custCategories, newData );
-
-  }
+    }
 
 
 /***
@@ -1301,7 +1360,12 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       console.log(e.status);
       console.log(e.message);
       let sendMessage = e.status + " - " + e.message;
-      this.setState({  loadStatus: "ListNotFound", loadError: e.message, listError: true, });
+      this.setState({  
+        loadStatus: "ListNotFound", 
+        loadError: e.message, 
+        listError: true, 
+        lastStateChange: 'processCatch',
+      });
   
     }
   
@@ -1325,7 +1389,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       let hubResponse = entireResponse.hubs;
 
       if (subsites.length === 0 && listResponse === 0 && itemsResponse.length === 0 && hubResponse === 0 ){
-        this.setState({  loadStatus: "NoItemsFound", itemsError: true,  });
+        this.setState({  loadStatus: "NoItemsFound", itemsError: true, lastStateChange: 'processResponse - 0', });
         return ;
       }
       
@@ -1359,10 +1423,8 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       }
 
       const listURL = fixedURL + ( this.props.listDefinition.indexOf("Library") < 0 ? "lists/" : "" ) + listStaticName;
- 
-      const currentPageUrl = this.props.pageContext.web.absoluteUrl + this.props.pageContext.site.serverRequestPath;
 
-      const editItemURL = listURL + (listURL.indexOf('/lists/') > -1 ? '' : '/Forms') + "/DispForm.aspx?ID=" + "ReplaceID" + "&Source=" + currentPageUrl;
+      const editItemURL = listURL + (listURL.indexOf('/lists/') > -1 ? '' : '/Forms') + "/DispForm.aspx?ID=" + "ReplaceID" + "&Source=" + this.currentPageUrl;
       //console.log('editItemURL',editItemURL);
 
       let pivotProps = this.props;
@@ -1419,11 +1481,12 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         newFilteredTiles = this.getOnClickFilteredTiles(tileCollection, heroIds, heroTiles, 'category', tileCategories[0] );
       }
 
+      /*
       console.log('processResponse: tileCategories', tileCategories);
       console.log('processResponse: this.props.setTab', this.props.setTab);   
       console.log('processResponse: defaultSelectedIndex', defaultSelectedIndex);
       console.log('processResponse: defaultSelectedKey', defaultSelectedKey);
-
+*/
       let showOtherTab = false;
       if ( tileCollectionResults.showOtherTab === true ) { showOtherTab = true ; }
       else if ( tileCollectionWebs.showOtherTab === true ) { showOtherTab = true ; }
@@ -1473,13 +1536,33 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         createdByIDs: useThisTileCollection.createdByIDs,
 
         changePivotCats: false,
-
+        lastStateChange: 'processResponse - 1',
       });
 
       saveAnalytics(this.props,this.state);
 
-      if ( tileCollection !== null && tileCollection.length > 0 && originalHubs.length > 0 ) {
-        allAvailableHubWebs( tileCollection, this.updateStateHubs.bind(this) );
+  
+      let reloadHubImages = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'hubs' ? true : false ;
+
+      if ( reloadHubImages === true ) {
+        if ( tileCollection !== null && tileCollection.length > 0 && originalHubs.length > 0 ) {
+
+          let didThisAlreadyRun : any = false;
+          let hasHubs : any = false;
+  
+          tileCollection.map( t => {
+              if ( t.sourceType === this.props.fetchInfo.hubsCategory ) { 
+                  hasHubs = true;
+                  if ( t.imageUrl.indexOf('data:image/png;base64,') !== 0 ) { didThisAlreadyRun = true; } 
+//                  console.log('allAvailableHubWebs: hubCheck', t.title , didThisAlreadyRun , t.imageUrl );
+              }
+          });
+
+          if ( hasHubs === true && didThisAlreadyRun !== true ) {
+            allAvailableHubWebs( tileCollection, this.props.fetchInfo.hubsCategory, this.updateStateHubs.bind(this) );
+          }
+
+        }
       }
 
       
@@ -1489,25 +1572,33 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
     private updateStateHubs( tileCollection ) {
 
-      console.log('state received originalHubs', tileCollection );
+      console.log('state received originalHubs', this.state.lastStateChange, tileCollection, );
 
+      let originalHubs = this.state.originalHubs;
       let allTiles = this.state.allTiles;
 
-      allTiles.map( thisTile => {
+      originalHubs.map( hub => {
 
-        if (thisTile.sourceType === 'Hubs' ) {
-          tileCollection.map( hub => {
-            if ( hub.Id === thisTile.Id ) { 
-              thisTile = hub;
-            }
-          });
+        //Update originalHubs values with newly fetched props and save back to state.
+        let original = doesObjectExistInArray( tileCollection, 'id', hub.SiteId , true );
+        if ( original || original !== false ) { 
+          hub.SiteLogoUrl = tileCollection[ original ].imageUrl;
+          hub.Title = tileCollection[ original ].title;
+          hub.Description = tileCollection[ original ].description;
+          hub.Created = tileCollection[ original ].created;
+          hub.LastItemUserModifiedDate = tileCollection[ original ].modified;
+          hub.SPSiteUrl = tileCollection[ original ].href;    
+                      
+          console.log('updateStateHubs: orginal', hub.Title , hub.SiteLogoUrl.substring(0, 100) );
+
         }
 
       });
 
       this.setState({
-        allTiles: allTiles,
-
+        allTiles: tileCollection,
+        originalHubs: originalHubs,
+        lastStateChange: 'updateStateHubs',
       });
 
     }
