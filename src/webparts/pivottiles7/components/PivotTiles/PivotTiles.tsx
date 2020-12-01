@@ -470,7 +470,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     let searchBoxStyles = this.state.changePivotCats !== true ? { root: { maxWidth: 300 } } :  { root: { maxWidth: 300, background: 'yellow' } } ;
     let urlVars : any = this.props.urlVars;
     let showDevHeader = urlVars.debug === 'true' || this.currentPageUrl.indexOf('_workbench.aspx') ? true : false;
-    let devHeader = showDevHeader === true ? <div> { 'props: ' + this.props.lastPropChange + ', ' + this.props.lastPropDetailChange + ' State: lastStateChange:  ' + this.state.lastStateChange  } </div> : null ;
+    let devHeader = showDevHeader === true ? <div><b>Props: </b> { this.props.lastPropChange + ', ' + this.props.lastPropDetailChange } - <b>State: lastStateChange: </b> { this.state.lastStateChange  } </div> : null ;
 
     return (
       
@@ -1546,7 +1546,7 @@ this.setState({
           tileCollection.map( t => {
               if ( t.sourceType === this.props.fetchInfo.hubsCategory ) { 
                   hasHubs = true;
-                  if ( t.imageUrl !== defaultHubIcon ) { didThisAlreadyRun = true; } 
+                  if ( t.imageUrl.indexOf('data:image/png;base64,') !== 0 ) { didThisAlreadyRun = true; } 
 //                  console.log('allAvailableHubWebs: hubCheck', t.title , didThisAlreadyRun , t.imageUrl );
               }
           });

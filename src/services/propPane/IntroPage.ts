@@ -241,6 +241,41 @@ export class IntroPage {
         ]}, // this group
 
 
+
+        { groupName: 'Hubsites',
+        isCollapsed: true ,
+        groupFields: [
+          PropertyPaneToggle('hubsInclude', {
+              label: 'Show Hubsites',
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.listWebURL !== '' ? true : false,
+          }),
+
+          PropertyPaneTextField('hubsCategory', {
+              label: 'Hubsite Category',
+              disabled: webPartProps.hubsInclude === true ? false : true,
+          }),
+
+          PropertyPaneToggle('hubsLazy', {
+            label: 'Lazy Load Hubs:  do not load until you click tab',
+            offText: 'Off',
+            onText: 'On',
+            disabled: true,
+          }),
+
+          PropertyPaneToggle('hubsOthers', {
+              label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.hubsCategory ),
+              offText: 'Off',
+              onText: 'On',
+              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.hubsInclude !== true ? true : false,
+          }),
+
+        ]}, // this group
+
+
+
+
         { groupName: 'Subsites',
         isCollapsed: true ,
         groupFields: [
@@ -281,11 +316,6 @@ export class IntroPage {
             disabled: webPartProps.listsInclude === true ? false : true,
           }),
 
-          PropertyPaneTextField('listLibCat', {
-              label: 'Combined category label (if blank, you will get Lists and Libraries',
-//              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
-              disabled: true,
-          }),
 
           //listHideSystem
           PropertyPaneToggle('listHideSystem', {
@@ -295,11 +325,18 @@ export class IntroPage {
               disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true ? false : true,
           }),
 
+/*
+          PropertyPaneTextField('listLibCat', {
+              label: 'Combined category label (if blank, you will get Lists and Libraries',
+//              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+              disabled: true,
+          }),
+
           PropertyPaneTextField('listFilter', {
             label: 'Filter to apply to lists',
             disabled: true , //webPartProps.listsInclude === true ? false : true,
           }),
-
+*/
           PropertyPaneToggle('listOthers', {
             label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', 'Lists' ),
             offText: 'Off',
@@ -324,25 +361,26 @@ export class IntroPage {
             disabled: webPartProps.libsInclude === true ? false : true,
           }),
 
-          PropertyPaneTextField('listLibCat', {
-              label: 'Combined category label (if blank, you will get Lists and Libraries',
-//              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
-              disabled: true,
-          }),
-
-          //listHideSystem
-          PropertyPaneToggle('listHideSystem', {
+            //listHideSystem
+            PropertyPaneToggle('listHideSystem', {
               label: 'Hide System lists',
               offText: 'Off',
               onText: 'On',
               disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
           }),
 
+/*
+          PropertyPaneTextField('listLibCat', {
+              label: 'Combined category label (if blank, you will get Lists and Libraries',
+//              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+              disabled: true,
+          }),
+
           PropertyPaneTextField('libsFilter', {
             label: 'Filter to apply to lists',
             disabled: true , //webPartProps.libsInclude === true ? false : true,
           }),
-
+*/
           PropertyPaneToggle('ignoreList', {
               label: 'Only show Lists and Libraries, Ignore your List settings',
               offText: 'Off',
@@ -360,36 +398,6 @@ export class IntroPage {
 
         ]}, // this group
   
-        { groupName: 'Hubsites',
-        isCollapsed: true ,
-        groupFields: [
-          PropertyPaneToggle('hubsInclude', {
-              label: 'Show Hubsites automatically',
-              offText: 'Off',
-              onText: 'On',
-              disabled: webPartProps.listWebURL !== '' ? true : false,
-          }),
-
-          PropertyPaneTextField('hubsCategory', {
-              label: 'Hubsite Category',
-              disabled: webPartProps.hubsInclude === true ? false : true,
-          }),
-
-          PropertyPaneToggle('hubsLazy', {
-            label: 'Lazy Load Hubs:  do not load until you click tab',
-            offText: 'Off',
-            onText: 'On',
-            disabled: true,
-          }),
-
-          PropertyPaneToggle('hubsOthers', {
-              label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.hubsCategory ),
-              offText: 'Off',
-              onText: 'On',
-              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.hubsInclude !== true ? true : false,
-          }),
-
-        ]}, // this group
   
         { groupName: 'Groups',
         isCollapsed: true ,

@@ -9,7 +9,7 @@ import { IHubSiteWebData, IHubSiteInfo } from  "@pnp/sp/hubsites";
 import "@pnp/sp/webs";
 import "@pnp/sp/hubsites/web";
 
-import { defaultHubIcon } from './BuildTileCollection';
+import { defaultHubIcon , defaultHubIcon2 } from './BuildTileCollection';
 
 
 export async function getHubSiteData() {
@@ -106,7 +106,7 @@ export async function allAvailableHubWebs(  tileCollection: any,  hubsCategory, 
     tileCollection.map( t => {
         if ( t.sourceType === hubsCategory ) { 
             hasHubs = true;
-            if ( t.imageUrl !== defaultHubIcon ) { didThisAlreadyRun = true; } 
+            if ( t.imageUrl.indexOf('data:image/png;base64,') !== 0 ) { didThisAlreadyRun = true; } 
 //            console.log('allAvailableHubWebs: hubCheck', t.title , didThisAlreadyRun , t.imageUrl );
         }
     });
@@ -115,7 +115,7 @@ export async function allAvailableHubWebs(  tileCollection: any,  hubsCategory, 
         let newTileCollection = JSON.parse(JSON.stringify( tileCollection )) ;
 
         for ( let i in newTileCollection ) {
-            if ( newTileCollection[i].sourceType === hubsCategory && newTileCollection[i].imageUrl === defaultHubIcon) {
+            if ( newTileCollection[i].sourceType === hubsCategory && newTileCollection[i].imageUrl.indexOf('data:image/png;base64,') === 0 ) {
                 let getThisWeb = newTileCollection[i].href;
                 let thisListWeb = Web( getThisWeb );
                 let errMessage = '';
