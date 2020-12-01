@@ -127,7 +127,7 @@ export async function allAvailableHubWebs(  tileCollection: any,  hubsCategory, 
                     newTileCollection[i].created = thisSite.Created;
                     newTileCollection[i].modified = thisSite.LastItemModifiedDate;
         
-                    console.log('thisSite: ', newTileCollection[i].title , newTileCollection[i].imageUrl );
+                    console.log('thisSite: ', newTileCollection[i].title , newTileCollection[i].imageUrl.substring(0, 100) );
         
                 } catch (e) {
                     errMessage = getHelpfullError(e, true, true);

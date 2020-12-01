@@ -120,6 +120,14 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 //    let hubInfo = getAssociatedSites( departmentId, null ) ;
  //   console.log('hubInfo', hubInfo ) ;
 
+    let urlVars : any = this.props.urlVars;
+    let debugMode = urlVars.debug === 'true' ? true : false;
+    let isWorkbench = this.currentPageUrl.indexOf('_workbench.aspx') > 0 ? true : false;
+
+    let showDevHeader = debugMode === true || isWorkbench === true ? true : false;
+
+    console.log('devHeader:', urlVars, debugMode, isWorkbench, showDevHeader );
+
     this.state = { 
 
       //Size courtesy of https://www.netwoven.com/2018/11/13/resizing-of-spfx-react-web-parts-in-different-scenarios/
@@ -162,6 +170,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       originalLists: [],
       originalHubs: [],
       departmentId: departmentId,
+      showDevHeader: showDevHeader,
     };
 
     console.log('PivotTiles.tsx Constructor: this.props', this.props);
@@ -468,9 +477,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
      */
 
     let searchBoxStyles = this.state.changePivotCats !== true ? { root: { maxWidth: 300 } } :  { root: { maxWidth: 300, background: 'yellow' } } ;
-    let urlVars : any = this.props.urlVars;
-    let showDevHeader = urlVars.debug === 'true' || this.currentPageUrl.indexOf('_workbench.aspx') ? true : false;
-    let devHeader = showDevHeader === true ? <div><b>Props: </b> { this.props.lastPropChange + ', ' + this.props.lastPropDetailChange } - <b>State: lastStateChange: </b> { this.state.lastStateChange  } </div> : null ;
+    let devHeader = this.state.showDevHeader === true ? <div><b>Props: </b> { this.props.lastPropChange + ', ' + this.props.lastPropDetailChange } - <b>State: lastStateChange: </b> { this.state.lastStateChange  } </div> : null ;
 
     return (
       
@@ -1582,7 +1589,7 @@ this.setState({
           hub.LastItemUserModifiedDate = tileCollection[ original ].modified;
           hub.SPSiteUrl = tileCollection[ original ].href;    
                       
-          console.log('updateStateHubs: orginal', hub.Title , hub.SiteLogoUrl );
+          console.log('updateStateHubs: orginal', hub.Title , hub.SiteLogoUrl.substring(0, 100) );
 
         }
 
