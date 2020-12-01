@@ -669,11 +669,14 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
 
     category.push(sourceType);
 
+    let idProp = theseProps.id ? theseProps.id : 'Id';
+    let itemId = item[ idProp ];
 
      return {
 
       sourceType: sourceType,
-
+      id: itemId,
+      
       imageUrl: imageUrl,
 
       title: title,
@@ -841,16 +844,19 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
       theseProps.colModified = 'LastItemUserModifiedDate';
       theseProps.colImageLink = 'SiteLogoUrl';
       theseProps.colGoToLink = 'ServerRelativeUrl';
+      theseProps.id = 'Id';
 
     } else if ( type === 'hubs') {
       theseProps.colModified = 'LastItemUserModifiedDate';
       theseProps.colImageLink = 'SiteLogoUrl';
       theseProps.colGoToLink = 'SPSiteUrl';
+      theseProps.id = 'SiteId';
 
     } else if ( type === 'lists') {
       theseProps.colModified = 'LastItemUserModifiedDate';
       theseProps.colImageLink = '';
       theseProps.colGoToLink = 'ParentWebUrl';
+      theseProps.id = 'Id';
 
     } 
 

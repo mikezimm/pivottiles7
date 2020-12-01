@@ -1573,7 +1573,7 @@ this.setState({
       originalHubs.map( hub => {
 
         //Update originalHubs values with newly fetched props and save back to state.
-        let original = doesObjectExistInArray( tileCollection, 'Id', hub.Id , true );
+        let original = doesObjectExistInArray( tileCollection, 'id', hub.SiteId , true );
         if ( original || original !== false ) { 
           hub.SiteLogoUrl = tileCollection[ original ].imageUrl;
           hub.Title = tileCollection[ original ].title;
@@ -1582,7 +1582,6 @@ this.setState({
           hub.LastItemUserModifiedDate = tileCollection[ original ].modified;
           hub.SPSiteUrl = tileCollection[ original ].href;    
                       
-    
           console.log('updateStateHubs: orginal', hub.Title , hub.SiteLogoUrl );
 
         }

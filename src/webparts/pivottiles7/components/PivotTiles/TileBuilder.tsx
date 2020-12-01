@@ -275,6 +275,7 @@ export function oneTileBuilder(parentProps : IPivotTilesProps,parentState, tType
       listTitle={newTile.listTitle}
       setRatio={newTile.setRatio}
       setSize={newTile.setSize}
+      id={newTile.id}
 
       themeVariant={parentProps.themeVariant}
 
