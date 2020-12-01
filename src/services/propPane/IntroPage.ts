@@ -227,7 +227,7 @@ export class IntroPage {
               description: 'begin with <> to show items that do not contain text',
           }),
 
-          PropertyPaneToggle('filterOnlyList', {
+          PropertyPaneToggle('filterEverything', {
               label: 'Title/Desc filter applies to',
               offText: 'Only main list items',
               onText: 'Everything including Subsites etc...',
@@ -283,7 +283,8 @@ export class IntroPage {
 
           PropertyPaneTextField('listLibCat', {
               label: 'Combined category label (if blank, you will get Lists and Libraries',
-              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+//              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+              disabled: true,
           }),
 
           //listHideSystem
@@ -325,7 +326,8 @@ export class IntroPage {
 
           PropertyPaneTextField('listLibCat', {
               label: 'Combined category label (if blank, you will get Lists and Libraries',
-              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+//              disabled: webPartProps.listsInclude === true || webPartProps.libsInclude === true? false : true,
+              disabled: true,
           }),
 
           //listHideSystem
@@ -377,7 +379,7 @@ export class IntroPage {
             label: 'Lazy Load Hubs:  do not load until you click tab',
             offText: 'Off',
             onText: 'On',
-            disabled: webPartProps.hubsInclude === true ? false : true,
+            disabled: true,
           }),
 
           PropertyPaneToggle('hubsOthers', {
@@ -413,13 +415,15 @@ export class IntroPage {
             label: 'Lazy Load Groups:  do not load until you click tab',
             offText: 'Off',
             onText: 'On',
-            disabled: webPartProps.groupsInclude === true ? false : true,
+//            disabled: webPartProps.groupsInclude === true ? false : true,
+            disabled: true,
           }),
           PropertyPaneToggle('groupsOthers', {
               label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.groupsCategory ),
               offText: 'Off',
               onText: 'On',
-              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.groupsInclude !== true ? true : false,
+//              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.groupsInclude !== true ? true : false,
+              disabled: true,
           }),
 
         ]}, // this group

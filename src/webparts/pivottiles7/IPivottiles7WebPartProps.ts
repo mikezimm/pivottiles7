@@ -17,7 +17,7 @@ export const changeFormats = [ 'setSize','setTab','otherTab','setPivSize','heroC
 export const changeItems = [ 'ignoreList', 'definitionToggle', 'listDefinition', 'listTitle', 'listWebURL' ];
 export const changeCats = [ 'custCatType', 'custCatCols', 'custCatLogi', 'custCatBrak', ];
 
-export const changeFilters = [  'setFilter', 'filterTitle', 'filterDescription', 'filterOnlyList', ];
+export const changeFilters = [  'setFilter', 'filterTitle', 'filterDescription', 'filterEverything', ];
 
 
 export interface IPivottiles7WebPartProps {
@@ -66,7 +66,7 @@ export interface IPivottiles7WebPartProps {
   listWebURL: string;
   listTitle: string;
   setFilter: string;
-  filterOnlyList: boolean;
+  filterEverything: boolean;
   filterTitle: string;
   filterDescription: string;
   propURLQuery: boolean;

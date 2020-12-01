@@ -66,6 +66,7 @@
       "colImageLink": "File/ServerRelativeUrl",
       "colSort": "Title",
 
+      "filterEverything": true,
       "custCatType": "tileCategory",
       "custCatCols": "",
       "custCatLogi": "",
@@ -78,7 +79,7 @@
       
       "hubsInclude": false ,
       "hubsCategory": "Hubs" ,
-      "hubsLazy": true ,
+      "hubsLazy": false ,
       "subsOthers": false,
 
       "groupsInclude": false ,
@@ -160,6 +161,7 @@
       "colImageLink": "File/ServerRelativeUrl",
       "colSort": "",
       
+      "filterEverything": true,
       "custCatType": "tileCategory",
       "custCatCols": "",
       "custCatLogi": "",
@@ -172,7 +174,7 @@
       
       "hubsInclude": false ,
       "hubsCategory": "Hubs" ,
-      "hubsLazy": true ,
+      "hubsLazy": false ,
       "subsOthers": false,
 
       "groupsInclude": false ,
@@ -254,6 +256,7 @@
       "colImageLink": "TileBgImageUrl",
       "colSort": "Order1",
 
+      "filterEverything": true,
       "custCatType": "tileCategory",
       "custCatCols": "",
       "custCatLogi": "",
@@ -266,7 +269,7 @@
       
       "hubsInclude": false ,
       "hubsCategory": "Hubs" ,
-      "hubsLazy": true ,
+      "hubsLazy": false ,
       "subsOthers": false,
 
       "groupsInclude": false ,

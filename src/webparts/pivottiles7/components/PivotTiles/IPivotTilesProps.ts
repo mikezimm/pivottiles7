@@ -130,7 +130,7 @@ export interface IPivotTilesProps {
   setFilter: string;
   filterTitle: string;
   filterDescription: string;
-  filterOnlyList: boolean;
+  filterEverything: boolean;
   propURLQuery: boolean;
   getAll: boolean;
 

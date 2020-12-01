@@ -894,7 +894,7 @@ export function buildTileCollectionFromAllResponse( type:  responseType, respons
     let theseProps = getTheseProps( type, pivotProps ) ;
 
     let newResponse : any[] = [];
-    let alwaysVisible : any = type === 'items' ? false : !pivotProps.filterOnlyList ;
+    let alwaysVisible : any = type === 'items' ? false : !pivotProps.filterEverything ;
 
     for (let item of response) {
 

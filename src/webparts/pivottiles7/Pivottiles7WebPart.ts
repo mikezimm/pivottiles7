@@ -272,7 +272,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
         filterTitle: this.properties.filterTitle ? this.properties.filterTitle : '',
         filterDescription: this.properties.filterDescription ? this.properties.filterDescription : '',
-        filterOnlyList: this.properties.filterOnlyList === true ? true : false,
+        filterEverything: this.properties.filterEverything === true ? true : false,
 
         propURLQuery: this.properties.propURLQuery,
         setTab: this.properties.setTab,

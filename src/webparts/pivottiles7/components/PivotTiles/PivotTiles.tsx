@@ -227,7 +227,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       if (this.props.setFilter !== prevProps.setFilter) {  reloadData = true ; theTrigger = 'setFilter'; }  
       else if (this.props.filterTitle !== prevProps.filterTitle) {  reloadData = true ; theTrigger = 'filterTitle'; }  
       else if (this.props.filterDescription !== prevProps.filterDescription) {  reloadData = true ; theTrigger = 'filterDescription'; }  
-      else if (this.props.filterOnlyList !== prevProps.filterOnlyList) {  reloadData = true ; theTrigger = 'filterOnlyList'; }  
+      else if (this.props.filterEverything !== prevProps.filterEverything) {  reloadData = true ; theTrigger = 'filterEverything'; }  
       else if (this.props.listDefinition !== prevProps.listDefinition) {  reloadData = true ; theTrigger = 'listDefinition'; }  
       else if (this.props.listWebURL !== prevProps.listWebURL) {  reloadData = true ; theTrigger = 'listWebURL'; }  
       else if (this.props.listTitle !== prevProps.listTitle) {  reloadData = true ; theTrigger = 'listTitle'; }  
@@ -470,7 +470,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
     let searchBoxStyles = this.state.changePivotCats !== true ? { root: { maxWidth: 300 } } :  { root: { maxWidth: 300, background: 'yellow' } } ;
     let urlVars : any = this.props.urlVars;
     let showDevHeader = urlVars.debug === 'true' || this.currentPageUrl.indexOf('_workbench.aspx') ? true : false;
-    let devHeader = showDevHeader === true ? <div> { this.props.lastPropChange } </div> : null ;
+    let devHeader = showDevHeader === true ? <div> { 'props: ' + this.props.lastPropChange + ', ' + this.props.lastPropDetailChange + ' State: lastStateChange:  ' + this.state.lastStateChange  } </div> : null ;
 
     return (
       

@@ -17,6 +17,24 @@ import { createIconButton } from '../createButtons/IconButton';
 
 import { jiraIcon } from '../PivotTiles/BuildTileCollection';
 
+import { } from '../../IPivottiles7WebPartProps';
+
+export const changeHubs = [ 'hubsInclude', 'hubsInclude', 'hubsCategory','hubsOthers', ];
+export const  changeSubs = [ 'subsitesInclude', 'subsitesCategory', 'subsOthers',  ];
+export const  changeGroups = [ 'groupsInclude', 'groupsOthers' , 'usersOthers', ];
+export const  changeLists = [ 'listsInclude', 'listIconStyles', 'listFilter', 'listLibCat', 
+  'libsInclude', 'libsIconStyles', 'libsFilter', 'listHideSystem', 'listOthers', 'libsOthers', ];
+
+export const  changeFormats = [ 'setSize','setTab','otherTab','setPivSize','heroCategory','heroRatio','showHero','setPivFormat','setImgFit','setImgCover','target',
+  'imageWidth','imageHeight','textPadding','setHeroFit','setHeroCover','onHoverZoom', 'enableChangePivots',];
+
+export const  changeItems = [ 'subsitesInclude', 'ignoreList', 'ignoreList', 'definitionToggle', 'listDefinition', 'listTitle', 'listWebURL' ];
+export const  changeCats = [ 'custCatType', 'custCatCols', 'custCatLogi', 'custCatBrak', ];
+
+export const  changeFilters = [  'setFilter', 'filterTitle', 'filterDescription', 'filterEverything', ];
+
+
+
 export default class PivotTileItem extends React.Component<IPivotTileItemProps, IPivotTileItemState> {
 
   public iHoverZoomStyle = tUtils.getOnHoverStyle(this.props.onHoverZoom);
