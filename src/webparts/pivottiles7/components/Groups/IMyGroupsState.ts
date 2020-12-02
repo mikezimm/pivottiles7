@@ -15,6 +15,7 @@ export interface ISingleGroup extends ISiteGroupInfo {
   RequestToJoinLeaveEmailSetting: string;
   AutoAcceptRequestToJoinLeave: boolean;
   Description: string;
+  hasCurrentUser: boolean;
 }
 
 export interface IMyGroups {
@@ -27,6 +28,7 @@ export interface IMyGroups {
   Ids: number[];
   isLoading: boolean;
   counts: number[];
+  userId: number;
 
 }
 

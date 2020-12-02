@@ -6,6 +6,7 @@ export interface IMyGroupsProps {
   groups: any[];
   title: string;
   width: number;
+  userId: number;
   displayMode: DisplayMode;
   context: WebPartContext;
   searchFirstName: boolean;

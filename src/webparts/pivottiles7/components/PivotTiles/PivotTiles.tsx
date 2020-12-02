@@ -443,8 +443,10 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       </div>
       ;
 
+      let userId = this.props.context.pageContext.legacyPageContext.userId;
 
       let directory = defIndex !== this.props.fetchInfo.groupsCategory || this.props.fetchInfo.groupsInclude !== true ? null : <MyGroups
+        userId= { userId }
         title={ 'Key site groups'}
         width= { this.state.WebpartWidth }
         setPivSize = { this.props.setPivSize }
