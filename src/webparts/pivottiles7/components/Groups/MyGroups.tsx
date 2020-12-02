@@ -6,7 +6,7 @@ import * as React from 'react';
 import styles from "./MyGroups.module.scss";
 
 
-import { CompoundButton, Stack, IStackTokens, elementContains, initializeIcons, IStackProps, PersonaSize } from 'office-ui-fabric-react';
+import { CompoundButton, Stack, IStackTokens, elementContains, initializeIcons, IStackProps, PersonaSize, GroupedList } from 'office-ui-fabric-react';
 import { PersonaCard } from "../Directory/PersonaCard/PersonaCard";
 import { spservices } from "../../../../SPServices/spservices";
 import * as strings from "Pivottiles7WebPartStrings";
@@ -69,6 +69,8 @@ private setMyGroups() {
 
     let myGroups: IMyGroups =  {
         groups:  [],
+        sortedGroups: [],
+        sortedIds: [],
         titles: this.props.groups,
         propTitles: JSON.parse(JSON.stringify( this.props.groups )), 
         Ids: [],
@@ -90,6 +92,8 @@ public constructor(props:IMyGroupsProps){
         errorMessage: "",
         hasError: false,
         indexSelectedKey: this.props.groups[0],
+        selectedGroupId: null,
+        selectedGroup: null,
         searchString: "LastName",
         searchText: ""
     };
@@ -228,16 +232,80 @@ public constructor(props:IMyGroupsProps){
 
         let searchSpinner = showNoUsers !== true && this.state.isLoading ? <Spinner size={SpinnerSize.large} label={"searching ..."} /> : null ;
         let size : PersonaSize = PersonaSize.size72;
-        if ( isLoaded !== true || !this.state.myGroups.groups[ selectedGroupIndex ] ) {
+
+        let selectedGroup = this.state.selectedGroup;
+
+        if ( isLoaded !== true || !selectedGroup ) {
           //Do nothing if there are no groups
-        } else if ( this.state.myGroups.groups[ selectedGroupIndex ].users.length > 20 ) {
+        } else if ( selectedGroup.users.length > 20 ) {
           size = PersonaSize.size48;
-        } else if ( this.state.myGroups.groups[ selectedGroupIndex ].users.length > 6 ) {
+        } else if ( selectedGroup.users.length > 6 ) {
           size = PersonaSize.size32;         
         }
-        const diretoryGrid =
-            isLoaded === true && this.state.myGroups.groups[ selectedGroupIndex ].users && this.state.myGroups.groups[ selectedGroupIndex ].users.length > 0
-            ? this.state.myGroups.groups[ selectedGroupIndex ].users.map((user: any) => {
+
+        let loadGrid = isLoaded === true && selectedGroup &&
+            selectedGroup.users && 
+            selectedGroup.users.length > 0 ? true : false;
+
+        let AllowMembersEditMembership = isLoaded === true && selectedGroup && selectedGroup.AllowMembersEditMembership === true  ? 
+          <Icon 
+            style={{ fontSize: 'large', fontWeight: 600 }}
+            iconName={ "EditContact"}
+            title={ "Group Members can edit membership"}            
+          /> : null;
+
+        let OnlyAllowMembersViewMembership = isLoaded === true && selectedGroup ? 
+          <Icon  
+            style={{ fontSize: 'large', fontWeight: 600, color: selectedGroup.OnlyAllowMembersViewMembership === true ? 'red' : 'black'  }}
+            iconName={ selectedGroup.OnlyAllowMembersViewMembership === true ? "Hide3" : "View"}
+            title={ selectedGroup.OnlyAllowMembersViewMembership === true ? "Members Hidden" : "Everyone can see members"}            
+          /> : null;
+        
+        let IsHiddenInUI = isLoaded === true && selectedGroup && selectedGroup.IsHiddenInUI === true ? 
+          <Icon  
+            style={{ fontSize: 'large', fontWeight: 600 }}
+            iconName={ "Hide"}
+            title={ "Group hidden in UI"}            
+          />: null;
+
+        let RequestToJoinLeaveEmailSetting = isLoaded === true && selectedGroup && selectedGroup.RequestToJoinLeaveEmailSetting && selectedGroup.RequestToJoinLeaveEmailSetting.length > 0 ? 
+        <Icon  
+          style={{ fontSize: 'large', fontWeight: 600 }}
+          iconName={ "Mail"}
+          title={ "Email owner: " + selectedGroup.RequestToJoinLeaveEmailSetting }            
+        />: null;
+
+                
+        let AutoAcceptRequestToJoinLeave = isLoaded === true && selectedGroup && selectedGroup.AutoAcceptRequestToJoinLeave === true ? 
+          <Icon 
+            style={{ fontSize: 'large', fontWeight: 600 }}
+            iconName={ "UserFollowed"}
+            title={ "You can join this group by CTRL-Clicking Group Title"}            
+          />: null;
+
+        //For some reason Description isn't getting returned
+        let Description = isLoaded === true && selectedGroup && selectedGroup.Description && selectedGroup.Description.length > 0 ?
+          <p style={{ whiteSpace: 'nowrap' }}><b>Description:</b> { selectedGroup.Description.substr(0,30) }</p> : null;
+
+        let groupElements = loadGrid === true ? [ 
+              <p style={{ whiteSpace: 'nowrap' }}><b>Id:</b> { selectedGroup.Id }</p>,
+              Description,
+              <p style={{ whiteSpace: 'nowrap' }}><b>Owner:</b> { selectedGroup.OwnerTitle }</p>,
+              OnlyAllowMembersViewMembership ,
+              AllowMembersEditMembership ,
+              IsHiddenInUI ,
+              AutoAcceptRequestToJoinLeave ,
+              RequestToJoinLeaveEmailSetting ,
+            ] : [];
+
+        let groupInfoTokens = { childrenGap: 20 };
+        const groupInfo = loadGrid === true
+        ?  <Stack horizontal={true} wrap={true} horizontalAlign={"center"} tokens={groupInfoTokens} >{/* Stack for Buttons and Webs */}
+              { groupElements }
+          </Stack> : [];
+
+        const diretoryGrid = loadGrid === true
+            ? selectedGroup.users.map((user: any) => {
               return (
                 <PersonaCard
                   context={this.props.context}
@@ -334,6 +402,10 @@ public constructor(props:IMyGroupsProps){
                   { groupPivot } 
                 </div>
 
+                <div>
+                  { groupInfo } 
+                </div>  
+
                 { showNoUsers === true ? 
                       noUsers 
 
@@ -372,6 +444,8 @@ public constructor(props:IMyGroupsProps){
             indexSelectedKey: myGroups.titles[0],
             isLoading: myGroups.isLoading,
             errorMessage: errorMessage,
+            selectedGroupId: myGroups.sortedIds[0],
+            selectedGroup: myGroups.sortedGroups[0],
         });
       }
 
@@ -547,9 +621,30 @@ debugger;
   private _selectedIndex(item?: PivotItem, ev?: React.MouseEvent<HTMLElement>) {
     //this.setState({ searchText: "" }, () => this._searchUsers(item.props.itemKey));
 
+    let clickedGroup = item.props.itemKey;
+
+    let thisGroupIndex = this.state.myGroups.titles.indexOf( clickedGroup );
+    let thisGroupId = this.state.myGroups.sortedIds[thisGroupIndex];
+
+    if (ev.ctrlKey) {
+      //Set clicked pivot as the hero pivot
+//      alert('CTRL was clicked!');
+      window.open( this.props.webURL + '/_layouts/15/people.aspx?MembershipGroupId=' + thisGroupId, '_blank');
+
+
+    } else if (ev.altKey) {
+      //Enable-disable ChangePivots options
+//      alert('Alt was clicked!');
+      window.open( this.props.webURL + '/_layouts/15/editgrp.aspx?Group=' + clickedGroup, '_blank');
+
+    }
+    ///_layouts/15/people.aspx?MembershipGroupId=6
+
     this.setState({ 
       searchText: "",
-      indexSelectedKey: item.props.itemKey,
+      indexSelectedKey: clickedGroup,
+      selectedGroupId: thisGroupId,
+      selectedGroup: this.state.myGroups.sortedGroups[thisGroupIndex],
      });
 
   }

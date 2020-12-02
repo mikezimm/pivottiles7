@@ -64,7 +64,7 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
         if ( tile.sourceType.toLowerCase().indexOf('files') > -1 ) { hasFiles = true ; }
         if ( tile.sourceType.toLowerCase().indexOf('pages') > -1 ) { hasFiles = true ; }
         if ( tile.sourceType.toLowerCase().indexOf('news') > -1 ) { hasFiles = true ; }
-        if ( tile.sourceType.toLowerCase().indexOf('hubs') > -1 ) { hasHubs = true ; }
+        if ( tile.sourceType.toLowerCase().indexOf('hubs') > -1 || tile.sourceType.toLowerCase().indexOf( pivotProps.fetchInfo.hubsCategory.toLowerCase() ) > -1 ) { hasHubs = true ; }
       }
 
       if ( tile.system ) { hasSystem = true ; }
