@@ -32,6 +32,9 @@ export function getPrincipalTypeString( type: PrincipalType ) {
         let allGroups : ISingleGroup[] = [];
         newGroups.counts = [];
         newGroups.titles = [];
+        newGroups.Ids = [];
+        newGroups.sortedIds = [];
+        newGroups.sortedGroups = [];
         newGroups.isLoading = true;
 
         let errMessage = '';
@@ -90,6 +93,16 @@ export function getPrincipalTypeString( type: PrincipalType ) {
         newGroups.propTitles.map( title => {
             if ( newGroups.titles.indexOf( title ) > -1 ) { sortedTitles.push(title) ; }
         });
+
+        sortedTitles.map( title => {
+            allGroups.map( group => {
+                if ( group.Title === title ) { 
+                    newGroups.sortedIds.push ( group.Id ) ;
+                    newGroups.sortedGroups.push ( group ) ;                
+                }
+            });
+        });
+
         newGroups.titles = sortedTitles;
         
         newGroups.groups = allGroups;
