@@ -415,7 +415,10 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
         this.properties.colTileStyle = newMap.listMapping.colTileStyle;
         this.properties.listWebURL = newMap.testSite;
         this.properties.setFilter = newMap.setFilter;
-        this.properties.setTab = newMap.setTab;        
+        this.properties.setTab = newMap.setTab;
+        
+        this.properties.custCatType = newMap.custCatType;
+        this.properties.custCatLogi = newMap.custCatLogi;
         
       } else {
         console.log('Did NOT List Defintion... updating column name props');

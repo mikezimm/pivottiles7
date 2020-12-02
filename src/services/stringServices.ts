@@ -92,3 +92,44 @@ export function getChoiceText(val: string) {
 
 }
 
+export function encodeDecodeString( str : string , doThis: 'encode' | 'decode') {
+
+  //https://abstractspaces.wordpress.com/2008/05/07/sharepoint-column-names-internal-name-mappings-for-non-alphabet/
+
+  let newStr = str + '';
+  newStr = newStr.replace(/_x007e_/g,'~');
+  newStr = newStr.replace(/_x0021_/g,'!');
+  newStr = newStr.replace(/_x0040_/g,'@');
+  newStr = newStr.replace(/_x0023_/g,'#');
+  newStr = newStr.replace(/_x0024_/g,'$');
+  newStr = newStr.replace(/_x0025_/g,'%');
+  newStr = newStr.replace(/_x005e_/g,'^');
+  newStr = newStr.replace(/_x0026_/g,'&');
+  newStr = newStr.replace(/_x002a_/g,'*');
+  newStr = newStr.replace(/_x0028_/g,'(');
+  newStr = newStr.replace(/_x0029_/g,')');
+  newStr = newStr.replace(/_x002b_/g,'+');
+  newStr = newStr.replace(/_x002d_/g,'\–');
+  newStr = newStr.replace(/_x003d_/g,'=');
+  newStr = newStr.replace(/_x007b_/g,'{');
+  newStr = newStr.replace(/_x007d_/g,'}');
+  newStr = newStr.replace(/_x003a_/g,':');
+  newStr = newStr.replace(/_x0022_/g,'\“');
+  newStr = newStr.replace(/_x007c_/g,'|');
+  newStr = newStr.replace(/_x003b_/g,';');
+  newStr = newStr.replace(/_x0027_/g,'\‘');
+  newStr = newStr.replace(/_x005c_/g,'\\');
+  newStr = newStr.replace(/_x003c_/g,'\<');
+  newStr = newStr.replace(/_x003e_/g,'\>');
+  newStr = newStr.replace(/_x003f_/g,'?');
+  newStr = newStr.replace(/_x002c_/g,',');
+  newStr = newStr.replace(/_x002e_/g,'.');
+  newStr = newStr.replace(/_x002f_/g,'/');
+  newStr = newStr.replace(/_x0060_/g,'`');
+  newStr = newStr.replace(/_x0020_/g,' ');
+  newStr = newStr.replace(/_x005f_/g,'_');
+  newStr = newStr.replace(/_/g,'_');
+
+  return newStr;
+
+}

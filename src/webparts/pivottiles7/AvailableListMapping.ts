@@ -73,6 +73,8 @@
             },
             "setFilter": "zzzShowAll eq 'Yes'",
             "setTab": "Main Menu",
+            "custCatType": "tileCategory",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "", 
         };
 
     } else if (findMe === 'AEInspiredTiles') {
@@ -95,6 +97,8 @@
             },
             "setFilter": "",
             "setTab": "Main Menu",
+            "custCatType": "tileCategory",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "", 
         };
         
     } else if (findMe === 'PromotedLinks') {
@@ -117,6 +121,8 @@
             },
             "setFilter": "",
             "setTab": "Main Menu",
+            "custCatType": "semiColon1",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "Title;Testing;Add New Category Here", 
         };
         
     } else if (findMe === 'MediaLibrary') {
@@ -140,6 +146,8 @@
             // This should remove folders:  ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'
             "setFilter": "ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'",
             "setTab": "Main Menu",
+            "custCatType": "tileCategory",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "",
         };
         
     } else if (findMe === 'SitePages') {
@@ -164,6 +172,8 @@
             // This should remove folders:  ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'
             "setFilter": "Id ne 'X' and ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159' and Title ne 'Home'",
             "setTab": "Main Menu",
+            "custCatType": "semiColon1",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "News",
         };
         
     } else if (findMe === 'SiteNews') {
@@ -188,6 +198,8 @@
             // This should remove folders:  ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'
             "setFilter": "Id ne 'X' and ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159' and Title ne 'Home'",
             "setTab": "Main Menu",
+            "custCatType": "semiColon1",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "News",
         };
         
     } else if (findMe === 'DocumentLibrary') {
@@ -211,6 +223,8 @@
             // This should remove folders:  ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'
             "setFilter": "ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'",
             "setTab": "Main Menu",
+            "custCatType": "tileCategory",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "",
         };
         
     } else if (findMe === 'IconsLibrary') {
@@ -234,6 +248,8 @@
             // This should remove folders:  ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'
             "setFilter": "ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'",
             "setTab": "Steps",
+            "custCatType": "tileCategory",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "",
         };
           
     } else if (findMe === 'TestImagesLibrary') {
@@ -257,6 +273,8 @@
             // This should remove folders:  ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'
             "setFilter": "ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'",
             "setTab": "Mike zimmerman",
+            "custCatType": "tileCategory",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "",
         };
 
     } else if (findMe === 'TestDateCatLibrary') {
@@ -280,6 +298,8 @@
             // This should remove folders:  ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'
             "setFilter": "ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'",
             "setTab": "2020",
+            "custCatType": "tileCategory",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "",
         };
     } else if (findMe === 'PolicyLibrary') {
         listMap = {
@@ -302,6 +322,8 @@
             // This should remove folders:  ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'
             "setFilter": "ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'",
             "setTab": "Quality",
+            "custCatType": "tileCategory",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "",
         };
     } else if (findMe === 'StandardsLibrary') {
         listMap = {
@@ -324,6 +346,8 @@
             // This should remove folders:  ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'
             "setFilter": "ContentTypeId ne '0x012000F6C75276DBE501468CA3CC575AD8E159'",
             "setTab": "EU",
+            "custCatType": "tileCategory",  //export type ICustomTypes = 'tileCategory' | 'semiColon1' | 'semiColon2' | 'custom';
+            "custCatLogi": "",
         };
     }
     console.log('List Mapping for: ' + findMe );

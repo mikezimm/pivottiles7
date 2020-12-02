@@ -6,6 +6,7 @@ import { IPivotTileItemProps,  } from './../TileItems/IPivotTileItemProps';
 import { getTheCurrentTime,} from '../../../../services/createAnalytics';
 import {tileTime} from '../TileItems/IPivotTileItemProps';
 import { getLocalMonths, ISO8601_week_no, makeSmallTimeObject, ITheTime } from '../../../../services/dateServices';
+import { encodeDecodeString } from '../../../../services/stringServices';
 
 import { removeLeadingUnderScore } from './BuildTileCategories';
 
@@ -416,7 +417,22 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
 
     let description = getColumnValue(theseProps,item,'colHoverText');
 
-    let href = getColumnValue(theseProps,item,'colGoToLink');
+    let href = null;
+    if ( item.sourceType === pivotProps.fetchInfo.listCategory ) {
+      let webUrl = item.ParentWebUrl;
+      let EntityTypeName = encodeDecodeString( item.EntityTypeName, 'decode' );
+      //For lists, you need to remove the string "List" from end of EntityTypeName property
+      EntityTypeName = EntityTypeName.substr( 0, EntityTypeName.length - 4 );
+      href = webUrl + '/lists/' + EntityTypeName;
+
+    } else if ( item.sourceType === pivotProps.fetchInfo.libsCategory ) {
+      let webUrl = item.ParentWebUrl;
+      let EntityTypeName = encodeDecodeString( item.EntityTypeName, 'decode' );
+      href = webUrl + '/' + EntityTypeName;
+
+    } else {
+      href = getColumnValue(theseProps,item,'colGoToLink');
+    }
 
     let category = getColumnValue(theseProps,item,'colCategory');
     if ( category === undefined || category === null ) { category = []; }
@@ -874,7 +890,7 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
     } else if ( type === 'lists') {
       theseProps.colModified = 'LastItemUserModifiedDate';
       theseProps.colImageLink = '';
-      theseProps.colGoToLink = 'ParentWebUrl';
+      theseProps.colGoToLink = 'ParentWebUrl+EntityTypeName';
       theseProps.id = 'Id';
 
     } 
