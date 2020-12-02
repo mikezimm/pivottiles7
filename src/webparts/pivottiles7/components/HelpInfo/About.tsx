@@ -127,6 +127,7 @@ public constructor(props:IInfoAboutMeProps){
                 {/* 3 files to update version number:  package-solution.json, package-lock.json, package.json*/}
                 <table className={styles.infoTable} style={{ width: '100%' }}>
                     <tr><th>Date</th><th>Version</th><th>Focus</th><th>Notes</th></tr>
+                    <tr><td>2020-12-01</td><td>{'1.2.2.2'}</td><td>Small bug fixes with groups, categories, properties</td></tr>
                     <tr><td>2020-12-01</td><td>{'1.2.2.1'}</td><td>Add CTRL-Click Group Name to add members, improve GroupInfo, Allow "Hub" as hubCategory</td></tr>
                     <tr><td>2020-12-01</td><td>{'1.2.2.0'}</td><td>Add Hubsites and Groups tabs</td></tr>
                     <tr><td>2020-11-19</td><td>{'1.2.1.0'}</td><td>Add filtering based on the Title/Description properties</td></tr>
