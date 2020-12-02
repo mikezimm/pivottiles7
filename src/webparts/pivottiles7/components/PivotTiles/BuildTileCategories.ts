@@ -148,19 +148,19 @@ export function buildTileCategoriesFromResponse(pivotProps: IPivotTilesProps , p
   }
 
   //2020-11-16:  Add this to add Subsites tab
-  if ( hasSubsites === true ) {
+  if ( hasSubsites === true && tileCategories.indexOf(pivotProps.fetchInfo.subsitesCategory) < 0 ) {
     tileCategories.push( pivotProps.fetchInfo.subsitesCategory );
   }
 
-  if ( hasHubs === true ) {
+  if ( hasHubs === true && tileCategories.indexOf(pivotProps.fetchInfo.hubsCategory) < 0 ) {
     tileCategories.push( pivotProps.fetchInfo.hubsCategory );
   }
 
-  if ( hasLists === true ) {
+  if ( hasLists === true && tileCategories.indexOf(pivotProps.fetchInfo.listCategory) < 0 ) {
     tileCategories.push( pivotProps.fetchInfo.listCategory);
   }
 
-  if ( hasLibraries === true ) {
+  if ( hasLibraries === true && tileCategories.indexOf(pivotProps.fetchInfo.libsCategory) < 0 ) {
     tileCategories.push( pivotProps.fetchInfo.libsCategory );
   }
   
