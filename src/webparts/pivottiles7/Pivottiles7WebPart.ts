@@ -20,6 +20,9 @@ import {
 import { sp } from '@pnp/sp';
 import { Web } from '@pnp/sp/presets/all';
 
+import "@pnp/sp/webs";
+import "@pnp/sp/site-groups/web";
+
 import { IPivottiles7WebPartProps,
   changeHubs, changeSubs, changeGroups, changeLists, changeFormats, changeItems, changeCats, changeFilters
   } from './IPivottiles7WebPartProps';
@@ -66,7 +69,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
         //https://stackoverflow.com/questions/52010321/sharepoint-online-full-width-page
         console.log('location',window.location.href);
-        if ( window.location.href &&  
+        if ( window.location.href && 
            window.location.href.indexOf("layouts/15/workbench.aspx") > 0  ) {
             
           if (document.getElementById("workbenchPageContent")) {
@@ -77,6 +80,10 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       sp.setup({
         spfxContext: this.context
       });
+
+      //this.checkGroups();
+      this.getAssociatedGroups();
+
     });
   }
 
@@ -429,6 +436,14 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
     }
 
     //If the the list is somewhere else (not on this site, auto-disable subsites due to complexity)
+    if (propertyPath === 'groupsInclude' ) {
+      if ( !this.properties.groupsList || this.properties.groupsList === '' ) {
+        let defaultGroupList : any = Promise.resolve(this.getAssociatedGroups());
+        this.properties.groupsList = defaultGroupList ;
+      }
+    }
+
+    //If the the list is somewhere else (not on this site, auto-disable subsites due to complexity)
     if (propertyPath === 'listWebURL' && newValue === '' ) {
       this.properties.subsitesInclude = false;
     } else { 
@@ -481,5 +496,48 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     }
     this.render();
+  }
+
+  private checkGroups() {
+
+    if ( this.properties.groupsList && this.properties.groupsList.length > 0 ) {
+      let test = null;
+      let groupList2 = this.getAssociatedGroups().then( result => {
+        test = result;
+      });
+      console.log('Groups:' , groupList2 );
+
+    }
+
+  }
+
+  private async getAssociatedGroups()  {
+
+    if ( this.properties.groupsList && this.properties.groupsList.length > 0 ) {
+      return;
+
+    } else {
+      let results = [];
+
+      // Gets the associated owners group of a web
+      const ownerGroup = await sp.web.associatedOwnerGroup();
+      if ( ownerGroup ) { results.push( ownerGroup.Title ) ; }
+  
+      // Gets the associated members group of a web
+      const memberGroup = await sp.web.associatedMemberGroup();
+      if ( memberGroup ) { results.push( memberGroup.Title ) ; }
+  
+      // Gets the associated visitors group of a web
+      const visitorGroup = await sp.web.associatedVisitorGroup();
+      if ( visitorGroup ) { results.push( visitorGroup.Title ) ; }
+      
+      let resultsString = results.join(';');
+      this.properties.groupsList = resultsString;
+  
+      this.context.propertyPane.refresh();
+  
+      return ;
+    }
+
   }
 }
