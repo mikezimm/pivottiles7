@@ -1300,8 +1300,9 @@ this.setState({
       let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'items' ? true : false ;
       if ( loadThisData === true &&  this.props.ignoreList !== true ) {
 
+        // 2020-12-03:  Changed from getAll() to just get() so orderBy actually works
         web.lists.getByTitle(useTileList).items
-        .select(selectCols).expand(expandThese).filter(restFilter).orderBy(restSort,true).getAll()
+        .select(selectCols).expand(expandThese).filter(restFilter).orderBy(restSort,true).get()
         .then((listResponse) => {
             listResponse.map( I => { 
               if ( I.BaseType === 1 ) { I.sourceType = "Files"; }

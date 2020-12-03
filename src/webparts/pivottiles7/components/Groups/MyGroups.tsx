@@ -405,6 +405,8 @@ public constructor(props:IMyGroupsProps){
  */
         let stackSettingTokens = { childrenGap: 20, width: '100%' };
 
+        //If you set the width here, it drives the overall width of the part.
+        //For some reason it is shown as 1204 in the actual page... not the full width of the page.
         return (
           <div className={styles.directory} style={{ width: this.props.width }}>
             { webpartTitle }
