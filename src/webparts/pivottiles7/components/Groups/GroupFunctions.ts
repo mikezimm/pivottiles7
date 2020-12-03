@@ -69,11 +69,18 @@ export function getPrincipalTypeString( type: PrincipalType ) {
                 newGroups.titles.push( null );
 
             } else {
-                allGroups[i].users = groupUsers.users;
-                allGroups[i].uCount = groupUsers.users.length;
+                let hasCurrentUser = false;
+
+                groupUsers.users.map( user => { if ( user.Id === newGroups.userId ) { hasCurrentUser = true; } } ) ;
+                let groupIndex : any = doesObjectExistInArray( newGroups.propProps, 'title', thisGroup.Title );
+
+                thisGroup.users = groupUsers.users;
+                thisGroup.uCount = groupUsers.users.length;
+                thisGroup.hasCurrentUser = hasCurrentUser;
+                thisGroup.groupProps = newGroups.propProps[ groupIndex ];
                 newGroups.counts.push( groupUsers.users.length );
-                newGroups.Ids.push(  allGroups[i].Id );
-                newGroups.titles.push( allGroups[i].Title );
+                newGroups.Ids.push(  thisGroup.Id );
+                newGroups.titles.push( thisGroup.Title );
             }
         }
     

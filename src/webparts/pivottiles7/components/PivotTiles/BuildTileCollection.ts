@@ -405,13 +405,14 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
   console.log('buildFinalTileCollection - all response items:', response );
   let tileCollection: IPivotTileItemProps[] = response.map(item => {
 
+    let itemPushOther = pushOther;
+
     let modifiedByTitle = null;
     let createdByTitle = null;
     if ( includePeople === true ) {
         modifiedByTitle = getColumnValue(pivotProps,item,'colModifiedByTitle');
         createdByTitle = getColumnValue(pivotProps,item,'colCreatedByTitle');
     }
-
     
     let title = getColumnValue(theseProps,item,'colTitleText');
 
@@ -425,13 +426,18 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
       EntityTypeName = EntityTypeName.substr( 0, EntityTypeName.length - 4 );
       href = webUrl + '/lists/' + EntityTypeName;
 
+      if ( itemPushOther === true && pivotProps.fetchInfo.listOthers !== true ) { itemPushOther = false; }
+
     } else if ( item.sourceType === pivotProps.fetchInfo.libsCategory ) {
       let webUrl = item.ParentWebUrl;
       let EntityTypeName = encodeDecodeString( item.EntityTypeName, 'decode' );
       href = webUrl + '/' + EntityTypeName;
 
+      if ( itemPushOther === true && pivotProps.fetchInfo.libsOthers !== true ) { itemPushOther = false; }
+
     } else {
       href = getColumnValue(theseProps,item,'colGoToLink');
+
     }
 
     let category = getColumnValue(theseProps,item,'colCategory');
@@ -444,7 +450,7 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
     //Need to resolve when category is undefined in case that webpart prop is empty
     let testCategory = category === undefined || category === null ? false : true;
     if ( testCategory === false || category.length === 0 ) { 
-      if ( pushOther === true ) { category = [pivotProps.otherTab] ; }
+      if ( itemPushOther === true ) { category = [pivotProps.otherTab] ; }
     }
 
     //Can't do specific type here or it will break the multi-typed logic below
@@ -502,7 +508,7 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
       });
 
       //2020-11-16: changed length check === 1 because it should always have subsites category
-      if ( category.length === 0 ) {  if ( pushOther === true ) { category.push ( pivotProps.otherTab ) ;  }  }
+      if ( category.length === 0 ) {  if ( itemPushOther === true ) { category.push ( pivotProps.otherTab ) ;  }  }
 
     } else if ( custCategories.type === 'custom' && custCatLogi.length > 0 ) {
       /**
@@ -559,7 +565,7 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
         });
 
         //2020-11-16: changed length check === 1 because it should always have subsites category
-        if ( category.length === 0 ) {  if ( pushOther === true ) { category.push ( pivotProps.otherTab ) ;  }  }
+        if ( category.length === 0 ) {  if ( itemPushOther === true ) { category.push ( pivotProps.otherTab ) ;  }  }
 
     } else {
 

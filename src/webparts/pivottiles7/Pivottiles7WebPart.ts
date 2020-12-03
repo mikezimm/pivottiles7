@@ -20,12 +20,21 @@ import {
 import { sp } from '@pnp/sp';
 import { Web } from '@pnp/sp/presets/all';
 
+import "@pnp/sp/webs";
+import "@pnp/sp/site-groups/web";
+
 import { IPivottiles7WebPartProps,
   changeHubs, changeSubs, changeGroups, changeLists, changeFormats, changeItems, changeCats, changeFilters
   } from './IPivottiles7WebPartProps';
 
+  
+import { getHelpfullError } from '../../services/ErrorHandler';
+
 import PivotTiles from './components/PivotTiles/PivotTiles';
-import { IPivotTilesProps, IFetchInfoSettings, ICustomCategories, ICustomLogic, IPropChangeTypes } from './components/PivotTiles/IPivotTilesProps';
+import { IPivotTilesProps, IFetchInfoSettings, ICustomCategories, ICustomLogic, IPropChangeTypes, } from './components/PivotTiles/IPivotTilesProps';
+
+import { IGroupsProps } from './components/Groups/IMyGroupsProps';
+
 import { IPivotTileItemProps,  } from './components/TileItems/IPivotTileItemProps';
 import { string, any } from 'prop-types';
 import { propertyPaneBuilder } from '../../services/propPane/PropPaneBuilder';
@@ -37,6 +46,7 @@ import { pivotOptionsGroup, } from '../../services/propPane';
 
 import { saveTheTime, getTheCurrentTime, saveAnalytics } from '../../services/createAnalytics';
 import { trimEnd } from '@microsoft/sp-lodash-subset';
+import { resultContent } from 'office-ui-fabric-react/lib/components/FloatingPicker/PeoplePicker/PeoplePicker.scss';
 
 require('../../services/propPane/GrayPropPaneAccordions.css');
 
@@ -66,7 +76,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
         //https://stackoverflow.com/questions/52010321/sharepoint-online-full-width-page
         console.log('location',window.location.href);
-        if ( window.location.href &&  
+        if ( window.location.href && 
            window.location.href.indexOf("layouts/15/workbench.aspx") > 0  ) {
             
           if (document.getElementById("workbenchPageContent")) {
@@ -77,6 +87,10 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       sp.setup({
         spfxContext: this.context
       });
+
+      //this.checkGroups();
+      this.getAssociatedGroups();
+
     });
   }
 
@@ -101,6 +115,17 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       return ({ ...obj, [key]: value });
     }, {});
     return vars;
+  }
+
+  private buildGroupProps( gName : string, description = '', styles = '', options = '' ) {
+    let optionsArray = options !== '' ? JSON.parse(options) : null;
+    let result : IGroupsProps = {
+      title: gName,
+      description: description,
+      styles: styles,
+      options: optionsArray,
+    };
+    return result;
   }
 
   public getObjectFromString(message: string, str: string ) {
@@ -175,15 +200,34 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     custCategories = JSON.parse(JSON.stringify(custCategories));
 
-    let groupList = [];
+    let groupsList = [];
+    let groupsProps : IGroupsProps[] = [];
 
     let groupString = this.properties.groupsList;
-    if ( !groupString || groupString === '' ) { groupList = [] ; } 
-    else {
+    if ( !groupString || groupString === '' ) { groupsList = [] ; } 
+    else if ( groupString.indexOf('[') === 0 ) {
+      //This is complex object
+      try { 
+        let groupsObject : IGroupsProps[] = JSON.parse(this.properties.groupsList);
+        groupsObject.map ( group => {
+          groupsList.push( group.title ) ;
+        });
+        groupsProps = groupsObject ;
+
+      } catch (e) {
+        let errMessage = getHelpfullError(e) ;
+        alert( errMessage );
+      }
+
+    }
+    else { //Assume semicolon based names
       groupString.split(';').map( g => { 
         let gName = g.trim();
-        if ( gName.length > 0 ) { groupList.push( gName ) ; }
-      } );
+        if ( gName.length > 0 ) { 
+          groupsList.push( gName ) ;
+          groupsProps.push ( this.buildGroupProps(gName) ) ;
+        }
+      } ) ;
     }
 
     let fetchInfo : IFetchInfoSettings = {
@@ -196,7 +240,8 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       groupsInclude: this.properties.groupsInclude ,
       groupsCategory: this.properties.groupsCategory ,
       groupsLazy: this.properties.groupsLazy ,
-      groupsList: groupList ,
+      groupsList: groupsList ,
+      groupsProps: groupsProps ,
       groupsOthers: this.properties.groupsOthers ,
 
       usersInclude: this.properties.usersInclude ,
@@ -231,6 +276,9 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       imageHeight = parseInt(setSize, 10);
 
     }
+
+    let userId = this.context.pageContext.legacyPageContext.userId;
+
     const element: React.ReactElement<IPivotTilesProps > = React.createElement(
       PivotTiles,
       {
@@ -429,6 +477,14 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
     }
 
     //If the the list is somewhere else (not on this site, auto-disable subsites due to complexity)
+    if (propertyPath === 'groupsInclude' ) {
+      if ( !this.properties.groupsList || this.properties.groupsList === '' ) {
+        let defaultGroupList : any = Promise.resolve(this.getAssociatedGroups());
+        this.properties.groupsList = defaultGroupList ;
+      }
+    }
+
+    //If the the list is somewhere else (not on this site, auto-disable subsites due to complexity)
     if (propertyPath === 'listWebURL' && newValue === '' ) {
       this.properties.subsitesInclude = false;
     } else { 
@@ -481,5 +537,57 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
     }
     this.render();
+  }
+
+  private checkGroups() {
+
+    if ( this.properties.groupsList && this.properties.groupsList.length > 0 ) {
+      let test = null;
+      let groupList2 = this.getAssociatedGroups().then( result => {
+        test = result;
+      });
+      console.log('Groups:' , groupList2 );
+
+    }
+
+  }
+
+  private async getAssociatedGroups()  {
+
+    if ( this.properties.groupsList && this.properties.groupsList.length > 0 ) {
+      return;
+
+    } else {
+      let results : IGroupsProps[] = [];
+      let list : string[] = [];
+      // Gets the associated owners group of a web
+      const ownerGroup = await sp.web.associatedOwnerGroup();
+      if ( ownerGroup ) { 
+        results.push( this.buildGroupProps( ownerGroup.Title , 'Current OWNER Group') ) ; 
+        //list.push( ownerGroup.Title );
+      }
+  
+      // Gets the associated members group of a web
+      const memberGroup = await sp.web.associatedMemberGroup();
+      if ( memberGroup ) { 
+        results.push( this.buildGroupProps( memberGroup.Title , 'Current MEMBER Group' ) ) ; 
+        //list.push( memberGroup.Title ); 
+      }
+  
+      // Gets the associated visitors group of a web
+      const visitorGroup = await sp.web.associatedVisitorGroup();
+      if ( visitorGroup ) { 
+        results.push( this.buildGroupProps( visitorGroup.Title , 'Current VISITOR Group' ) ) ;
+        //list.push( visitorGroup.Title );
+     }
+      
+      let resultsString = JSON.stringify( results );
+      this.properties.groupsList = resultsString;
+
+      this.context.propertyPane.refresh();
+  
+      return ;
+    }
+
   }
 }

@@ -6,6 +6,8 @@ import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 import { Pivot, IPivotStyles, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 
+import { IGroupsProps } from '../Groups/IMyGroupsProps';
+
 export interface theTime {
   now: Date;
   theTime : string;
@@ -44,6 +46,7 @@ export interface IFetchInfoSettings {
   groupsCategory: string ;
   groupsLazy: boolean ;
   groupsList: string[] ;
+  groupsProps: IGroupsProps[] ;
   groupsOthers: boolean ;
 
   usersInclude: boolean ;

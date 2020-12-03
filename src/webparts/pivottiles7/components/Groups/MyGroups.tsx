@@ -73,9 +73,11 @@ private setMyGroups() {
         sortedIds: [],
         titles: this.props.groups,
         propTitles: JSON.parse(JSON.stringify( this.props.groups )), 
+        propProps: this.props.groupsProps,
         Ids: [],
         isLoading: true,
         counts: [],
+        userId: this.props.userId,
     };
 
     return myGroups;
@@ -188,8 +190,6 @@ public constructor(props:IMyGroupsProps){
           onChange={this._searchBoxChanged}
         /></div>;
 
-        let selectedGroupIndex = this.state.myGroups.titles.indexOf(this.state.indexSelectedKey);
-
         let groupPivot = <div><Pivot
             styles={{
               root: {
@@ -211,7 +211,9 @@ public constructor(props:IMyGroupsProps){
             })}
           </Pivot></div>;
 
-          let showNoUsers = isLoaded === false ? false : !this.state.myGroups.groups[0].users || this.state.myGroups.groups[0].users.length == 0 ? true : false;
+          let selectedGroup = this.state.selectedGroup;
+
+          let showNoUsers = isLoaded === false ? false : !selectedGroup.users || selectedGroup.users.length == 0 ? true : false;
 
           let noUsers = <div className={styles.noUsers}>
               <Icon
@@ -233,7 +235,6 @@ public constructor(props:IMyGroupsProps){
         let searchSpinner = showNoUsers !== true && this.state.isLoading ? <Spinner size={SpinnerSize.large} label={"searching ..."} /> : null ;
         let size : PersonaSize = PersonaSize.size72;
 
-        let selectedGroup = this.state.selectedGroup;
 
         if ( isLoaded !== true || !selectedGroup ) {
           //Do nothing if there are no groups
@@ -283,14 +284,32 @@ public constructor(props:IMyGroupsProps){
             title={ "You can join this group by CTRL-Clicking Group Title"}            
           />: null;
 
-        //For some reason Description isn't getting returned
-        let Description = isLoaded === true && selectedGroup && selectedGroup.Description && selectedGroup.Description.length > 0 ?
-          <p style={{ whiteSpace: 'nowrap' }}><b>Description:</b> { selectedGroup.Description.substr(0,30) }</p> : null;
+        let HasCurrentUser = isLoaded === true && selectedGroup && selectedGroup.hasCurrentUser === true ? 
+        <Icon 
+          style={{ fontSize: 'large', fontWeight: 600, color: 'darkgreen' }}
+          iconName={ "ContactHeart"}
+          title={ "You are in this group"}            
+        />: null;
 
-        let groupElements = loadGrid === true ? [ 
+        //For some reason Description isn't getting returned
+        let groupDescription = null;
+        let Description = null;
+        if ( isLoaded === true && selectedGroup ) {
+          if ( selectedGroup.groupProps.description.length > 0 ) {
+            groupDescription = selectedGroup.groupProps.description;
+          } else { groupDescription = selectedGroup.Description && selectedGroup.Description.length > 0 ? selectedGroup.Description : ''; }
+
+          Description = groupDescription.length > 0 ?
+          <p style={{ whiteSpace: 'nowrap' }}><b>Description:</b> { groupDescription.substr(0,30) }</p> : null;
+        }
+
+
+        let groupElements = isLoaded === true && selectedGroup ? [ 
               <p style={{ whiteSpace: 'nowrap' }}><b>Id:</b> { selectedGroup.Id }</p>,
               Description,
-              <p style={{ whiteSpace: 'nowrap' }}><b>Owner:</b> { selectedGroup.OwnerTitle }</p>,
+              <p style={{ whiteSpace: 'nowrap' }} title={ 'People in ' + selectedGroup.OwnerTitle + ' can update this group'}><b>Owner:</b> { selectedGroup.OwnerTitle }</p>,
+              <p style={{ whiteSpace: 'nowrap' }}><b>Users:</b> { selectedGroup.uCount }</p>,
+              HasCurrentUser,
               OnlyAllowMembersViewMembership ,
               AllowMembersEditMembership ,
               IsHiddenInUI ,
@@ -299,7 +318,7 @@ public constructor(props:IMyGroupsProps){
             ] : [];
 
         let groupInfoTokens = { childrenGap: 20 };
-        const groupInfo = loadGrid === true
+        const groupInfo = isLoaded === true && selectedGroup
         ?  <Stack horizontal={true} wrap={true} horizontalAlign={"center"} tokens={groupInfoTokens} >{/* Stack for Buttons and Webs */}
               { groupElements }
           </Stack> : [];
