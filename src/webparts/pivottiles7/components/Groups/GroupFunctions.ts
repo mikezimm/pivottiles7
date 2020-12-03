@@ -72,10 +72,12 @@ export function getPrincipalTypeString( type: PrincipalType ) {
                 let hasCurrentUser = false;
 
                 groupUsers.users.map( user => { if ( user.Id === newGroups.userId ) { hasCurrentUser = true; } } ) ;
+                let groupIndex : any = doesObjectExistInArray( newGroups.propProps, 'title', thisGroup.Title );
 
                 thisGroup.users = groupUsers.users;
                 thisGroup.uCount = groupUsers.users.length;
                 thisGroup.hasCurrentUser = hasCurrentUser;
+                thisGroup.groupProps = newGroups.propProps[ groupIndex ];
                 newGroups.counts.push( groupUsers.users.length );
                 newGroups.Ids.push(  thisGroup.Id );
                 newGroups.titles.push( thisGroup.Title );

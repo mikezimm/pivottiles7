@@ -452,6 +452,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         setPivSize = { this.props.setPivSize }
         setPivFormat = { PivotLinkFormat.tabs }
         groups={ this.props.fetchInfo.groupsList } //["PivotTiles Owners", "PivotTiles Members", "PivotTiles Visitors"]
+        groupsProps={ this.props.fetchInfo.groupsProps } //["PivotTiles Owners", "PivotTiles Members", "PivotTiles Visitors"]
         webURL={ this.props.pageContext.web.absoluteUrl }
         context={ this.props.context }
         searchFirstName={ true }

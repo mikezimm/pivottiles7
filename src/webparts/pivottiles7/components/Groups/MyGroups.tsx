@@ -73,6 +73,7 @@ private setMyGroups() {
         sortedIds: [],
         titles: this.props.groups,
         propTitles: JSON.parse(JSON.stringify( this.props.groups )), 
+        propProps: this.props.groupsProps,
         Ids: [],
         isLoading: true,
         counts: [],
@@ -291,13 +292,22 @@ public constructor(props:IMyGroupsProps){
         />: null;
 
         //For some reason Description isn't getting returned
-        let Description = isLoaded === true && selectedGroup && selectedGroup.Description && selectedGroup.Description.length > 0 ?
-          <p style={{ whiteSpace: 'nowrap' }}><b>Description:</b> { selectedGroup.Description.substr(0,30) }</p> : null;
+        let groupDescription = null;
+        let Description = null;
+        if ( isLoaded === true && selectedGroup ) {
+          if ( selectedGroup.groupProps.description.length > 0 ) {
+            groupDescription = selectedGroup.groupProps.description;
+          } else { groupDescription = selectedGroup.Description && selectedGroup.Description.length > 0 ? selectedGroup.Description : ''; }
+
+          Description = groupDescription.length > 0 ?
+          <p style={{ whiteSpace: 'nowrap' }}><b>Description:</b> { groupDescription.substr(0,30) }</p> : null;
+        }
+
 
         let groupElements = isLoaded === true && selectedGroup ? [ 
               <p style={{ whiteSpace: 'nowrap' }}><b>Id:</b> { selectedGroup.Id }</p>,
               Description,
-              <p style={{ whiteSpace: 'nowrap' }}><b>Owner:</b> { selectedGroup.OwnerTitle }</p>,
+              <p style={{ whiteSpace: 'nowrap' }} title={ 'People in ' + selectedGroup.OwnerTitle + ' can update this group'}><b>Owner:</b> { selectedGroup.OwnerTitle }</p>,
               <p style={{ whiteSpace: 'nowrap' }}><b>Users:</b> { selectedGroup.uCount }</p>,
               HasCurrentUser,
               OnlyAllowMembersViewMembership ,

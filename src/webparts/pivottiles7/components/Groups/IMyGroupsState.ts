@@ -3,6 +3,7 @@ import { Web, SiteGroups, SiteGroup, ISiteGroups, ISiteGroup, ISiteGroupInfo, IP
 
 import { IUser } from '../IReUsableInterfaces';
 
+import { IGroupsProps } from './IMyGroupsProps';
 
 // IMyGroups, ISingleGroup, IMyGroupsState
 export interface ISingleGroup extends ISiteGroupInfo {
@@ -16,6 +17,8 @@ export interface ISingleGroup extends ISiteGroupInfo {
   AutoAcceptRequestToJoinLeave: boolean;
   Description: string;
   hasCurrentUser: boolean;
+  groupProps: IGroupsProps;
+
 }
 
 export interface IMyGroups {
@@ -25,6 +28,7 @@ export interface IMyGroups {
   sortedIds: number[];
   titles: string[];
   propTitles: string[];
+  propProps: IGroupsProps[];
   Ids: number[];
   isLoading: boolean;
   counts: number[];

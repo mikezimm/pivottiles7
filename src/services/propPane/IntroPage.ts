@@ -18,8 +18,17 @@ import { devListMapping } from './../../webparts/pivottiles7/DevListMapping';
 import { corpListMapping } from './../../webparts/pivottiles7/CorpListMapping';
 import { teamListMapping } from './../../webparts/pivottiles7/TeamListMapping';
 
+
+
 export class IntroPage {
   public getPropertyPanePage(webPartProps): IPropertyPanePage {
+
+    const JSONLink = PropertyPaneLink('JSON Link' , {
+      text: 'Use this site to more easily work on JSON',
+      href: 'https://codebeautify.org/jsonviewer',
+      target: '_blank',
+      disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
+    });
 
     let theListChoices : IPropertyPaneDropdownOption[] = devListMapping.listChoices;
 
@@ -184,12 +193,7 @@ export class IntroPage {
                 disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
             }),
 
-            PropertyPaneLink('JSON Link' , {
-              text: 'Use this site to more easily work on JSON',
-              href: 'https://codebeautify.org/jsonviewer',
-              target: '_blank',
-              disabled: webPartProps.custCatType === 'tileCategory' ? true : false,
-            }),
+            JSONLink,
 
             PropertyPaneTextField('custCatLogi', {
               label: 'Custom Logic (see wiki), use link above to help edit JSON',
@@ -409,16 +413,21 @@ export class IntroPage {
               disabled: webPartProps.listWebURL !== '' ? true : false,
           }),
 
+
           PropertyPaneTextField('groupsList', {
               label: 'List of group names - separated by ;',
+              description: 'For complex settings, use the link below to edit as JSON Object',
               disabled: webPartProps.groupsInclude === true ? false : true,
               multiline: true,
           }),
           
+          JSONLink,
+
           PropertyPaneTextField('groupsCategory', {
               label: 'Groups Category',
               disabled: webPartProps.groupsInclude === true ? false : true,
           }),
+          
           PropertyPaneToggle('groupsLazy', {
             label: 'Lazy Load Groups:  do not load until you click tab',
             offText: 'Off',
@@ -426,6 +435,7 @@ export class IntroPage {
 //            disabled: webPartProps.groupsInclude === true ? false : true,
             disabled: true,
           }),
+
           PropertyPaneToggle('groupsOthers', {
               label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.groupsCategory ),
               offText: 'Off',
