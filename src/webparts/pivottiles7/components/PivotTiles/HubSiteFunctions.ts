@@ -69,6 +69,8 @@ export function getAssociatedSites(departmentId: string, callback: any, entireRe
             entireResponse.hubs.map( h => {
                 h.sourceType = hubsCategory;
             });
+
+            
             callback( entireResponse, custCategories, newData );
     
     });
