@@ -1411,6 +1411,8 @@ this.setState({
         lastStateChange: 'processCatch',
       });
   
+      saveAnalytics(this.props,this.state);
+
     }
   
 /***
