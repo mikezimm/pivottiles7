@@ -694,6 +694,12 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
     }
     */
 
+    //sortValue
+
+    let sortValue = getColumnValue(theseProps,item,'colSort');
+    if ( !sortValue ) { sortValue = '0'; }
+    let newStringSort : string = '';
+    if ( typeof sortValue === 'number' ) { newStringSort = sortValue.toString() ; } else { newStringSort = sortValue ; }
     category.push(sourceType);
 
     let idProp = theseProps.id ? theseProps.id : 'Id';
@@ -702,6 +708,8 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
      return {
 
       sourceType: sourceType,
+      sortValue: newStringSort,
+
       id: itemId,
       
       imageUrl: imageUrl,
@@ -777,7 +785,7 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
     * Function to sort alphabetically an array of objects by some specific key.
     *  https://ourcodeworld.com/articles/read/764/how-to-sort-alphabetically-an-array-of-objects-by-key-in-javascript#:~:text=%20How%20to%20sort%20alphabetically%20an%20array%20of,Finally%2C%20to%20sort%20an%20array%20of...%20More%20
     */
-    tileCollection.sort((a,b) => a['title'].localeCompare(b['title']));
+    tileCollection.sort((a,b) => a['sortValue'].localeCompare(b['sortValue']));
 
     tileCollection.map( item => {
       let anyItem: any = item;
@@ -872,6 +880,7 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
       colCreated: 'Created',
       colTitleText: 'Title',
       colHoverText: 'Description',
+      colSort: 'Title',
 
       colCategory: null,
       colTileStyle: null,

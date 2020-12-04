@@ -26,6 +26,8 @@ export interface IPivotTileItemProps {
   sourceType: string;  //odata.type ie List, Library, Web, Document, ListItem
   system: string;  //Used for identifying system lists
 
+  sortValue: string ;
+
   //Hero tile properties
   heroType: string;
   heroCategory: string;

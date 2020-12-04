@@ -43,11 +43,14 @@ export interface MySearchResults extends ISearchResult {
 
 }
 
-export function getAssociatedSites(departmentId: string, callback: any, entireResponse: any , custCategories, hubsCategory, newData ) {
+export function getAssociatedSites(departmentId: string, callback: any, entireResponse: any , custCategories, hubsCategory, ascSort: boolean, newData ) {
 
     //var departmentId = departmentId;
     // do a null check of department id
     //366df2ee-6476-4b15-a4fd-018dfae71e48 <= SPHub
+
+    //Sort ascending by default
+    let sortDirection = ascSort === false ? 1 : 0;
 
     console.log('current department ID:', departmentId );
     sp.search(<ISearchQuery>{
@@ -55,6 +58,7 @@ export function getAssociatedSites(departmentId: string, callback: any, entireRe
           SelectProperties: ["Title", "SPSiteUrl", "WebTemplate","departmentId","SiteLogoUrl"],
           RefinementFilters:[`departmentid:string("{*",linguistics=off)`],
           RowLimit: 500,
+//          SortList: [ {Property: 'Title',Direction: sortDirection }],
           TrimDuplicates: false})
           .then((r: SearchResults) => {
     
@@ -65,6 +69,8 @@ export function getAssociatedSites(departmentId: string, callback: any, entireRe
             entireResponse.hubs.map( h => {
                 h.sourceType = hubsCategory;
             });
+
+            
             callback( entireResponse, custCategories, newData );
     
     });

@@ -61,6 +61,8 @@ import { IHubSiteWebData, IHubSiteInfo } from  "@pnp/sp/hubsites";
 
 import { getHelpfullError } from '../../../../services/ErrorHandler';
 
+import { createIconButton , defCommandIconStyles} from "../createButtons/IconButton";
+
 //import DirectoryHook from '../Directory/DirectoryHook';
 
  import MyGroups from '../Groups/MyGroups';
@@ -143,6 +145,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       pivtTitles:[],
       showAllTiles: false,
       filteredCategory: this.props.setTab,
+      resortCat: this.props.setTab,
       pivotDefSelKey:"",
       loadStatus:"Loading",
       showTips: "none",
@@ -154,6 +157,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
       shuffleShow: true,
       searchCount: 0,
       searchWhere: '',
+      sortAsc: true,
       searchType: '',
       listStaticName: this.props.listTitle,
       heroCategoryError: false,
@@ -467,6 +471,12 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
         pageSize={ 5 }
       ></MyGroups>;
 
+      defCommandIconStyles.icon.fontWeight = '600' ;
+  
+      //className={ /*farLinkHover*/ }
+      let sortedLabel = this.state.sortAsc === false ? 'Sorted Larger to Smaller' : 'Sorted Smaller to Larger';
+      let sortButton = <div title={ "Sort" } className={ '' /*farLinkHover*/ } style={{background: 'white', opacity: .7, borderRadius: '10px', cursor: 'pointer', marginRight: '20px' }}>
+      { createIconButton(this.state.sortAsc === false ? 'Down' : 'Up', sortedLabel ,this._sortTiles.bind(this), null, defCommandIconStyles, false ) } </div>;
 
     /***
      *    d8888b. d88888b d888888b db    db d8888b. d8b   db      
@@ -538,6 +548,9 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
               onChange={ this.searchForItems.bind(this) }
               onClick={ this._changeSearchOnFocus.bind(this) }
             />
+
+            { sortButton }
+            
             <div className={styles.searchStatus}>
               { 'Searching about ' + this.state.searchCount + ' items' + this.state.searchWhere }
               { /* 'Searching ' + (this.state.searchType !== 'all' ? this.state.filteredTiles.length : ' all' ) + ' items' */ }
@@ -652,6 +665,18 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
  *                                                                                                                                    
  */
 
+  private _sortTiles = (item) : void => {
+
+    let entireResponse = {
+      webs: this.state.originalWebs,
+      lists: this.state.originalLists,
+      items: this.state.originalListItems,
+      hubs: this.state.originalHubs,
+    };
+
+    this.processResponse( entireResponse, this.state.custCategories, false, true );
+
+  }
 
   public searchForItems = (item): void => {
     //This sends back the correct pivot category which matches the category on the tile.
@@ -703,7 +728,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
           items: this.state.originalListItems,
           hubs: this.state.originalHubs,
         };
-        this.processResponse( entireResponse, custCategories, false );
+        this.processResponse( entireResponse, custCategories, false, false );
 
       }
 
@@ -799,6 +824,14 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
       } else {
         showSearch = false; //Hide this bar when you are showing groups
+      }
+
+      
+      //Modified this stackexchange to move item to front of array:  https://stackoverflow.com/a/23921775
+      //objs.sort((a,b) => (a.last_nom > b.last_nom) ? 1 : ((b.last_nom > a.last_nom) ? -1 : 0)); '
+      if ( item.props.headerText === this.props.fetchInfo.hubsCategory ) {
+        //Resort items so that the Hubsite link is always first when you are in the Hubs category
+        newFilteredTiles.sort((a,b) => a.id == this.state.departmentId ? -1 : b.id == this.state.departmentId ? 1 : 0 ); 
       }
 
       //Save back the last pivot/tile clicked.
@@ -1243,6 +1276,12 @@ this.setState({
         try {
             let websResponse = await web.webs();
             websResponse.map( w => { w.sourceType = this.props.fetchInfo.subsitesCategory ; });
+            //.orderBy('Title', this.state.sortAsc )
+            //    tileCollection.sort((a,b) => a['title'].localeCompare(b['title']));
+            if ( this.state.sortAsc === true ) {
+              websResponse.sort((a,b) => a['Title'].localeCompare(b['Title']));
+            } else { websResponse.sort((a,b) => b['Title'].localeCompare(a['Title'])); }
+
             entireResponse.webs = websResponse;
             this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
         } catch (e) {
@@ -1276,7 +1315,7 @@ this.setState({
           listFilter += ` and Title ne \'Style Library\'`; //For some reason had to hard-code filter this one out
         }
 
-        web.lists.filter(listFilter).orderBy('Title',true).get()
+        web.lists.filter(listFilter).orderBy('Title',this.state.sortAsc).get()
         .then((listLibResponse) => {
             listLibResponse.map( L => { 
               L.sourceType = L.BaseType === 0 ? this.props.fetchInfo.listCategory : this.props.fetchInfo.libsCategory;
@@ -1300,8 +1339,9 @@ this.setState({
       let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'items' ? true : false ;
       if ( loadThisData === true &&  this.props.ignoreList !== true ) {
 
+        // 2020-12-03:  Changed from getAll() to just get() so orderBy actually works
         web.lists.getByTitle(useTileList).items
-        .select(selectCols).expand(expandThese).filter(restFilter).orderBy(restSort,true).getAll()
+        .select(selectCols).expand(expandThese).filter(restFilter).orderBy(restSort,this.state.sortAsc).get()
         .then((listResponse) => {
             listResponse.map( I => { 
               if ( I.BaseType === 1 ) { I.sourceType = "Files"; }
@@ -1330,7 +1370,7 @@ this.setState({
       let hubResponse = [];
       let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'hubs' ? true : false ;
       if ( loadThisData === true &&  this.props.fetchInfo.hubsInclude === true ) {
-        getAssociatedSites( this.state.departmentId, this.finalCall.bind(this) , entireResponse, custCategories, this.props.fetchInfo.hubsCategory, newData );
+        getAssociatedSites( this.state.departmentId, this.finalCall.bind(this) , entireResponse, custCategories, this.props.fetchInfo.hubsCategory, this.state.sortAsc, newData );
       } else {
         entireResponse.hubs =  this.props.fetchInfo.hubsInclude === true ? this.state.originalHubs : [];
         this.finalCall ( entireResponse, custCategories, newData);
@@ -1339,7 +1379,7 @@ this.setState({
     }
 
     private finalCall ( entireResponse : any, custCategories, newData) {
-      this.processResponse( entireResponse, custCategories, newData );
+      this.processResponse( entireResponse, custCategories, newData, false );
 
     }
 
@@ -1383,7 +1423,7 @@ this.setState({
  *                                                                                                                                    
  */
 
-    private processResponse(entireResponse: any, custCategories: ICustomCategories, newData: boolean){
+    private processResponse(entireResponse: any, custCategories: ICustomCategories, newData: boolean, toggleSort ){
       
       console.log('entireResponse', entireResponse );
       let subsites = entireResponse.webs;
@@ -1433,11 +1473,12 @@ this.setState({
       let pivotProps = this.props;
       let pivotState = this.state;
 
+
       let tileCollectionResults = buildTileCollectionFromAllResponse( 'items', itemsResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
       let tileCollectionWebs = buildTileCollectionFromAllResponse( 'subs', subsites, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
       let tileCollectionLists = buildTileCollectionFromAllResponse( 'lists', listResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
       let tileCollectionHubs = buildTileCollectionFromAllResponse( 'hubs', hubResponse, pivotProps, custCategories, editItemURL, pivotProps.heroCategory);
-
+      
       console.log('tileCollectionWebs: ', tileCollectionWebs);
       console.log('tileCollectionLists: ', tileCollectionLists);
       console.log('tileCollectionResults: ', tileCollectionResults);
@@ -1462,13 +1503,39 @@ this.setState({
         });
       }
 
+      
+      /*
+      https://stackoverflow.com/a/1129270
+      objs.sort((a,b) => (a.last_nom > b.last_nom) ? 1 : ((b.last_nom > a.last_nom) ? -1 : 0)); 
+
+        let restSort: string = "Title";
+        if ( this.props.colSort ) {
+          restSort = this.props.colSort;
+        }
+
+        if ( this.state.sortAsc === true ) {
+          tileCollection.sort((a,b) => (a.sortValue > b.sortValue) ? 1 : ((b.sortValue > a.sortValue) ? -1 : 0));
+        } else { 
+          tileCollection.sort((a,b) => (b.sortValue > a.sortValue) ? 1 : ((a.sortValue > b.sortValue) ? -1 : 0));
+        }
+      */
+
+      
+      let newSort = toggleSort === false ? this.state.sortAsc : !this.state.sortAsc;
+
+      if ( newSort === true ) {
+        tileCollection.sort((a,b) => a['sortValue'].localeCompare(b['sortValue']));
+      } else { 
+        tileCollection.sort((a,b) => b['sortValue'].localeCompare(a['sortValue']));
+      }
+
       let tileCategories = buildTileCategoriesFromResponse(pivotProps, pivotState, custCategories, tileCollection, pivotProps.heroCategory, 'category');
       
-      const defaultSelectedIndex = tileCategories.indexOf(this.props.setTab);
+      const defaultSelectedIndex = tileCategories.indexOf( newData === true ? this.props.setTab : this.state.filteredCategory );
       let defaultSelectedKey = defaultSelectedIndex.toString();
       defaultSelectedKey = this.props.setTab.toString();  // Added this because I think this needs to be the header text, not the index.
       defaultSelectedKey = convertCategoryToIndex(defaultSelectedKey);
-      if ( newData === false ) { defaultSelectedKey = tileCategories[0] ; }
+      if ( newData === false ) { defaultSelectedKey = toggleSort !== true ? this.props.setTab : this.state.filteredCategory ; }
       
       tileCollectionResults.categoryInfo.lastCategory = tileCategories[0];
 
@@ -1481,7 +1548,14 @@ this.setState({
       if ( newData === true ) { 
         newFilteredTiles = this.getNewFilteredTiles(pivotProps, pivotState, tileCollection, heroIds, heroTiles, 'category');
       } else {
-        newFilteredTiles = this.getOnClickFilteredTiles(tileCollection, heroIds, heroTiles, 'category', tileCategories[0] );
+        newFilteredTiles = this.getOnClickFilteredTiles(tileCollection, heroIds, heroTiles, 'category', defaultSelectedKey );
+      }
+
+      //Modified this stackexchange to move item to front of array:  https://stackoverflow.com/a/23921775
+      //objs.sort((a,b) => (a.last_nom > b.last_nom) ? 1 : ((b.last_nom > a.last_nom) ? -1 : 0)); '
+      if ( this.state.filteredCategory === this.props.fetchInfo.hubsCategory ) {
+        //Resort items so that the Hubsite link is always first when you are in the Hubs category
+        newFilteredTiles.sort((a,b) => a.id == this.state.departmentId ? -1 : b.id == this.state.departmentId ? 1 : 0 ); 
       }
 
       /*
@@ -1505,6 +1579,8 @@ this.setState({
         lastFilteredTiles: newFilteredTiles,
         pivotDefSelKey: defaultSelectedKey,
         filteredCategory: defaultSelectedKey,
+        sortAsc: newSort,
+        resortCat: defaultSelectedKey,
         loadStatus:"Ready",
         heroStatus: heroTiles[0] ? "Ready" : "none",
 //      heroCategoryError: (this.props.showHero === true && this.props.heroType !== "none" && this.state.heroStatus === "none") ? true : false,
