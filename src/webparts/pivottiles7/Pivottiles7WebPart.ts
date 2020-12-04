@@ -90,7 +90,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
       //this.checkGroups();
       this.getAssociatedGroups();
-
+      this.pushMissingDefaultsThatCauseIssues();
     });
   }
 
@@ -142,6 +142,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
     }
     
     return result;
+
   }
 
   public render(): void {
@@ -149,6 +150,8 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
     let urlVars : any = this.getUrlVars();
 
     if ( urlVars.scenario && urlVars.scenario.toLowerCase() === 'dev' ) {  this.properties.scenario = 'DEV';  }
+
+    this.pushMissingDefaultsThatCauseIssues();
 
     //Added for https://github.com/mikezimm/pivottiles7/issues/2
     if ( urlVars.category ) {  this.properties.setTab = urlVars.category;  }
@@ -549,6 +552,23 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       });
       console.log('Groups:' , groupList2 );
 
+    }
+
+  }
+
+  private async pushMissingDefaultsThatCauseIssues() {
+    let madeUpdate = false;
+    if ( !this.properties.hubsCategory ) { this.properties.hubsCategory = 'Hub'; madeUpdate = true; console.log('Autoset hubsCategory property'); }
+    if ( !this.properties.subsitesCategory ) { this.properties.subsitesCategory = 'Subsites'; madeUpdate = true; console.log('Autoset subsitesCategory property'); }
+    if ( !this.properties.groupsCategory ) { this.properties.groupsCategory = 'Groups'; madeUpdate = true; console.log('Autoset groupsCategory property'); }
+    if ( !this.properties.colSort ) { this.properties.colSort = 'Title'; madeUpdate = true; console.log('Autoset colSort property'); }
+    if ( this.properties.custCatType === 'semiColon1' || this.properties.custCatType ===  'semiColon2' ) {
+      if ( !this.properties.custCatLogi ) { this.properties.custCatLogi = "Set;Categories;Here;Now"; madeUpdate = true; console.log('Autoset custCatLogi property'); }
+    }
+
+    if ( madeUpdate === true ) {
+      this.context.propertyPane.refresh();
+      this.render();
     }
 
   }

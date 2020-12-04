@@ -127,7 +127,7 @@ public constructor(props:IInfoAboutMeProps){
                 {/* 3 files to update version number:  package-solution.json, package-lock.json, package.json*/}
                 <table className={styles.infoTable} style={{ width: '100%' }}>
                     <tr><th>Date</th><th>Version</th><th>Focus</th><th>Notes</th></tr>
-                    <tr><td>2020-12-04</td><td>{'1.2.2.5'}</td><td>Fix fetch users in groups with OnlyAllowMembersViewMembership === true crash</td></tr>
+                    <tr><td>2020-12-04</td><td>{'1.2.2.5'}</td><td>Fix fetch users in groups with OnlyAllowMembersViewMembership === true crash, pushMissingDefaultsThatCauseIssues</td></tr>
                     <tr><td>2020-12-04</td><td>{'1.2.2.4'}</td><td>Add quick-sort button, remove support for 'modified' type quick custom categories</td></tr>
                     <tr><td>2020-12-03</td><td>{'1.2.2.3'}</td><td>Auto add Associated Groups to settings when opening property pane, complex group styles and options</td></tr>
                     <tr><td>2020-12-02</td><td>{'1.2.2.2'}</td><td>Small bug fixes with groups, categories, properties</td></tr>
