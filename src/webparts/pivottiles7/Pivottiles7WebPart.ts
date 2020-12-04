@@ -278,6 +278,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
     }
 
     let userId = this.context.pageContext.legacyPageContext.userId;
+    let tenant = this.context.pageContext.web.absoluteUrl.replace(this.context.pageContext.web.serverRelativeUrl,"");
 
     const element: React.ReactElement<IPivotTilesProps > = React.createElement(
       PivotTiles,
@@ -352,7 +353,7 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
         textPadding: this.properties.textPadding,
 
         analyticsList: strings.analyticsList,
-        analyticsWeb: strings.analyticsWeb,
+        analyticsWeb: tenant + strings.analyticsWeb,
         tenant: this.context.pageContext.web.absoluteUrl.replace(this.context.pageContext.web.serverRelativeUrl,""),
         urlVars: this.getUrlVars(),
 

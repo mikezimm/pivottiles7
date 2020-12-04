@@ -475,7 +475,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
   
       //className={ /*farLinkHover*/ }
       let sortedLabel = this.state.sortAsc === false ? 'Sorted Larger to Smaller' : 'Sorted Smaller to Larger';
-      let sortButton = <div title={ "Sort" } className={ '' /*farLinkHover*/ } style={{background: 'white', opacity: .7, borderRadius: '10px', cursor: 'pointer', marginRight: '20px' }}>
+      let sortButton = <div title={ "Sort" } className={  ''/*[styles.floatLeft,styles.padLeft20].join(' ')*/ } style={{background: 'white', opacity: .7, borderRadius: '10px', cursor: 'pointer', marginRight: '20px', position: 'absolute', left: '350px' }}>
       { createIconButton(this.state.sortAsc === false ? 'Down' : 'Up', sortedLabel ,this._sortTiles.bind(this), null, defCommandIconStyles, false ) } </div>;
 
     /***
@@ -539,6 +539,7 @@ export default class PivotTiles extends React.Component<IPivotTilesProps, IPivot
 
           {/*https://developer.microsoft.com/en-us/fabric#/controls/web/searchbox*/}
           <div className={[styles.floatLeft,styles.padLeft20,( this.state.searchShow ? styles.showSearch: styles.hideSearch )].join(' ')} >
+
             <SearchBox
               className={ styles.searchBox }
               styles={ searchBoxStyles }
@@ -1592,7 +1593,7 @@ this.setState({
         endTime: this.state.endTime ? this.state.endTime : getTheCurrentTime(),
         heroCategory: this.props.heroCategory,
         searchCount: newFilteredTiles.length,
-        searchWhere: ' in ' + this.props.setTab,
+        searchWhere: ' in ' + defaultSelectedKey,
         listStaticName: listStaticName,
 
         showOtherTab: showOtherTab,
@@ -1618,9 +1619,8 @@ this.setState({
         lastStateChange: 'processResponse - 1',
       });
 
-      saveAnalytics(this.props,this.state);
+      if ( newData === true ) { saveAnalytics(this.props,this.state); }
 
-  
       let reloadHubImages = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'hubs' ? true : false ;
 
       if ( reloadHubImages === true ) {

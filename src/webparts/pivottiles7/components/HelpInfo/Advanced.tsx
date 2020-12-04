@@ -110,12 +110,16 @@ public constructor(props:IAdvancedProps){
             messageRows.push( <tr><td>CTRL-Click on <b>Search Box</b></td><td><mark>Word1;Word2;Word3</mark></td><td>Type <b>; separated Keywords</b> and <b>ENTER</b> rebuild Tile Categories</td></tr> );
             messageRows.push( <tr><td>Search Box SHOULD turn <mark>Yellow</mark></td><td><mark>reset</mark></td><td>Type <b>'reset'</b> and <b>Enter</b> to reset Tile Categories</td></tr> );
 
+            /*
+            //Commented these out because they no longer work at least as of v1.2.2.3... 
+            //I think it stopped working when I added custom categories.
+            //See around line 703 in BildTileCollection
             messageRows.push( <tr><td></td><td><mark>modified</mark></td><td>Type <b>'modified'</b> and <b>Enter</b> to group in labels</td></tr> );
             messageRows.push( <tr><td></td><td><mark>modified&lt;</mark></td><td>Type <b>'modified&lt;'</b> and <b>Enter</b> to group in recent buckets</td></tr> );
 
             messageRows.push( <tr><td></td><td><mark>created</mark></td><td>Type <b>'created'</b> and <b>Enter</b> to group in labels</td></tr> );
             messageRows.push( <tr><td></td><td><mark>created&lt;</mark></td><td>Type <b>'created&lt;'</b> and <b>Enter</b> to group in recent buckets</td></tr> );
-
+            */
             //
 
             let customCatWiki = <a href="https://github.com/mikezimm/pivottiles7/wiki/Custom-Category---basic" target="_blank">Github Wiki</a>;

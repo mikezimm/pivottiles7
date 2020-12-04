@@ -2,8 +2,8 @@ define([], function() {
   return {
 
     "analyticsList": "TilesCycleTesting",
-    "analyticsWeb": "https://mcclickster.sharepoint.com/sites/Templates/SiteAudit/",
-    "minClickWeb": "https://mcclickster.sharepoint.com/sites/Templates/SiteAudit/SitePages/Contents_.aspx?Web=",
+    "analyticsWeb": "/sites/Templates/Analytics/",
+    "minClickWeb": "/sites/Templates/SiteAudit/SitePages/Contents_.aspx?Web=",
     
     "PropertyPaneAbout": "About",
     "PropertyPaneDescription": "Description",

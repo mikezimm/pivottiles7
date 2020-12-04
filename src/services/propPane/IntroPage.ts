@@ -269,10 +269,11 @@ export class IntroPage {
           }),
 
           PropertyPaneToggle('hubsOthers', {
-              label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.hubsCategory ),
+              label: addToOthers.replace('xxx', webPartProps.hubsCategory ),
               offText: 'Off',
               onText: 'On',
-              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.hubsInclude !== true ? true : false,
+              disabled: webPartProps.hubsInclude === true ? false : true,
+//              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.hubsInclude !== true ? true : false,
           }),
 
         ]}, // this group
@@ -296,10 +297,11 @@ export class IntroPage {
           }),
 
           PropertyPaneToggle('subsOthers', {
-              label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.subsitesCategory ),
+              label: addToOthers.replace('xxx', webPartProps.subsitesCategory ),
               offText: 'Off',
               onText: 'On',
-              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.subsitesInclude !== true ? true : false,
+              disabled: webPartProps.subsitesInclude === true ? false : true,
+//              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.subsitesInclude !== true ? true : false,
           }),
 
         ]}, // this group
@@ -342,10 +344,11 @@ export class IntroPage {
           }),
 */
           PropertyPaneToggle('listOthers', {
-            label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', 'Lists' ),
+            label: addToOthers.replace('xxx', 'Lists' ),
             offText: 'Off',
             onText: 'On',
-            disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.libsInclude !== true ? true : false,
+            disabled: webPartProps.listsInclude === true ? false : true,
+//            disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.libsInclude !== true ? true : false,
         }),
 
         ]}, // this group
@@ -394,10 +397,11 @@ export class IntroPage {
           }),
 
           PropertyPaneToggle('libsOthers', {
-              label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', 'Libraries' ),
+              label: addToOthers.replace('xxx', 'Libraries' ),
               offText: 'Off',
               onText: 'On',
-              disabled: webPartProps.custCatType === 'tileCategory'  || webPartProps.libsInclude !== true ? true : false,
+              disabled: webPartProps.libsInclude === true ? false : true,
+//              disabled: webPartProps.custCatType === 'tileCategory'  || webPartProps.libsInclude !== true ? true : false,
           }),
 
         ]}, // this group
@@ -435,7 +439,7 @@ export class IntroPage {
 //            disabled: webPartProps.groupsInclude === true ? false : true,
             disabled: true,
           }),
-
+/*
           PropertyPaneToggle('groupsOthers', {
               label: webPartProps.custCatType === 'tileCategory' ? 'Feature disabled' : addToOthers.replace('xxx', webPartProps.groupsCategory ),
               offText: 'Off',
@@ -443,7 +447,7 @@ export class IntroPage {
 //              disabled: webPartProps.custCatType === 'tileCategory' || webPartProps.groupsInclude !== true ? true : false,
               disabled: true,
           }),
-
+*/
         ]}, // this group
 /*
         { groupName: 'Users',

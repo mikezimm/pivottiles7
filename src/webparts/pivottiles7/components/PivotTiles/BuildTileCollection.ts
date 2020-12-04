@@ -442,6 +442,7 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
 
     let category = getColumnValue(theseProps,item,'colCategory');
     if ( category === undefined || category === null ) { category = []; }
+    
     let categoryCopy = JSON.stringify(category);
 
     //2020-11-16: Added this before Others tab is added
@@ -700,6 +701,14 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
     if ( !sortValue ) { sortValue = '0'; }
     let newStringSort : string = '';
     if ( typeof sortValue === 'number' ) { newStringSort = sortValue.toString() ; } else { newStringSort = sortValue ; }
+
+    //2020-12-04:  Errored here on Site Pages when "Category" was just a label with my name:  Author
+    //2020-12-04: Added this for error when having SitePages library and Column based tile category...
+    if ( typeof category === 'string' ) {
+      //Caused error about not able to load tiles due to tile category.
+      category = [ category ];
+    }
+
     category.push(sourceType);
 
     let idProp = theseProps.id ? theseProps.id : 'Id';
