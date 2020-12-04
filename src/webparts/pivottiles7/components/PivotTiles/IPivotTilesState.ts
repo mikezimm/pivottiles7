@@ -14,7 +14,8 @@ export interface IPivotTilesState {
   heroTiles?: IPivotTileItemProps[];
   heroIds?: string[];
   heroCategory: string;
-  
+  resortCat: string; // Used to filter items when resorting.
+
   allTiles?:IPivotTileItemProps[];
   filteredTiles?: IPivotTileItemProps[];
   lastFilteredTiles?: IPivotTileItemProps[];
@@ -38,6 +39,9 @@ export interface IPivotTilesState {
   searchShow?: boolean;
   searchCount?: number;
   searchWhere?: string;
+
+  sortAsc: boolean;
+
   changePivotCats: boolean;
   custCategories: ICustomCategories;
 
