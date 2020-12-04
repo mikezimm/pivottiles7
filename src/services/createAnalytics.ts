@@ -19,73 +19,71 @@ export function saveAnalytics (theProps,theState) {
     if (!theProps.analyticsList) { return ; }
     if (!theProps.analyticsWeb) { return ; }
 
-    if (  theProps.analyticsWeb.indexOf(theProps.tenant) === -1 ) {
-        //The current site is not in the expected tenant... skip analytics.
-        console.log('the analyticsWeb is not in the same tenant...',theProps.analyticsWeb,theProps.tenant);
-        return ;
-    } else {
+    //console.log('saveAnalytics: ', theProps, theState);
+    let analyticsList = theProps.analyticsList;
+    let startTime = theProps.startTime;
+    let endTime = theState.endTime;
+    let web = Web(theProps.analyticsWeb);
+    const delta = endTime.now - startTime.now;
+    //alert(delta);
+    //alert(getBrowser("Chrome",false));
+    /*
 
-        //console.log('saveAnalytics: ', theProps, theState);
-        let analyticsList = theProps.analyticsList;
-        let startTime = theProps.startTime;
-        let endTime = theState.endTime;
-        let web = Web(theProps.analyticsWeb);
-        const delta = endTime.now - startTime.now;
-        //alert(delta);
-        //alert(getBrowser("Chrome",false));
-        /*
-
-        */
-        let siteLink = {
-            'Url': theProps.pageContext.web.serverRelativeUrl,
-            'Description': theProps.pageContext.web.serverRelativeUrl ,
-        };
-        
-        let itemInfo1 = "(" + theState.allTiles.length + ")"  + " - " +  theProps.getAll + " - " + " - " + theProps.listDefinition;
-        let itemInfo2 = "(" + theProps.listTitle + ")"  + " - " +  theProps.listWebURL;
-
-        let itemInfoProps = theProps.setSize +
-                " ImgFit: " +  theProps.setImgFit;
-
-        let heroCount;
-        if (theProps.heroTiles) { 
-            let itemInfoHero = 
-            " ShowHero: " +  theProps.showHero +
-            " HeroType: " +  theProps.heroType +
-            " HeroFit: " +  theProps.setHeroFit;
-            heroCount = theProps.heroTiles.length;
-            itemInfoProps += ' -Hero: ' + itemInfoHero; }
+    */
+    let siteLink = {
+        'Url': theProps.pageContext.web.serverRelativeUrl,
+        'Description': theProps.pageContext.web.serverRelativeUrl ,
+    };
     
-        web.lists.getByTitle(analyticsList).items.add({
-            'Title': ['Pivot-Tiles',theProps.scenario,theProps.setSize,theProps.heroType].join(' : '),
-            'zzzText1': startTime.now,      
-            'zzzText2': startTime.theTime,
-            'zzzNumber1': startTime.milliseconds,
-            'zzzText3': endTime.now,      
-            'zzzText4': endTime.theTime,
-            'zzzNumber2': endTime.milliseconds,
-            'zzzNumber3': delta,
-            'zzzNumber4': theState.allTiles.length,
-            'zzzNumber5': heroCount,
-            'zzzText5': itemInfo1,
-            'zzzText6': itemInfo2,
-            'zzzText7': itemInfoProps,
-            'SiteLink': siteLink,
-            'SiteTitle': theProps.pageContext.web.title,
-            'ListTitle': theProps.listTitle,
+    let itemInfo1 = "(" + theState.allTiles.length + ")"  + " - " +  theProps.getAll + " - " + " - " + theProps.listDefinition;
+    let itemInfo2 = "(" + theProps.listTitle + ")"  + " - " +  theProps.listWebURL;
 
+    let itemInfoProps = theProps.setSize +
+            " ImgFit: " +  theProps.setImgFit;
 
-            }).then((response) => {
-            //Reload the page
-                //location.reload();
-            }).catch((e) => {
-            //Throw Error
-                alert(e);
-        });
+    let heroCount;
+    if (theProps.heroTiles) { 
+        let itemInfoHero = 
+        " ShowHero: " +  theProps.showHero +
+        " HeroType: " +  theProps.heroType +
+        " HeroFit: " +  theProps.setHeroFit;
+        heroCount = theProps.heroTiles.length;
+        itemInfoProps += ' -Hero: ' + itemInfoHero; }
 
-    }
+    let propsJSON = {};
 
+    let ignoreKeys = [ 'pageContext', 'context', 'loadListItems', 'convertCategoryToIndex', 'WebpartElement', 'themeVariant', 'startTime' ];
+    Object.keys(theProps).map( key => {
+        if ( ignoreKeys.indexOf(key) < 0 ) { propsJSON[key] = theProps[key]; }
+    });
 
+    web.lists.getByTitle(analyticsList).items.add({
+        'Title': ['Pivot-Tiles',theProps.scenario,theProps.setSize,theProps.heroType].join(' : '),
+        'zzzRichText1': JSON.stringify(propsJSON),
+        'zzzText1': startTime.now,      
+        'zzzText2': startTime.theTime,
+        'zzzNumber1': startTime.milliseconds,
+        'zzzText3': endTime.now,      
+        'zzzText4': endTime.theTime,
+        'zzzNumber2': endTime.milliseconds,
+        'zzzNumber3': delta,
+        'zzzNumber4': theState.allTiles.length,
+        'zzzNumber5': heroCount,
+        'zzzText5': itemInfo1,
+        'zzzText6': itemInfo2,
+        'zzzText7': itemInfoProps,
+        'SiteLink': siteLink,
+        'SiteTitle': theProps.pageContext.web.title,
+        'ListTitle': theProps.listTitle,
+
+        }).then((response) => {
+        //Reload the page
+            //location.reload();
+        }).catch((e) => {
+        //Throw Error
+            //alert(e);
+            console.log('analytics not set up on your tenant.');
+    });
 
 }
 
