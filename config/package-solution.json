@@ -5,7 +5,7 @@
 //    "name": "pivottiles-7-client-side-solution",  //This was the original from the rebuilt solution
     "id": "4a739852-424f-48a8-8454-8711f78604fd", //This is the original PivotTiles id
 //    "id": "401fc644-e050-4304-be17-897e1bb5aff2",  //This was the original from the rebuilt solution
-    "version": "1.2.2.4",
+    "version": "1.2.2.5",
     "includeClientSideAssets": true,
     "isDomainIsolated": false,
     "developer": {

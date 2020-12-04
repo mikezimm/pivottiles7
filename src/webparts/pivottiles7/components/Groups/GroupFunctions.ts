@@ -126,9 +126,18 @@ export function getPrincipalTypeString( type: PrincipalType ) {
         try {
             thisWebInstance = Web(webURL);
             if ( titleOrId === 'Name' ) {
-                users = await thisWebInstance.siteGroups.getByName( thisGroup ).users();
+                try {
+                    users = await thisWebInstance.siteGroups.getByName( thisGroup ).users();
+                } catch (e) {
+                    console.log('You may not have access to view members from this list: ', thisGroup );
+                }
+ 
             } else {
-                users = await thisWebInstance.siteGroups.getById( thisGroup ).users();
+                try {
+                    users = await thisWebInstance.siteGroups.getById( thisGroup ).users();
+                } catch (e) {
+                    console.log('You may not have access to view members from this list: ', thisGroup );
+                }
             }
         } catch (e) {
             errMessage = getHelpfullError(e, true, true);

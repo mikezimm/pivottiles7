@@ -88,10 +88,10 @@ export function listViewBuilder(parentProps,parentState, theseAreItems, thisCate
     {
       name: "Id",
       displayName: "Id",
-      isResizable: false,
+      isResizable: true,
       sorting: true,
       minWidth: 20,
-      maxWidth: 30
+      maxWidth: 40
     },{   
       name: "modifiedNote",
       displayName: "Modified",

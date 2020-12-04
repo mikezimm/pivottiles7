@@ -214,17 +214,26 @@ public constructor(props:IMyGroupsProps){
           let selectedGroup = this.state.selectedGroup;
 
           let showNoUsers = isLoaded === false ? false : !selectedGroup.users || selectedGroup.users.length == 0 ? true : false;
+          
+          let DirectoryMessage = [];
+
+          if ( isLoaded === true && selectedGroup.uCount === 0 ) {
+            DirectoryMessage.push ( 
+              <div><span style={{ marginLeft: 5, fontSize: "26px", color: color }}> { 'No users found in group' } </span></div> );
+  
+            if ( selectedGroup.OnlyAllowMembersViewMembership === true ) {
+              DirectoryMessage.push ( 
+                <div><span style={{ marginLeft: 5, fontSize: "12px", color: 'red' }}> { 'Only members of this group or the owners ( ' + selectedGroup.OwnerTitle + ' ) will see group members here.' } </span></div> );
+            }
+          }
+
 
           let noUsers = <div className={styles.noUsers}>
               <Icon
                 iconName={"ProfileSearch"}
                 style={{ fontSize: "54px", color: color }}
               />
-              <Label>
-                <span style={{ marginLeft: 5, fontSize: "26px", color: color }}>
-                  {strings.DirectoryMessage}
-                </span>
-              </Label>
+              { DirectoryMessage }
             </div>;
 
             let errorBar = this.state.hasError ? <div><MessageBar messageBarType={MessageBarType.error}>
