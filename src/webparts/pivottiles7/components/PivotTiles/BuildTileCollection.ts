@@ -10,6 +10,8 @@ import { encodeDecodeString } from '../../../../services/stringServices';
 
 import { removeLeadingUnderScore } from './BuildTileCategories';
 
+import { LoadErrorIcon } from './PivotTiles';
+
 import { convertLinks, parseMe } from './UtilsNew';
 
 import { getQuarter } from './QuickBuckets';
@@ -405,6 +407,8 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
   console.log('buildFinalTileCollection - all response items:', response );
   let tileCollection: IPivotTileItemProps[] = response.map(item => {
 
+    let hasLoadErrorIcon = item.category && item.category.indexOf(LoadErrorIcon) > -1 ? true : false;
+
     let itemPushOther = pushOther;
 
     let modifiedByTitle = null;
@@ -592,7 +596,11 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
     let imageHeight = pivotProps.imageHeight;
     let defFabricSize = `;size=50;top=-${imageHeight/5}px;background=white;`;
 
-    if ( sourceType === pivotProps.fetchInfo.libsCategory ) {
+    if ( hasLoadErrorIcon === true ) {
+      color = 'font=darkred;' + defFabricSize ;
+      imageUrl = LoadErrorIcon ;
+      category[category.indexOf( pivotProps.otherTab )] = 'ErrorMessage';
+    } else if ( sourceType === pivotProps.fetchInfo.libsCategory ) {
       if ( !color || color === '' ) { color = 'font=darkgray;' + defFabricSize + pivotProps.fetchInfo.libsIconStyles ; }
       if ( !imageUrl || imageUrl === '' ) { imageUrl = getStyleProp([ pivotProps.fetchInfo.libsIconStyles ], 'icon' ) ; }
       if ( !imageUrl || imageUrl === '' ) { imageUrl = 'FolderHorizontal' ; }   
@@ -1109,7 +1117,7 @@ export function buildTileCollectionFromAllResponse( type:  responseType, respons
        */
 
 
-      function ifNotExistsReturnNull ( obj ) {
+      export function ifNotExistsReturnNull ( obj ) {
         let result = null;
 
         if ( !obj ) { 
