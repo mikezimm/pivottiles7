@@ -49,7 +49,7 @@ import { convertCategoryToIndex, fixURLs } from './UtilsNew';
 
 import { buildTileCategoriesFromResponse } from './BuildTileCategories';
 
-import {  buildTileCollectionFromAllResponse, defaultHubIcon } from './BuildTileCollection';
+import {  buildTileCollectionFromAllResponse, defaultHubIcon, ifNotExistsReturnNull } from './BuildTileCollection';
 
 import { CustTime , custTimeOption, } from './QuickBuckets';
 
@@ -93,6 +93,8 @@ const SystemLists = ["WorkflowTasks", "Style Library",
                 clearTextSearchProps: this.properties.clearTextSearchProps,
                 pageSize: this.properties.pageSize
 */
+
+export const LoadErrorIcon = 'ErrorBadge';
 
 export default class PivotTiles extends React.Component<IPivotTilesProps, IPivotTilesState> {
 
@@ -1287,7 +1289,11 @@ this.setState({
             this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
         } catch (e) {
             let errMessage = getHelpfullError(e, true, true);
-            this.processCatch(errMessage);
+
+            if ( errMessage.toLowerCase().indexOf( 'access denied') > -1 ) { errMessage = 'For some reason you do not have access to do this :(' ; }
+            //this.processCatch(errMessage, 'Unable to fetch Subsites');
+            entireResponse.webs = [ this.createErrorTile(this.props.fetchInfo.subsitesCategory, 'Unable to fetch Subsites', errMessage) ];
+            this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
         }
       } else {
         entireResponse.webs = this.props.fetchInfo.subsitesInclude === true ? this.state.originalWebs : [];
@@ -1315,7 +1321,7 @@ this.setState({
           });
           listFilter += ` and Title ne \'Style Library\'`; //For some reason had to hard-code filter this one out
         }
-
+        let defaultType = this.props.fetchInfo.listCategory;
         web.lists.filter(listFilter).orderBy('Title',this.state.sortAsc).get()
         .then((listLibResponse) => {
             listLibResponse.map( L => { 
@@ -1325,7 +1331,11 @@ this.setState({
             entireResponse.lists = listLibResponse;
             this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
         }).catch((e) => {
-            this.processCatch(e);
+            let errMessage = getHelpfullError(e, true, true);
+            //this.processCatch(e, 'Unable to fetch Lists & Libraries');
+            //Note in this case, items could be both Lists and Libraries but I'm just passing in 1 label for error tile.
+            entireResponse.lists = [ this.createErrorTile( defaultType, 'Unable to fetch Lists & Libraries', errMessage ) ];
+            this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
         });
 
       } else {
@@ -1340,21 +1350,28 @@ this.setState({
       let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'items' ? true : false ;
       if ( loadThisData === true &&  this.props.ignoreList !== true ) {
 
+        let defaultType = '';
+        if ( this.props.listDefinition.toLowerCase().indexOf('library') > -1 ) { defaultType = "Files"; }
+        else if ( this.props.listDefinition.toLowerCase().indexOf('news') > -1 ) { defaultType = "News"; }
+        else if ( this.props.listDefinition.toLowerCase().indexOf('page') > -1 ) { defaultType = "Pages"; }
+        else { defaultType = ''; }
+
         // 2020-12-03:  Changed from getAll() to just get() so orderBy actually works
         web.lists.getByTitle(useTileList).items
         .select(selectCols).expand(expandThese).filter(restFilter).orderBy(restSort,this.state.sortAsc).get()
         .then((listResponse) => {
             listResponse.map( I => { 
-              if ( I.BaseType === 1 ) { I.sourceType = "Files"; }
-              else if ( this.props.listDefinition.toLowerCase().indexOf('library') > -1 ) { I.sourceType = "Files"; }
-              else if ( this.props.listDefinition.toLowerCase().indexOf('news') > -1 ) { I.sourceType = "News"; }
-              else if ( this.props.listDefinition.toLowerCase().indexOf('page') > -1 ) { I.sourceType = "Pages"; }
-              else { I.sourceType = ""; }
+              if ( I.BaseType === 1 ) { I.sourceType = "Files"; } 
+              else if ( defaultType ) { I.sourceType = defaultType; }
+              else { I.sourceType = "" ; }              
             });
             entireResponse.items = listResponse;
             this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
         }).catch((e) => {
-            this.processCatch(e);
+            let errMessage = getHelpfullError(e, true, true);
+            //this.processCatch(e, 'Unable to fetch Tile list');
+            entireResponse.items = [ this.createErrorTile(defaultType, 'Unable to fetch Tile list', errMessage ) ];
+            this._getHubsites( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
         });
 
       } else {
@@ -1396,22 +1413,106 @@ this.setState({
  *                                                                                                           
  */
 
-    private processCatch(e) {
+    private processCatch(e, loadStatus) {
       console.log("Can't load data");
       //var m = e.status === 404 ? "Tile List not found: " + useTileList : "Other message";
       //alert(m);
       console.log(e);
+      let frieldlyErr = getHelpfullError( e );
       console.log(e.status);
       console.log(e.message);
-      let sendMessage = e.status + " - " + e.message;
+      let sendMessage = frieldlyErr + '\n' + e.status + " - " + e.message;
       this.setState({  
-        loadStatus: "ListNotFound", 
-        loadError: e.message, 
+        loadStatus: loadStatus, 
+        loadError: e.message ? e.message : e, 
         listError: true, 
         lastStateChange: 'processCatch',
       });
   
       saveAnalytics(this.props,this.state);
+
+    }
+
+    private createErrorTile( sourceType, errTitle, errDetails ) {
+
+      let tile : any = {
+
+        system: '',
+        themeVariant: this.props.themeVariant,
+        editor: '',
+        author: '',
+
+          //Custom image properties
+        imageWidth: this.props.imageWidth,
+        imageHeight: this.props.imageHeight,
+        textPadding: this.props.textPadding,
+
+        sourceType: sourceType,
+        sortValue: '',
+  
+        id: '666',
+         
+        title: errTitle,
+        Title: errTitle,
+        description: errDetails,
+        Description: errDetails,
+
+        href: null,
+  
+        category: [sourceType, 'LoadError', LoadErrorIcon ],
+  
+        setTab: this.props.setTab,
+        setSize: this.props.setSize,
+        heroType: this.props.heroType,
+        heroCategory: 'currentHero',
+  
+        Id: '666',
+  
+        //ifNotExistsReturnNull
+        options: ifNotExistsReturnNull( this.props.colTileStyle ),
+  
+        color: 'yellow',
+  
+        imgSize: ifNotExistsReturnNull( this.props.colSize ),
+  
+        listWebURL: '',
+        listTitle: '',
+  
+        target:  '_none',
+        
+        setRatio: this.props.setRatio,
+        setImgFit: this.props.setImgFit,
+        setImgCover: this.props.setImgCover,
+        onHoverZoom: this.props.onHoverZoom,
+  
+        modified: '',
+        //modifiedBy: null,
+        //createdBy: 'Hmmmmm',
+        //modifiedByID: '',
+        //2020-11-16: Not required for web ==>>  modifiedByTitle: modifiedByTitle,
+        created: '',
+        //createdByID: '',
+        //2020-11-16: Not required for web ==>>  createdByTitle: createdByTitle,
+        modifiedTime: null,
+        createdTime: null,
+  
+        //createdSimpleDate: null,
+        //createdSimpleTime: null,
+        //createdSimpleDateTime: null,
+        //createdInitials: '', //2020-11-16: Not required for web ==>>  item.createdInitials,
+        //createdNote: null,
+  
+        //modifiedSimpleDate: null,
+        //modifiedSimpleTime: null,
+        //modifiedSimpleDateTime: null,
+        //modifiedInitials: '', //2020-11-16: Not required for web ==>>  item.modifiedInitials,
+        //modifiedNote: null,
+  
+      };
+
+      tile.SiteLogoUrl = LoadErrorIcon;
+
+      return tile;
 
     }
   

@@ -22,7 +22,7 @@ export function saveAnalytics (theProps,theState) {
     //console.log('saveAnalytics: ', theProps, theState);
     let analyticsList = theProps.analyticsList;
     let startTime = theProps.startTime;
-    let endTime = theState.endTime;
+    let endTime = theState.endTime ? theState.endTime : new Date() ;
     let web = Web(theProps.analyticsWeb);
     const delta = endTime.now - startTime.now;
     //alert(delta);
