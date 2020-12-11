@@ -209,12 +209,13 @@ export async function ensureTheseUsers ( theseUsers: IUser[], checkTheseUsers: I
 
     let errMessage = null;
     let adminFilter = "IsSiteAdmin eq true";
-
+    //This works in React PnpJS Tester:  sp.web.siteUsers.filter("IsSiteAdmin eq true")
     try {
         const users = thisWeb.siteUsers;
         let returnUsers = await users.filter(adminFilter).get();
         console.log('getSiteAdmins: users', returnUsers );
-        return returnUsers ;
+
+        return { users: returnUsers, errMessage: errMessage }  ;
 
     } catch (e) {
         errMessage = getHelpfullError(e, true, true);
@@ -227,7 +228,7 @@ export async function ensureTheseUsers ( theseUsers: IUser[], checkTheseUsers: I
 
         console.log( 'getSiteAdmins', errMessage );
 
-        return errMessage;
+        return { users: [], errMessage: errMessage }  ;
     }
 
 }

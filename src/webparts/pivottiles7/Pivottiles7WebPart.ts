@@ -34,6 +34,7 @@ import PivotTiles from './components/PivotTiles/PivotTiles';
 import { IPivotTilesProps, IFetchInfoSettings, ICustomCategories, ICustomLogic, IPropChangeTypes, } from './components/PivotTiles/IPivotTilesProps';
 
 import { IGroupsProps } from './components/Groups/IMyGroupsProps';
+import { SiteAdminGroupName, SiteAdminIconName } from './components/Groups/IMyGroupsState';
 
 import { IPivotTileItemProps,  } from './components/TileItems/IPivotTileItemProps';
 import { string, any } from 'prop-types';
@@ -119,6 +120,9 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
 
   private buildGroupProps( gName : string, description = '', styles = '', options = '' ) {
     let optionsArray = options !== '' ? JSON.parse(options) : null;
+    if ( gName === SiteAdminGroupName && options === '' ) {
+      optionsArray = ['iconName=' + SiteAdminIconName];
+    }
     let result : IGroupsProps = {
       title: gName,
       description: description,
@@ -233,8 +237,8 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       } ) ;
     }
 
-    groupsProps.push( this.buildGroupProps('SiteAdmins') );
-    groupsList.push( 'SiteAdmins' ) ;
+    groupsProps.push( this.buildGroupProps(SiteAdminGroupName) );
+    groupsList.push( SiteAdminGroupName ) ;
 
     let fetchInfo : IFetchInfoSettings = {
 

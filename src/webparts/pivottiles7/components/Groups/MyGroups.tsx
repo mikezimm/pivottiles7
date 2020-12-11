@@ -20,6 +20,7 @@ import {
   Label,
   Pivot,
   PivotItem,
+  IPivotItemProps,
   PivotLinkFormat,
   PivotLinkSize,
   Dropdown,
@@ -30,10 +31,11 @@ import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
 import { ISPServices } from "../../../../SPServices/ISPServices";
 import stylesI from '../HelpInfo/InfoPane.module.scss';
 
-import { IMyGroupsState, IMyGroups } from './IMyGroupsState';
+import { IMyGroupsState, IMyGroups, SiteAdminGroupName, SiteAdminIconName } from './IMyGroupsState';
 import { IMyGroupsProps } from './IMyGroupsProps';
 
 import { allAvailableGroups } from './GroupFunctions';
+
 
 const orderOptions: IDropdownOption[] = [
     { key: "FirstName", text: "First Name" },
@@ -204,10 +206,13 @@ public constructor(props:IMyGroupsProps){
             onLinkClick={this._selectedIndex.bind(this)}
             linkSize={PivotLinkSize.large}
           >
-            { this.state.myGroups.titles.map((index: string) => {
-              return (
-                <PivotItem headerText={index} itemKey={index} key={index} />
-              );
+            { this.state.myGroups.titles.map((index: string) => { //_renderAdminsIcon
+              if ( index === SiteAdminGroupName ) {
+                //return (<PivotItem headerText={index + ' '} itemIcon={ '' } itemKey={index} key={index} onRenderItemLink={ this._renderAdminsIcon } /> );
+                return (<PivotItem headerText={index + ' '} itemIcon={ SiteAdminIconName } itemKey={index} key={index } /> );
+              } else {
+                return (<PivotItem headerText={index} itemKey={index} key={index} itemIcon={ '' } /> );
+              }
             })}
           </Pivot></div>;
 
@@ -314,7 +319,7 @@ public constructor(props:IMyGroupsProps){
 
 
         let groupElements = isLoaded === true && selectedGroup ? [ 
-              <p style={{ whiteSpace: 'nowrap' }}><b>Id:</b> { selectedGroup.Id }</p>,
+              <p style={{ whiteSpace: 'nowrap' }}><b>Id:</b> { selectedGroup.Id === -666 ? '-na-' : selectedGroup.Id  }</p>,
               Description,
               <p style={{ whiteSpace: 'nowrap' }} title={ 'People in ' + selectedGroup.OwnerTitle + ' can update this group'}><b>Owner:</b> { selectedGroup.OwnerTitle }</p>,
               <p style={{ whiteSpace: 'nowrap' }}><b>Users:</b> { selectedGroup.uCount }</p>,
@@ -451,6 +456,15 @@ public constructor(props:IMyGroupsProps){
 
              </Stack>
           </div>
+        );
+      }
+
+      private _renderAdminsIcon(link: IPivotItemProps, defaultRenderer: (link: IPivotItemProps) => JSX.Element): JSX.Element {
+        return (
+          <span>
+            {defaultRenderer(link)}
+            <Icon iconName= { SiteAdminIconName } style={{ fontWeight: 'bold', fontSize: 'larger', color: 'black' }} />
+          </span>
         );
       }
 

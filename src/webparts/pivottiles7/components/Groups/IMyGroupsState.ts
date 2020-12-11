@@ -5,6 +5,9 @@ import { IUser } from '../IReUsableInterfaces';
 
 import { IGroupsProps } from './IMyGroupsProps';
 
+
+export const SiteAdminGroupName = 'SiteAdmins';
+export const SiteAdminIconName = 'HeadsetSolid';
 // IMyGroups, ISingleGroup, IMyGroupsState
 export interface ISingleGroup extends ISiteGroupInfo {
 
