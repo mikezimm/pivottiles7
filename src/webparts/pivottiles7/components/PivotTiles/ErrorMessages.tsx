@@ -112,12 +112,12 @@ export function NoListFound (parentProps,parentState) {
           Check your site contents for list:  <Link href={fixedURL + "_layouts/15/viewlsts.aspx"} target="_blank">{fixedURL}</Link>
 
           <h2>Other common causes for this message</h2>
-          <h3>You do not have a Tile Category set for a visible tile:</h3>
+          <h3>1) You do not have a Tile Category set for a visible tile:</h3>
           <p><Link href={fixedURL + listExt + parentProps.listTitle} 
               target="_blank">
               {fixedURL + listExt + parentProps.listTitle}
             </Link></p>
-          <h3>You do not have permissions to the list :(</h3>
+          <h3>2) You do not have permissions to the list :(</h3>
           <p>Please contact your site admin for assistance!</p>
       </div>
     </div>;
