@@ -7,7 +7,7 @@ import { PageContext } from '@microsoft/sp-page-context';
 // changes = changeHubs, changeSubs, changeGroups, changeLists, changeFormats, changeItems, changeCats, changeFilters
 export const changeHubs = [ 'hubsLazy', 'hubsInclude', 'hubsCategory','hubsOthers', ];
 export const changeSubs = [ 'subsitesInclude', 'subsitesCategory', 'subsOthers',  ];
-export const changeGroups = [ 'groupsInclude', 'groupsCategory', 'groupsLazy', 'groupsList' , 'groupsOthers', ];
+export const changeGroups = [ 'groupsInclude', 'groupsCategory', 'groupsLazy', 'groupsList' , 'groupsOthers', 'groupsShowGuests', 'groupsShowAdmins' ];
 export const changeLists = [ 'listsInclude', 'listIconStyles', 'listFilter', 'listLibCat', 'listCategory',
   'libsInclude', 'libsIconStyles', 'libsFilter', 'listHideSystem', 'listOthers', 'libsCategory', 'libsOthers', ];
 
@@ -99,6 +99,8 @@ export interface IPivottiles7WebPartProps {
   groupsLazy: boolean ;
   groupsList: string ;
   groupsOthers: boolean ;
+  groupsShowAdmins: boolean ;
+  groupsShowGuests: boolean ;
 
   usersInclude: boolean ;
   usersCategory: string ;

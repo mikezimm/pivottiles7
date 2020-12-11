@@ -48,7 +48,9 @@ export interface IFetchInfoSettings {
   groupsList: string[] ;
   groupsProps: IGroupsProps[] ;
   groupsOthers: boolean ;
-
+  groupsShowAdmins: boolean ;
+  groupsShowGuests: boolean ;
+  
   usersInclude: boolean ;
   usersCategory: string ;
   usersLazy: boolean ;

@@ -6,6 +6,7 @@ export interface IGroupsProps {
   title: string;
   description: string;
   styles: string;
+  icon: string;
   options: string[];
 }
 
@@ -25,4 +26,7 @@ export interface IMyGroupsProps {
   searchProps?: string;
   clearTextSearchProps?: string;
   pageSize?: number;
+  groupsShowAdmins: boolean ;
+  groupsShowGuests: boolean ;
+  
 }

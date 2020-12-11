@@ -115,6 +115,7 @@ public constructor(props:IInfoAboutMeProps){
 
             let underScoreIssue = <a href="https://github.com/mikezimm/Pivot-Tiles/issues/30" target="_blank">Issue #30</a>;
             
+            let noWrap : React.CSSProperties = { whiteSpace: 'nowrap' };
 
             thisPage = <div>
                 <WebPartLinks
@@ -127,25 +128,26 @@ public constructor(props:IInfoAboutMeProps){
                 {/* 3 files to update version number:  package-solution.json, package-lock.json, package.json*/}
                 <table className={styles.infoTable} style={{ width: '100%' }}>
                     <tr><th>Date</th><th>Version</th><th>Focus</th><th>Notes</th></tr>
-                    <tr><td>2020-12-10</td><td>{'1.2.2.6'}</td><td>Fix Subsites for visitors crash</td></tr>
-                    <tr><td>2020-12-04</td><td>{'1.2.2.5'}</td><td>Fix fetch users in groups with OnlyAllowMembersViewMembership === true crash, pushMissingDefaultsThatCauseIssues</td></tr>
-                    <tr><td>2020-12-04</td><td>{'1.2.2.4'}</td><td>Add quick-sort button, remove support for 'modified' type quick custom categories</td></tr>
-                    <tr><td>2020-12-03</td><td>{'1.2.2.3'}</td><td>Auto add Associated Groups to settings when opening property pane, complex group styles and options</td></tr>
-                    <tr><td>2020-12-02</td><td>{'1.2.2.2'}</td><td>Small bug fixes with groups, categories, properties</td></tr>
-                    <tr><td>2020-12-01</td><td>{'1.2.2.1'}</td><td>Add CTRL-Click Group Name to add members, improve GroupInfo, Allow "Hub" as hubCategory</td></tr>
-                    <tr><td>2020-11-24</td><td>{'1.2.2.0'}</td><td>Add Hubsites and Groups tabs</td></tr>
-                    <tr><td>2020-11-19</td><td>{'1.2.1.0'}</td><td>Add filtering based on the Title/Description properties</td></tr>
-                    <tr><td>2020-11-19</td><td>{'1.2.0.0'}</td><td>Complete Rebuild of solution to PivotTiles7</td></tr>
+                    <tr><td style={ noWrap }>2020-12-11</td><td>{'1.2.2.7'}</td><td>Add Site Admins tab in Groups</td></tr>
+                    <tr><td style={ noWrap }>2020-12-10</td><td>{'1.2.2.6'}</td><td>Fix Subsites for visitors crash</td></tr>
+                    <tr><td style={ noWrap }>2020-12-04</td><td>{'1.2.2.5'}</td><td>Fix fetch users in groups with OnlyAllowMembersViewMembership === true crash, pushMissingDefaultsThatCauseIssues</td></tr>
+                    <tr><td style={ noWrap }>2020-12-04</td><td>{'1.2.2.4'}</td><td>Add quick-sort button, remove support for 'modified' type quick custom categories</td></tr>
+                    <tr><td style={ noWrap }>2020-12-03</td><td>{'1.2.2.3'}</td><td>Auto add Associated Groups to settings when opening property pane, complex group styles and options</td></tr>
+                    <tr><td style={ noWrap }>2020-12-02</td><td>{'1.2.2.2'}</td><td>Small bug fixes with groups, categories, properties</td></tr>
+                    <tr><td style={ noWrap }>2020-12-01</td><td>{'1.2.2.1'}</td><td>Add CTRL-Click Group Name to add members, improve GroupInfo, Allow "Hub" as hubCategory</td></tr>
+                    <tr><td style={ noWrap }>2020-11-24</td><td>{'1.2.2.0'}</td><td>Add Hubsites and Groups tabs</td></tr>
+                    <tr><td style={ noWrap }>2020-11-19</td><td>{'1.2.1.0'}</td><td>Add filtering based on the Title/Description properties</td></tr>
+                    <tr><td style={ noWrap }>2020-11-19</td><td>{'1.2.0.0'}</td><td>Complete Rebuild of solution to PivotTiles7</td></tr>
 
-                    <tr><td>2020-11-17</td><td>{'1.1.3.1'}</td><td>Use Fabric {links.devDocsIcon} as Tiles</td><td>{links.devDocsIcon}</td></tr>
-                    <tr><td>2020-11-16</td><td>{'1.1.3.0'}</td><td>Add option to show Subsites as tiles</td><td>{ underScoreIssue }</td></tr>
-                    <tr><td>2020-10-23</td><td>{'1.1.2.0'}</td><td>Custom Categories with _UnderScore , List and Doc Card view updates</td><td>{ underScoreIssue }</td></tr>
-                    <tr><td>2020-10-20</td><td>{'1.1.1.4'}</td><td>Add special custom Categories:  created, modified</td><td></td></tr>
-                    <tr><td>2020-10-20</td><td>{'1.1.1.3'}</td><td>For Dynamic Categories, Tabs now in same order as you type in.</td><td>Pad Title, Desc in hover pane</td></tr>
-                    <tr><td>2020-10-19</td><td>{'1.1.1.2'}</td><td>Add Basics Info, Dynamic Categoris (CTRL-Click Search box)</td><td></td></tr>
-                    <tr><td>2020-10-19</td><td>{'1.1.1.1'}</td><td>Fix Custom Category when missing catergory column</td><td></td></tr>
-                    <tr><td>2020-10-14</td><td>{'1.1.1.0'}</td><td>Add Early Access, Custom Category Logic</td><td></td></tr>
-                    <tr><td>2020-10-14</td><td>{'1.1.0.2'}</td><td>Add Site News BannerImageUrl.Url for Image</td><td></td></tr>
+                    <tr><td style={ noWrap }>2020-11-17</td><td>{'1.1.3.1'}</td><td>Use Fabric {links.devDocsIcon} as Tiles</td><td>{links.devDocsIcon}</td></tr>
+                    <tr><td style={ noWrap }>2020-11-16</td><td>{'1.1.3.0'}</td><td>Add option to show Subsites as tiles</td><td>{ underScoreIssue }</td></tr>
+                    <tr><td style={ noWrap }>2020-10-23</td><td>{'1.1.2.0'}</td><td>Custom Categories with _UnderScore , List and Doc Card view updates</td><td>{ underScoreIssue }</td></tr>
+                    <tr><td style={ noWrap }>2020-10-20</td><td>{'1.1.1.4'}</td><td>Add special custom Categories:  created, modified</td><td></td></tr>
+                    <tr><td style={ noWrap }>2020-10-20</td><td>{'1.1.1.3'}</td><td>For Dynamic Categories, Tabs now in same order as you type in.</td><td>Pad Title, Desc in hover pane</td></tr>
+                    <tr><td style={ noWrap }>2020-10-19</td><td>{'1.1.1.2'}</td><td>Add Basics Info, Dynamic Categoris (CTRL-Click Search box)</td><td></td></tr>
+                    <tr><td style={ noWrap }>2020-10-19</td><td>{'1.1.1.1'}</td><td>Fix Custom Category when missing catergory column</td><td></td></tr>
+                    <tr><td style={ noWrap }>2020-10-14</td><td>{'1.1.1.0'}</td><td>Add Early Access, Custom Category Logic</td><td></td></tr>
+                    <tr><td style={ noWrap }>2020-10-14</td><td>{'1.1.0.2'}</td><td>Add Site News BannerImageUrl.Url for Image</td><td></td></tr>
 
                 </table>
             </div>;
