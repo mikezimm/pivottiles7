@@ -119,16 +119,23 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
   }
 
   private buildGroupProps( gName : string, description = '', styles = '', options = '' ) {
-    let optionsArray = options !== '' ? JSON.parse(options) : null;
+    let optionsArray : string[] = options !== '' ? JSON.parse(options) : null;
+    let icon = null;
     if ( gName === SiteAdminGroupName && options === '' ) {
       optionsArray = [];
+      icon = SiteAdminIconName;
+    }
+    if ( options.indexOf('iconName') > -1 ) {
+      optionsArray.map( optObj => {
+        if (optObj.indexOf('iconName=') === 0 ) { icon = optObj.substring( 9 ) ; }
+      });
     }
     let result : IGroupsProps = {
       title: gName,
       description: description,
       styles: styles,
       options: optionsArray,
-      icon: SiteAdminIconName,
+      icon: icon,
     };
     return result;
   }
