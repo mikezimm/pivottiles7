@@ -3,10 +3,14 @@ import { Web, SiteGroups, SiteGroup, ISiteGroups, ISiteGroup, ISiteGroupInfo, IP
 import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/site-groups/web";
+import { WebPartContext } from "@microsoft/sp-webpart-base";
+import { PageContext } from '@microsoft/sp-page-context';
 
 import { IMyGroups, ISingleGroup, IMyGroupsState } from './IMyGroupsState';
 
 import { doesObjectExistInArray, addItemToArrayIfItDoesNotExist } from '../../../../services/arrayServices';
+
+import { getSiteAdmins } from '../../../../services/userServices';
 
 import { getHelpfullError } from '../../../../services/ErrorHandler';
 
@@ -60,7 +64,14 @@ export function getPrincipalTypeString( type: PrincipalType ) {
     
     //        allGroups[i].timeCreated = makeSmallTimeObject(allGroups[i].Created);
             let thisGroup = allGroups[i];
-            let groupUsers : any = await getUsersFromGroup( webURL, 'Name', thisGroup.Title );
+            let groupUsers : any = null;
+            
+            if ( thisGroup.Title === 'SiteAdmins') {
+                groupUsers = await getSiteAdmins( webURL, false);
+            } else {
+                groupUsers = await getUsersFromGroup( webURL, 'Name', thisGroup.Title );
+            }
+
 
             if ( groupUsers.errMessage && groupUsers.errMessage.length > 0 ) {
                 errMessage = errMessage.length > 0 ? errMessage += '\n' : errMessage;
@@ -83,6 +94,37 @@ export function getPrincipalTypeString( type: PrincipalType ) {
                 newGroups.titles.push( thisGroup.Title );
             }
         }
+
+        if ( myGroups.propTitles.indexOf('SiteAdmins') > -1 ) {
+            let siteAdmins = await getSiteAdmins( webURL, false);
+            let adminGroup : ISingleGroup = {
+                users: siteAdmins,
+                Title: 'Site Admins',
+                Description: 'Have ultimate permissions on this site',
+                AllowMembersEditMembership: false,
+                AllowRequestToJoinLeave: false,
+                AutoAcceptRequestToJoinLeave: false,
+                Id: -1,
+                IsHiddenInUI: false,
+                LoginName: null,
+                OnlyAllowMembersViewMembership: false,
+                OwnerTitle: 'SiteAdmins',
+                PrincipalType: null,
+                RequestToJoinLeaveEmailSetting: null,
+
+                isLoading: null,
+                uCount:siteAdmins.length,
+                hasCurrentUser:  null,
+                groupProps:  null,
+
+            };
+
+            newGroups.counts.push( adminGroup.users.length );
+            newGroups.Ids.push(  adminGroup.Id );
+            newGroups.titles.push( adminGroup.Title );
+
+        }
+
     
         if ( errMessage === '' && allGroups.length === 0 ) { 
             errMessage = 'This site/web does not have any subsites that you can see.';
@@ -101,6 +143,8 @@ export function getPrincipalTypeString( type: PrincipalType ) {
             if ( newGroups.titles.indexOf( title ) > -1 ) { sortedTitles.push(title) ; }
         });
 
+        if ( myGroups.propTitles.indexOf('SiteAdmins') > -1 ) { sortedTitles.push( 'SiteAdmins' ) ; }
+        
         sortedTitles.map( title => {
             allGroups.map( group => {
                 if ( group.Title === title ) { 

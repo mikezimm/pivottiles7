@@ -233,6 +233,9 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       } ) ;
     }
 
+    groupsProps.push( this.buildGroupProps('SiteAdmins') );
+    groupsList.push( 'SiteAdmins' ) ;
+
     let fetchInfo : IFetchInfoSettings = {
 
       hubsInclude: this.properties.hubsInclude ,

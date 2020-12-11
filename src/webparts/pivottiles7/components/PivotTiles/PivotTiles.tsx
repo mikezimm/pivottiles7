@@ -1277,16 +1277,39 @@ this.setState({
     let loadThisData = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'subs' ? true : false ;
     if ( loadThisData === true && this.props.fetchInfo.subsitesInclude === true ) {
         try {
-            let websResponse = await web.webs();
-            websResponse.map( w => { w.sourceType = this.props.fetchInfo.subsitesCategory ; });
-            //.orderBy('Title', this.state.sortAsc )
-            //    tileCollection.sort((a,b) => a['title'].localeCompare(b['title']));
-            if ( this.state.sortAsc === true ) {
-              websResponse.sort((a,b) => a['Title'].localeCompare(b['Title']));
-            } else { websResponse.sort((a,b) => b['Title'].localeCompare(a['Title'])); }
+            let websResponse = [];
+            let gotWebs = false;
 
-            entireResponse.webs = websResponse;
-            this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
+            //This first tries to get webs using .webs() so you get SiteLogoUrls... but this only works if you have above Read permissions.
+            try {
+              websResponse = await web.webs();
+              gotWebs = true;
+
+              //If you only have read permissions, it will fetch webs a different way.
+            } catch (e) {
+              let errMessage = getHelpfullError(e, true, true);
+              if ( errMessage.toLowerCase().indexOf( 'access denied') > -1 ) { 
+                websResponse = await web.getSubwebsFilteredForCurrentUser(-1, -1).get();
+                gotWebs = true;
+                
+              } else {
+                entireResponse.webs = [ this.createErrorTile(this.props.fetchInfo.subsitesCategory, 'Unable to fetch Subsites', errMessage) ];
+                this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
+              }
+            }
+
+            if ( gotWebs === true ) {
+              websResponse.map( w => { w.sourceType = this.props.fetchInfo.subsitesCategory ; });
+              //.orderBy('Title', this.state.sortAsc )
+              //    tileCollection.sort((a,b) => a['title'].localeCompare(b['title']));
+              if ( this.state.sortAsc === true ) {
+                websResponse.sort((a,b) => a['Title'].localeCompare(b['Title']));
+              } else { websResponse.sort((a,b) => b['Title'].localeCompare(a['Title'])); }
+  
+              entireResponse.webs = websResponse;
+              this._getListsLibs( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
+            }
+
         } catch (e) {
             let errMessage = getHelpfullError(e, true, true);
 

@@ -9,6 +9,7 @@ import { getHelpfullError } from './ErrorHandler';
 import { Web, IList, IItem, IItemAddResult, } from "@pnp/sp/presets/all";
 
 import { doesObjectExistInArray } from './arrayServices';
+import { isEqual } from '@microsoft/sp-lodash-subset';
 
 
 export function checkIfUserExistsInArray( recentUsers : IUser[] , user: IUser ) {
@@ -201,3 +202,32 @@ export async function ensureTheseUsers ( theseUsers: IUser[], checkTheseUsers: I
     return recentUsers;
 
   }
+
+  export async function getSiteAdmins( webUrl: string , supressError: boolean ) {
+    
+    let thisWeb = Web(webUrl);
+
+    let errMessage = null;
+    let adminFilter = "IsSiteAdmin eq true";
+
+    try {
+        const users = thisWeb.siteUsers;
+        let returnUsers = await users.filter(adminFilter).get();
+        console.log('getSiteAdmins: users', returnUsers );
+        return returnUsers ;
+
+    } catch (e) {
+        errMessage = getHelpfullError(e, true, true);
+
+        if ( supressError === true && errMessage.indexOf('Save Conflict') === 0 ) {
+          //Do nothting
+        } else {
+          alert( errMessage );
+        }
+
+        console.log( 'getSiteAdmins', errMessage );
+
+        return errMessage;
+    }
+
+}
