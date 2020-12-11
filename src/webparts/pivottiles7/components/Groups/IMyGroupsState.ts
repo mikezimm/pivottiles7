@@ -8,6 +8,10 @@ import { IGroupsProps } from './IMyGroupsProps';
 
 export const SiteAdminGroupName = 'SiteAdmins';
 export const SiteAdminIconName = 'HeadsetSolid';
+
+export const GuestsGroupName = 'Guests';
+export const GuestsIconName = 'UserWarning';
+
 // IMyGroups, ISingleGroup, IMyGroupsState
 export interface ISingleGroup extends ISiteGroupInfo {
 
@@ -36,6 +40,10 @@ export interface IMyGroups {
   isLoading: boolean;
   counts: number[];
   userId: number;
+  allUsers: IUser[];
+  guestUsers: IUser[];
+  groupsShowAdmins: boolean ;
+  groupsShowGuests: boolean ;
 
 }
 
@@ -50,6 +58,5 @@ export interface IMyGroupsState {
   searchString: string;
   searchText: string;
   myGroups: IMyGroups;
-
 
 }

@@ -431,6 +431,20 @@ export class IntroPage {
               label: 'Groups Category',
               disabled: webPartProps.groupsInclude === true ? false : true,
           }),
+
+          PropertyPaneToggle('groupsShowAdmins', {
+            label: 'Show Site Admins',
+            offText: 'No',
+            onText: 'Yes',
+            disabled: webPartProps.groupsInclude === true ? false : true,
+          }),
+
+          PropertyPaneToggle('groupsShowGuests', {
+            label: 'Show Guests',
+            offText: 'No',
+            onText: 'Yes',
+            disabled: webPartProps.groupsInclude === true ? false : true,
+          }),
           
           PropertyPaneToggle('groupsLazy', {
             label: 'Lazy Load Groups:  do not load until you click tab',

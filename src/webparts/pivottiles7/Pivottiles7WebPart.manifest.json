@@ -87,6 +87,8 @@
       "groupsLazy": true ,
       "groupsList": "",
       "groupsOthers": false,
+      "groupsShowAdmins": true,
+      "groupsShowGuests": true,
 
       "usersInclude": false ,
       "usersCategory": "Users" ,
@@ -182,6 +184,8 @@
       "groupsLazy": true ,
       "groupsList": "",
       "groupsOthers": false,
+      "groupsShowAdmins": true,
+      "groupsShowGuests": false,
 
       "usersInclude": false ,
       "usersCategory": "Users" ,
@@ -277,7 +281,9 @@
       "groupsLazy": true ,
       "groupsList": "",
       "groupsOthers": false,
-
+      "groupsShowAdmins": true,
+      "groupsShowGuests": true,
+      
       "usersInclude": false ,
       "usersCategory": "Users" ,
       "usersLazy": true ,

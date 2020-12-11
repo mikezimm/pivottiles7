@@ -121,13 +121,14 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
   private buildGroupProps( gName : string, description = '', styles = '', options = '' ) {
     let optionsArray = options !== '' ? JSON.parse(options) : null;
     if ( gName === SiteAdminGroupName && options === '' ) {
-      optionsArray = ['iconName=' + SiteAdminIconName];
+      optionsArray = [];
     }
     let result : IGroupsProps = {
       title: gName,
       description: description,
       styles: styles,
       options: optionsArray,
+      icon: SiteAdminIconName,
     };
     return result;
   }
@@ -237,8 +238,13 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       } ) ;
     }
 
-    groupsProps.push( this.buildGroupProps(SiteAdminGroupName) );
-    groupsList.push( SiteAdminGroupName ) ;
+    let groupsShowAdmins = this.properties.groupsShowAdmins;
+    let groupsShowGuests = this.properties.groupsShowGuests;
+
+    if ( groupsShowAdmins === null || groupsShowAdmins === undefined || groupsShowAdmins === true ) {
+      groupsProps.push( this.buildGroupProps(SiteAdminGroupName) );
+      groupsList.push( SiteAdminGroupName ) ;
+    }
 
     let fetchInfo : IFetchInfoSettings = {
 
@@ -253,6 +259,8 @@ export default class Pivottiles7WebPart extends BaseClientSideWebPart<IPivottile
       groupsList: groupsList ,
       groupsProps: groupsProps ,
       groupsOthers: this.properties.groupsOthers ,
+      groupsShowAdmins: groupsShowAdmins === null || groupsShowAdmins === undefined ? true : groupsShowAdmins ,
+      groupsShowGuests: groupsShowGuests === null || groupsShowGuests === undefined ? true : groupsShowGuests ,
 
       usersInclude: this.properties.usersInclude ,
       usersCategory: this.properties.usersCategory ,

@@ -31,7 +31,7 @@ import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
 import { ISPServices } from "../../../../SPServices/ISPServices";
 import stylesI from '../HelpInfo/InfoPane.module.scss';
 
-import { IMyGroupsState, IMyGroups, SiteAdminGroupName, SiteAdminIconName } from './IMyGroupsState';
+import { IMyGroupsState, IMyGroups, SiteAdminGroupName, SiteAdminIconName, GuestsGroupName, GuestsIconName } from './IMyGroupsState';
 import { IMyGroupsProps } from './IMyGroupsProps';
 
 import { allAvailableGroups } from './GroupFunctions';
@@ -80,6 +80,10 @@ private setMyGroups() {
         isLoading: true,
         counts: [],
         userId: this.props.userId,
+        allUsers: [],
+        guestUsers: [],
+        groupsShowAdmins: this.props.groupsShowAdmins,
+        groupsShowGuests: this.props.groupsShowGuests,
     };
 
     return myGroups;
@@ -116,7 +120,7 @@ public constructor(props:IMyGroupsProps){
 
   public componentDidMount() {
     console.log('componentDidMount MyGroups:', this.props.groups);
-    this.fetchUsers();
+    this.fetchUsers( this.setMyGroups() );
   }
 
 
@@ -136,11 +140,13 @@ public constructor(props:IMyGroupsProps){
     let rebuildTiles = false;
     let reload = false;
     if (prevProps.width !== this.props.width ) { rebuildTiles = true ; }
+    if (prevProps.groupsShowGuests !== this.props.groupsShowGuests ) { rebuildTiles = true ; }
+    if (prevProps.groupsShowAdmins !== this.props.groupsShowAdmins ) { rebuildTiles = true ; }
     if ( prevProps.groups !== this.props.groups ) { reload = true ; }
 
     if ( reload === true ) {
       console.log('componentDidUpdate reloading MyGroups:', this.props.groups);
-      this.fetchUsers();
+      this.fetchUsers( this.setMyGroups() );
 
     } else if (rebuildTiles === true) {
       console.log('componentDidUpdate rebuilding MyGroups:', this.props.groups);
@@ -206,13 +212,8 @@ public constructor(props:IMyGroupsProps){
             onLinkClick={this._selectedIndex.bind(this)}
             linkSize={PivotLinkSize.large}
           >
-            { this.state.myGroups.titles.map((index: string) => { //_renderAdminsIcon
-              if ( index === SiteAdminGroupName ) {
-                //return (<PivotItem headerText={index + ' '} itemIcon={ '' } itemKey={index} key={index} onRenderItemLink={ this._renderAdminsIcon } /> );
-                return (<PivotItem headerText={index + ' '} itemIcon={ SiteAdminIconName } itemKey={index} key={index } /> );
-              } else {
-                return (<PivotItem headerText={index} itemKey={index} key={index} itemIcon={ '' } /> );
-              }
+            { this.state.myGroups.sortedGroups.map(( thisGroup ) => { //_renderAdminsIcon
+                return (<PivotItem headerText={thisGroup.Title} itemKey={thisGroup.Title} key={thisGroup.Title} itemIcon={ thisGroup.groupProps.icon } /> );
             })}
           </Pivot></div>;
 
@@ -317,9 +318,8 @@ public constructor(props:IMyGroupsProps){
           <p style={{ whiteSpace: 'nowrap' }}><b>Description:</b> { groupDescription.substr(0,30) }</p> : null;
         }
 
-
         let groupElements = isLoaded === true && selectedGroup ? [ 
-              <p style={{ whiteSpace: 'nowrap' }}><b>Id:</b> { selectedGroup.Id === -666 ? '-na-' : selectedGroup.Id  }</p>,
+              <p style={{ whiteSpace: 'nowrap' }}><b>Id:</b> { selectedGroup.Id < 0 ? '-na-' : selectedGroup.Id  }</p>,
               Description,
               <p style={{ whiteSpace: 'nowrap' }} title={ 'People in ' + selectedGroup.OwnerTitle + ' can update this group'}><b>Owner:</b> { selectedGroup.OwnerTitle }</p>,
               <p style={{ whiteSpace: 'nowrap' }}><b>Users:</b> { selectedGroup.uCount }</p>,
@@ -472,9 +472,9 @@ public constructor(props:IMyGroupsProps){
         this.setState({ 
         });
       }
-      private fetchUsers() {
+      private fetchUsers( myGroups: IMyGroups ) {
 
-        allAvailableGroups( this.props.webURL , this.state.myGroups, this.addTheseGroupsToState.bind(this), null );
+        allAvailableGroups( this.props.webURL , myGroups, this.addTheseGroupsToState.bind(this), null );
 
       }
 
