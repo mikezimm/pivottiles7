@@ -135,8 +135,12 @@ const DirectoryHook: React.FC<IDirectoryProps> = (props) => {
                 return (
                     <PersonaCard
                         size= { PersonaSize.size72 }
+                        iconSize = { 20 }
+                        iconTextSize = { 14 }
                         context={props.context}
                         profileProperties={{
+                            isGuest: user.isGuest,
+                            isSiteAdmin: user.IsSiteAdmin,
                             DisplayName: user.PreferredName,
                             Title: user.JobTitle,
                             PictureUrl: user.PictureURL,

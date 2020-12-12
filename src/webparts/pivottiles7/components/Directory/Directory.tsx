@@ -298,8 +298,12 @@ debugger;
             <PersonaCard
               //2020-11-24:  This was not in the original React Directory sample
               size= { PersonaSize.size72 }
+              iconSize = { 20 }
+              iconTextSize = { 14 }
               context={this.props.context}
               profileProperties={{
+                isGuest: user.isGuest,
+                isSiteAdmin: user.IsSiteAdmin,
                 DisplayName: user.PreferredName,
                 Title: user.JobTitle,
                 PictureUrl: user.PictureURL,

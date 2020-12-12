@@ -9,4 +9,6 @@ export interface IPersonaCardProps {
   profileProperties: IUserProperties;
   //2020-11-24:  Added for adjusting card size
   size: PersonaSize;
+  iconSize: number;
+  iconTextSize: number;    
 }

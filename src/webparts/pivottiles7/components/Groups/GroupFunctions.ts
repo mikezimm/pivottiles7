@@ -98,14 +98,17 @@ export function getPrincipalTypeString( type: PrincipalType ) {
 
                 groupUsers.users.map( user => { 
                     if ( user.Id === newGroups.userId ) { hasCurrentUser = true; }
+                    user.isGuest = false;
+                    if ( user.IsEmailAuthenticationGuestUser === true || user.IsShareByEmailGuestUser === true || user.LoginName.indexOf('.external') > -1 ) {
+                        user.isGuest = true;
+                    }
                     let userIndex : any = doesObjectExistInArray( allUsers, 'Id', user.Id );
                     if ( userIndex === false ) { 
                         allUsers.push( user ) ;
-                        if ( user.IsEmailAuthenticationGuestUser === true || user.IsShareByEmailGuestUser === true || user.LoginName.indexOf('.external') > -1 ) {
+                        if ( user.isGuest ) {
                             guestUsers.push( user ) ;
                         }
                     }
-
                 } ) ;
                 let groupIndex : any = doesObjectExistInArray( newGroups.propProps, 'title', thisGroup.Title );
 
