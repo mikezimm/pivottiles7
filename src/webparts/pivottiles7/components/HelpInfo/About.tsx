@@ -128,7 +128,7 @@ public constructor(props:IInfoAboutMeProps){
                 {/* 3 files to update version number:  package-solution.json, package-lock.json, package.json*/}
                 <table className={styles.infoTable} style={{ width: '100%' }}>
                     <tr><th>Date</th><th>Version</th><th>Focus</th><th>Notes</th></tr>
-                    <tr><td style={ noWrap }>2020-12-11</td><td>{'1.2.2.8'}</td><td>Add Site Admins tab in Groups</td></tr>
+                    <tr><td style={ noWrap }>2020-12-11</td><td>{'1.2.2.9'}</td><td>Add Site Admins tab in Groups</td></tr>
                     <tr><td style={ noWrap }>2020-12-10</td><td>{'1.2.2.6'}</td><td>Fix Subsites for visitors crash</td></tr>
                     <tr><td style={ noWrap }>2020-12-04</td><td>{'1.2.2.5'}</td><td>Fix fetch users in groups with OnlyAllowMembersViewMembership === true crash, pushMissingDefaultsThatCauseIssues</td></tr>
                     <tr><td style={ noWrap }>2020-12-04</td><td>{'1.2.2.4'}</td><td>Add quick-sort button, remove support for 'modified' type quick custom categories</td></tr>
