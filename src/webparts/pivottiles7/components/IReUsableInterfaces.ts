@@ -331,6 +331,7 @@ export interface ILink {
     isSiteAdmin?:boolean;
     LoginName?: string;
     Name?: string;
+    isGuest?: boolean;
   
     //These optional props are from the React PeoplePicker control
     imageInitials?: string; //same as Initials;         From React People Picker control

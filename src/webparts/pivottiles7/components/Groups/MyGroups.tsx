@@ -249,14 +249,19 @@ public constructor(props:IMyGroupsProps){
 
         let searchSpinner = showNoUsers !== true && this.state.isLoading ? <Spinner size={SpinnerSize.large} label={"searching ..."} /> : null ;
         let size : PersonaSize = PersonaSize.size72;
-
+        let iconSize = 20;
+        let iconTextSize = 16;
 
         if ( isLoaded !== true || !selectedGroup ) {
           //Do nothing if there are no groups
         } else if ( selectedGroup.users.length > 20 ) {
-          size = PersonaSize.size48;
+          size = PersonaSize.size28;
+          iconSize = 14;
+          iconTextSize = 12;
         } else if ( selectedGroup.users.length > 6 ) {
-          size = PersonaSize.size32;         
+          size = PersonaSize.size32;  
+          iconSize = 16;
+          iconTextSize = 12;       
         }
 
         let loadGrid = isLoaded === true && selectedGroup &&
@@ -343,7 +348,11 @@ public constructor(props:IMyGroupsProps){
                 <PersonaCard
                   context={this.props.context}
                   size = { size }
+                  iconSize = { iconSize }
+                  iconTextSize = { iconTextSize }     
                   profileProperties={{
+                    isGuest: user.isGuest,
+                    isSiteAdmin: user.IsSiteAdmin,
                     DisplayName: user.Title,
                     Title: '',
                     PictureUrl: this.props.webURL + '/_layouts/15/userphoto.aspx?size=M&accountname=' + user.Email ,

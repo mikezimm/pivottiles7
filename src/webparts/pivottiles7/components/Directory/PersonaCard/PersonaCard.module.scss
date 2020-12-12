@@ -40,12 +40,33 @@
   }
 
 .documentCard {
-  border-color: $ms-color-themeDark;
   border-top-width: 5px;
   width: 100%;
   max-width: 350px;
   // height: 120px; //Removed this for various sizes
 }
+.documentCardDefault {
+  @extend .documentCard;
+  border-color: $ms-color-themeDark;
+}
+
+.inlineFlex {
+  display: inline-flex;
+  padding-top: 5px;
+  padding-bottom: 8px;
+
+}
+
+.documentCardAdmin {
+  @extend .documentCard;
+  border-color: 'darkgreen';
+}
+
+.documentCardGuest {
+  @extend .documentCard;
+  border-color: 'saddlebrown';
+}
+
 .persona {
   padding: 15px;
 }

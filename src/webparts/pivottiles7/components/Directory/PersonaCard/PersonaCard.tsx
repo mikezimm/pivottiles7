@@ -15,6 +15,8 @@ import {
   Icon,
 } from 'office-ui-fabric-react';
 
+import { SiteAdminGroupName, GuestsGroupName, GuestsIconName, SiteAdminIconName, } from '../../Groups/IMyGroupsState';
+
 const EXP_SOURCE: string = 'SPFxDirectory';
 const LIVE_PERSONA_COMPONENT_ID: string =
   '914330ee-2df2-4f6e-a858-30c23a812408';
@@ -112,25 +114,41 @@ export class PersonaCard extends React.Component<
    */
   private _PersonaCard(): JSX.Element {
 
+    let docCardClass = styles.documentCardDefault;
+    if ( this.props.profileProperties.isSiteAdmin === true ) {  docCardClass = styles.documentCardAdmin ; }
+    else if ( this.props.profileProperties.isGuest === true ) { docCardClass = styles.documentCardGuest ; } 
+    let iconSize = this.props.iconSize;
+    let iconTextSize = this.props.iconTextSize;
+
+    let AdminIcon = this.props.profileProperties.isSiteAdmin !== true ? false :
+              <div style={{ fontSize: iconSize , color: 'darkgreen' , paddingRight: 10, whiteSpace: 'nowrap' }} >
+                <Icon iconName={ SiteAdminIconName } title={'Site Admin'} />
+                <span style={{ fontSize: iconTextSize }}>Admin</span>
+              </div>;
+    let GuestIcon = this.props.profileProperties.isGuest !== true ? false :
+              <div style={{ fontSize: iconSize , color: 'saddlebrown' , paddingRight: 4, whiteSpace: 'nowrap' }} >
+                <Icon iconName={ GuestsIconName } title={'Guest User'} />
+                <span style={{ fontSize: iconTextSize }}>Guest</span>
+              </div>;
 
     return (
       <DocumentCard
-        className={styles.documentCard}
+        className={ docCardClass }
         type={DocumentCardType.normal}
 
         //2020-11-24:  Added for adjusting card size
         style={{ height: this.getCardHeight(), minWidth: this.getCardWidth(), maxWidth: this.getCardWidth() } }
       >
-        <div className={styles.persona}>
+        <div className={ styles.persona }>
           <Persona
             text={this.props.profileProperties.DisplayName}
             secondaryText={this.props.profileProperties.Title}
             tertiaryText={this.props.profileProperties.Department}
             imageUrl={this.props.profileProperties.PictureUrl}
             size={ this.props.size }
-            imageShouldFadeIn={false}
+            imageShouldFadeIn={true}
             imageShouldStartVisible={true}
-          >
+          >  <div className={ styles.inlineFlex }> { AdminIcon } { GuestIcon } </div>
             {this.props.profileProperties.WorkPhone ? (
               <div>
                 <Icon iconName="Phone" style={{ fontSize: '12px' }} />
