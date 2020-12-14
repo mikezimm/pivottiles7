@@ -7,7 +7,7 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { PageContext } from '@microsoft/sp-page-context';
 import { IGroupsProps } from './IMyGroupsProps';
 import { IMyGroups, ISingleGroup, IMyGroupsState, SiteAdminGroupName, GuestsGroupName, GuestsIconName, SiteAdminIconName, } from './IMyGroupsState';
-import { IUser } from '../IReUsableInterfaces';
+import { IUser } from '../../../../services/IReUsableInterfaces';
 
 import { doesObjectExistInArray, addItemToArrayIfItDoesNotExist, } from '../../../../services/arrayServices';
 

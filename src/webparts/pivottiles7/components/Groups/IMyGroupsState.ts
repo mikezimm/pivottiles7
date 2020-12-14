@@ -1,7 +1,7 @@
 
 import { Web, SiteGroups, SiteGroup, ISiteGroups, ISiteGroup, ISiteGroupInfo, IPrincipalInfo, PrincipalType, PrincipalSource } from "@pnp/sp/presets/all";
 
-import { IUser } from '../IReUsableInterfaces';
+import { IUser } from '../../../../services/IReUsableInterfaces';
 
 import { IGroupsProps } from './IMyGroupsProps';
 

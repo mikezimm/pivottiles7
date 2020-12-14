@@ -1,4 +1,4 @@
-import { IUser } from '../webparts/pivottiles7/components/IReUsableInterfaces';
+import { IUser } from './IReUsableInterfaces';
 
 import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
