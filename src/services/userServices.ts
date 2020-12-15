@@ -76,22 +76,23 @@ return result;
  */
 
 export function checkForLoginName( u : IUser ) {
-let results = undefined;
 
-if ( u.Name ) {
-    results = u.Name;
+  let results = undefined;
 
-} else if ( u.loginName ) {
-    results = u.loginName;
+  if ( u.Name ) {
+      results = u.Name;
 
-} else if ( u.LoginName ) {
-    results = u.LoginName;
+  } else if ( u.loginName ) {
+      results = u.loginName;
 
-} else if ( u.email ) {
-    results = u.email;
-}
+  } else if ( u.LoginName ) {
+      results = u.LoginName;
 
-return results;
+  } else if ( u.email ) {
+      results = u.email;
+  }
+
+  return results;
 
 }
 
@@ -203,7 +204,78 @@ export async function ensureTheseUsers ( theseUsers: IUser[], checkTheseUsers: I
 
   }
 
+
+  /**
+   * Updated function from https://github.com/pnp/pnpjs/issues/1480#issuecomment-745203843
+   * 
+  */
+  import { PermissionKind } from '@pnp/sp/presets/all';
+
+  export async function getUserPermissions( webUrl: string , supressError: boolean ) {
+    let thisWeb = Web(webUrl);
+    let errMessage = null;
+
+    try {
+        const userPerm = await thisWeb.getCurrentUserEffectivePermissions();
+       
+        console.log({
+          'PermissionKind.ViewListItems': sp.web.hasPermissions(userPerm, PermissionKind.ViewListItems),
+          'PermissionKind.AddListItems': sp.web.hasPermissions(userPerm, PermissionKind.AddListItems),
+          'PermissionKind.ManageWeb': sp.web.hasPermissions(userPerm, PermissionKind.ManageWeb),
+          'PermissionKind.FullMask': sp.web.hasPermissions(userPerm, PermissionKind.FullMask),
+        });
+
+        return { permissions: userPerm, errMessage: errMessage } ;
+
+      } catch (e) {
+
+        errMessage = getHelpfullError(e, true, true);
+        if ( supressError === true && errMessage.indexOf('Save Conflict') === 0 ) {
+          alert( errMessage );
+        }
+        console.log( 'getUserPermissions', errMessage ) ;
+        return { users: [], errMessage: errMessage } ;
+
+    }
+
+  }
+
   export async function getSiteAdmins( webUrl: string , supressError: boolean ) {
+    let thisWeb = Web(webUrl);
+
+    let errMessage = null;
+    let adminFilter = "IsSiteAdmin eq true";
+
+    try {
+ 
+      const siteAdmins = await thisWeb.siteUserInfoList.items.filter(`IsSiteAdmin eq 1`).get();
+
+      /**
+       * This was added because loginName is not retured but is in other functions so it just copies it to make it easier to resuse.
+       */
+      siteAdmins.map( user => {
+        if ( !user.loginName && user.Name ) { user.loginName = user.Name ; }
+        if ( !user.Email && user.EMail ) { user.Email = user.EMail ; }
+      });
+
+      return { users: siteAdmins, errMessage: errMessage }  ;
+
+    } catch (e) {
+
+      errMessage = getHelpfullError(e, true, true);
+      if ( supressError === true && errMessage.indexOf('Save Conflict') === 0 ) {
+        //Do nothting
+      } else {
+        alert( errMessage );
+      }
+      console.log( 'getSiteAdmins', errMessage );
+
+      return { users: [], errMessage: errMessage }  ;
+  }
+}
+
+
+  export async function getSiteAdminsOrigMustBeSiteAdmin( webUrl: string , supressError: boolean ) {
     
     let thisWeb = Web(webUrl);
 

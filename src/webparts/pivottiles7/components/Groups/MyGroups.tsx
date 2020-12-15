@@ -354,9 +354,10 @@ public constructor(props:IMyGroupsProps){
                     isGuest: user.isGuest,
                     isSiteAdmin: user.IsSiteAdmin,
                     DisplayName: user.Title,
-                    Title: '',
+                    Title: user.JobTitle ? user.JobTitle : '',
                     PictureUrl: this.props.webURL + '/_layouts/15/userphoto.aspx?size=M&accountname=' + user.Email ,
                     Email: user.Email,
+                    //Department: user.Department ? user.Department : '',
                     Department: '',
                     WorkPhone: '',
                     Location: user.OfficeNumber
