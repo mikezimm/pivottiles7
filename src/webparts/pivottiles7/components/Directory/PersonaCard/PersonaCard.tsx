@@ -131,6 +131,13 @@ export class PersonaCard extends React.Component<
                 <span style={{ fontSize: iconTextSize }}>Guest</span>
               </div>;
 
+    let cardHeight = this.getCardHeight();
+    let personaStyles = styles.inlineFlex;
+    if ( cardHeight !== '120px' && ( AdminIcon !== false || GuestIcon !== false ) ) {
+      personaStyles = styles.inlineFlexWBPadding;
+    }
+
+
     return (
       <DocumentCard
         className={ docCardClass }
@@ -148,7 +155,7 @@ export class PersonaCard extends React.Component<
             size={ this.props.size }
             imageShouldFadeIn={true}
             imageShouldStartVisible={true}
-          >  <div className={ styles.inlineFlex }> { AdminIcon } { GuestIcon } </div>
+          >  <div className={ personaStyles }> { AdminIcon } { GuestIcon } </div>
             {this.props.profileProperties.WorkPhone ? (
               <div>
                 <Icon iconName="Phone" style={{ fontSize: '12px' }} />

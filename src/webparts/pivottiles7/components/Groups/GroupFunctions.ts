@@ -7,7 +7,7 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { PageContext } from '@microsoft/sp-page-context';
 import { IGroupsProps } from './IMyGroupsProps';
 import { IMyGroups, ISingleGroup, IMyGroupsState, SiteAdminGroupName, GuestsGroupName, GuestsIconName, SiteAdminIconName, } from './IMyGroupsState';
-import { IUser } from '../IReUsableInterfaces';
+import { IUser } from '../../../../services/IReUsableInterfaces';
 
 import { doesObjectExistInArray, addItemToArrayIfItDoesNotExist, } from '../../../../services/arrayServices';
 
@@ -96,12 +96,23 @@ export function getPrincipalTypeString( type: PrincipalType ) {
             } else {
                 let hasCurrentUser = false;
 
+                let externalNameFilter = '.external';
                 groupUsers.users.map( user => { 
+
                     if ( user.Id === newGroups.userId ) { hasCurrentUser = true; }
                     user.isGuest = false;
-                    if ( user.IsEmailAuthenticationGuestUser === true || user.IsShareByEmailGuestUser === true || user.LoginName.indexOf('.external') > -1 ) {
+
+                    /**
+                     * This series checks for external users.
+                     */
+                    if ( user.IsEmailAuthenticationGuestUser === true || user.IsShareByEmailGuestUser === true ) {
+                        user.isGuest = true;
+                    } else if ( user.LoginName  && user.LoginName.indexOf( externalNameFilter ) > -1 ) {
+                        user.isGuest = true;
+                    } else if ( user.Name  && user.Name.indexOf( externalNameFilter ) > -1 ) {
                         user.isGuest = true;
                     }
+
                     let userIndex : any = doesObjectExistInArray( allUsers, 'Id', user.Id );
                     if ( userIndex === false ) { 
                         allUsers.push( user ) ;
@@ -110,6 +121,7 @@ export function getPrincipalTypeString( type: PrincipalType ) {
                         }
                     }
                 } ) ;
+                
                 let groupIndex : any = doesObjectExistInArray( newGroups.propProps, 'title', thisGroup.Title );
 
                 thisGroup.users = groupUsers.users;

@@ -89,7 +89,7 @@ import { getHelpfullError } from '../../../../services/ErrorHandler';
 
 import { getExpandColumns, getKeysLike, getSelectColumns } from '../../../../services/getFunctions';
 
-import { IUser } from '../IReUsableInterfaces';
+import { IUser } from '../../../../services/IReUsableInterfaces';
 
 
 const allColumns = ['Title','Id','Created','Modified','Author/Title','Author/ID','Author/Name','Editor/Title','Editor/ID','Editor/Name',

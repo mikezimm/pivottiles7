@@ -1,4 +1,23 @@
-import { IUser } from '../webparts/pivottiles7/components/IReUsableInterfaces';
+/***
+ *    .d888b.  .d88b.  .d888b.  .d88b.          db .d888b.         db   j88D                     
+ *    VP  `8D .8P  88. VP  `8D .8P  88.        o88 VP  `8D        o88  j8~88                     
+ *       odD' 88  d'88    odD' 88  d'88         88    odD'         88 j8' 88                     
+ *     .88'   88 d' 88  .88'   88 d' 88 C8888D  88  .88'   C8888D  88 V88888D                    
+ *    j88.    `88  d8' j88.    `88  d8'         88 j88.            88     88                     
+ *    888888D  `Y88P'  888888D  `Y88P'          VP 888888D         VP     VP                     
+ *                                                                                               
+ *                                                                                               
+ *    d8888b. d888888b db    db  .d88b.  d888888b      d888888b d888888b db      d88888b .d8888. 
+ *    88  `8D   `88'   88    88 .8P  Y8. `~~88~~'      `~~88~~'   `88'   88      88'     88'  YP 
+ *    88oodD'    88    Y8    8P 88    88    88            88       88    88      88ooooo `8bo.   
+ *    88~~~      88    `8b  d8' 88    88    88            88       88    88      88~~~~~   `Y8b. 
+ *    88        .88.    `8bd8'  `8b  d8'    88            88      .88.   88booo. 88.     db   8D 
+ *    88      Y888888P    YP     `Y88P'     YP            YP    Y888888P Y88888P Y88888P `8888Y' 
+ *                                                                                               
+ *                                                                                               
+ */
+
+import { IUser } from './IReUsableInterfaces';
 
 import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
@@ -76,22 +95,23 @@ return result;
  */
 
 export function checkForLoginName( u : IUser ) {
-let results = undefined;
 
-if ( u.Name ) {
-    results = u.Name;
+  let results = undefined;
 
-} else if ( u.loginName ) {
-    results = u.loginName;
+  if ( u.Name ) {
+      results = u.Name;
 
-} else if ( u.LoginName ) {
-    results = u.LoginName;
+  } else if ( u.loginName ) {
+      results = u.loginName;
 
-} else if ( u.email ) {
-    results = u.email;
-}
+  } else if ( u.LoginName ) {
+      results = u.LoginName;
 
-return results;
+  } else if ( u.email ) {
+      results = u.email;
+  }
+
+  return results;
 
 }
 
@@ -203,7 +223,77 @@ export async function ensureTheseUsers ( theseUsers: IUser[], checkTheseUsers: I
 
   }
 
+
+  /**
+   * Updated function from https://github.com/pnp/pnpjs/issues/1480#issuecomment-745203843
+   * 
+  */
+  import { PermissionKind } from '@pnp/sp/presets/all';
+
+  export async function getUserPermissions( webUrl: string , supressError: boolean ) {
+    let thisWeb = Web(webUrl);
+    let errMessage = null;
+
+    try {
+        const userPerm = await thisWeb.getCurrentUserEffectivePermissions();
+       
+        console.log({
+          'PermissionKind.ViewListItems': sp.web.hasPermissions(userPerm, PermissionKind.ViewListItems),
+          'PermissionKind.AddListItems': sp.web.hasPermissions(userPerm, PermissionKind.AddListItems),
+          'PermissionKind.ManageWeb': sp.web.hasPermissions(userPerm, PermissionKind.ManageWeb),
+          'PermissionKind.FullMask': sp.web.hasPermissions(userPerm, PermissionKind.FullMask),
+        });
+
+        return { permissions: userPerm, errMessage: errMessage } ;
+
+      } catch (e) {
+
+        errMessage = getHelpfullError(e, true, true);
+        if ( supressError === true && errMessage.indexOf('Save Conflict') === 0 ) {
+          alert( errMessage );
+        }
+        console.log( 'getUserPermissions', errMessage ) ;
+        return { users: [], errMessage: errMessage } ;
+
+    }
+
+  }
+
   export async function getSiteAdmins( webUrl: string , supressError: boolean ) {
+    let thisWeb = Web(webUrl);
+
+    let errMessage = null;
+    //let adminFilter = "IsSiteAdmin eq true"; //This did not work....
+    let adminFilter = "IsSiteAdmin eq 1";  //Updated per @koltyakov: https://github.com/pnp/pnpjs/issues/1480
+
+    try {
+ 
+      const siteAdmins = await thisWeb.siteUserInfoList.items.filter( adminFilter ).get();
+
+      /**
+       * This was added because loginName is not retured but is in other functions so it just copies it to make it easier to resuse.
+       */
+      siteAdmins.map( user => {
+        if ( !user.loginName && user.Name ) { user.loginName = user.Name ; }
+        if ( !user.Email && user.EMail ) { user.Email = user.EMail ; }
+      });
+
+      return { users: siteAdmins, errMessage: errMessage }  ;
+
+    } catch (e) {
+
+      errMessage = getHelpfullError(e, true, true);
+      if ( supressError !== true ) {
+        alert( errMessage );
+      }
+      console.log( 'getSiteAdmins', errMessage );
+
+      return { users: [], errMessage: errMessage }  ;
+  }
+}
+
+
+  export async function getSiteAdminsOrigMustBeSiteAdmin( webUrl: string , supressError: boolean ) {
     
     let thisWeb = Web(webUrl);
 
