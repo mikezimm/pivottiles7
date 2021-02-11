@@ -84,29 +84,6 @@ export function getAssociatedSites(departmentId: string, callback: any, entireRe
 
     return;
 
-    console.log('current department ID:', departmentId );
-    sp.search(<ISearchQuery>{
-        Querytext: `contentclass:STS_Site AND departmentId:{${departmentId}}`,
-          SelectProperties: ["*","Title", "SPSiteUrl", "WebTemplate","departmentId","SiteLogoUrl","Description"],
-          RefinementFilters:[`departmentid:string("{*",linguistics=off)`],
-          RowLimit: 500,
-//          SortList: [ {Property: 'Title',Direction: sortDirection }],
-          TrimDuplicates: false})
-          .then((r: SearchResults) => {
-    
-            console.log(r.RowCount);
-            console.log(r.PrimarySearchResults);
-            entireResponse.hubs = r.PrimarySearchResults;
-
-            entireResponse.hubs.map( h => {
-                h.sourceType = hubsCategory;
-            });
-
-            
-            callback( entireResponse, custCategories, newData );
-    
-    });
-
 }
 
 
