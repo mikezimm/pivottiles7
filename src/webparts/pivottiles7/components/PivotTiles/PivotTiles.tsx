@@ -1749,6 +1749,8 @@ this.setState({
 
       if ( newData === true ) { saveAnalytics(this.props,this.state); }
 
+      return true;
+      
       let reloadHubImages = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'hubs' ? true : false ;
 
       if ( reloadHubImages === true ) {

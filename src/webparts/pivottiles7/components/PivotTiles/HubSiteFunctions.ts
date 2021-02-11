@@ -53,9 +53,41 @@ export function getAssociatedSites(departmentId: string, callback: any, entireRe
     let sortDirection = ascSort === false ? 1 : 0;
 
     console.log('current department ID:', departmentId );
+
+    /**
+     *  Updated search query per pnpjs issue response:
+     *  https://github.com/pnp/pnpjs/issues/1552#issuecomment-767837463
+     * 
+     */
     sp.search(<ISearchQuery>{
         Querytext: `contentclass:STS_Site AND departmentId:{${departmentId}}`,
-          SelectProperties: ["Title", "SPSiteUrl", "WebTemplate","departmentId","SiteLogoUrl"],
+          SelectProperties: ["*","Title", "SPSiteUrl", "WebTemplate","departmentId","SiteLogo","SiteDescription",
+          "ContentModifiedTime","LastModifiedTime", "LastModifiedTimeForRetention","ModifiedBy","Created","Modified","CreatedBy","CreatedById","ModifiedById"],
+          "RowLimit": 500,
+//          "StartRow": 0,
+          "ClientType": "ContentSearchRegular",
+          TrimDuplicates: false, //This is needed in order to also get the hub itself.
+        })
+          .then( ( res: SearchResults) => {
+    
+            console.log('associated sites with URL/Desc', res);
+            console.log(res.RowCount);
+            console.log(res.PrimarySearchResults);
+            entireResponse.hubs = res.PrimarySearchResults;
+
+            entireResponse.hubs.map( h => {
+                h.sourceType = hubsCategory;
+            });
+            callback( entireResponse, custCategories, newData );
+
+    });
+
+    return;
+
+    console.log('current department ID:', departmentId );
+    sp.search(<ISearchQuery>{
+        Querytext: `contentclass:STS_Site AND departmentId:{${departmentId}}`,
+          SelectProperties: ["*","Title", "SPSiteUrl", "WebTemplate","departmentId","SiteLogoUrl","Description"],
           RefinementFilters:[`departmentid:string("{*",linguistics=off)`],
           RowLimit: 500,
 //          SortList: [ {Property: 'Title',Direction: sortDirection }],

@@ -914,9 +914,16 @@ function buildFinalTileCollection ( response: any, type:  responseType, thesePro
       theseProps.id = 'Id';
 
     } else if ( type === 'hubs') {
-      theseProps.colModified = 'LastItemUserModifiedDate';
-      theseProps.colImageLink = 'SiteLogoUrl';
+      theseProps.colModified = 'LastModifiedTime';
+      theseProps.colImageLink = 'SiteLogo', //'SiteLogoUrl';  2021-02-11:  Changed with new search query
+      theseProps.colHoverText = 'SiteDescription', //'SiteDescription';  2021-02-11:  Changed with new search query
       theseProps.colGoToLink = 'SPSiteUrl';
+
+      theseProps.colModifiedById = 'ModifiedById';
+      theseProps.colModifiedByTitle = 'ModifiedBy';
+      theseProps.colCreatedById = 'CreatedById';
+      theseProps.colCreatedByTitle = 'CreatedBy';
+
       theseProps.id = 'SiteId';
 
     } else if ( type === 'lists') {
