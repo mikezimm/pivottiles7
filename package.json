@@ -1,6 +1,6 @@
 {
   "name": "pivottiles-7",
-  "version": "2.2.10",
+  "version": "3.0.1",
   "private": true,
   "main": "lib/index.js",
   "engines": {
@@ -17,6 +17,7 @@
     "@microsoft/sp-office-ui-fabric-core": "1.11.0",
     "@microsoft/sp-property-pane": "1.11.0",
     "@microsoft/sp-webpart-base": "1.11.0",
+    "@mikezimm/npmfunctions": "0.0.27",
     "@pnp/common": "^2.0.12",
     "@pnp/graph": "^2.0.12",
     "@pnp/logging": "^2.0.12",

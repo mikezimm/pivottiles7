@@ -1,25 +1,23 @@
+
+/***
+ *    d888888b .88b  d88. d8888b.  .d88b.  d8888b. d888888b       .d88b.  d88888b d88888b d888888b  .o88b. d888888b  .d8b.  db      
+ *      `88'   88'YbdP`88 88  `8D .8P  Y8. 88  `8D `~~88~~'      .8P  Y8. 88'     88'       `88'   d8P  Y8   `88'   d8' `8b 88      
+ *       88    88  88  88 88oodD' 88    88 88oobY'    88         88    88 88ooo   88ooo      88    8P         88    88ooo88 88      
+ *       88    88  88  88 88~~~   88    88 88`8b      88         88    88 88~~~   88~~~      88    8b         88    88~~~88 88      
+ *      .88.   88  88  88 88      `8b  d8' 88 `88.    88         `8b  d8' 88      88        .88.   Y8b  d8   .88.   88   88 88booo. 
+ *    Y888888P YP  YP  YP 88       `Y88P'  88   YD    YP          `Y88P'  YP      YP      Y888888P  `Y88P' Y888888P YP   YP Y88888P 
+ *                                                                                                                                  
+ *                                                                                                                                  
+ */
+
 import * as React from 'react';
-import styles from './PivotTiles.module.scss';
-import tileStyles from './../TileItems/PivotTileItem.module.scss';
+
 
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
-import { changeHubs, changeSubs, changeGroups, changeLists, changeFormats, changeItems, changeCats, changeFilters
-  } from '../../IPivottiles7WebPartProps';
-
-import { IPivotTilesProps, ICustomCategories, ICustomLogic } from './IPivotTilesProps';
-import { IPivotTilesState } from './IPivotTilesState';
-import { IPivotTileItemProps } from './../TileItems/IPivotTileItemProps';
-import PivotTileItem from './../TileItems/PivotTileItem';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 import { escape } from '@microsoft/sp-lodash-subset';
-
-import tUtils from './../TileItems/utilTiles';
-import InfoPage from '../HelpInfo/infoPages';
-import  EarlyAccess from '../HelpInfo/EarlyAccess';
-
-import * as links from '../HelpInfo/AllLinks';
 
 import { Pivot, PivotItem, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 import { DefaultButton, autobind } from 'office-ui-fabric-react';
@@ -29,57 +27,130 @@ import { sp } from '@pnp/sp';
 
 import { Web,  } from '@pnp/sp/presets/all';
 import { IWebInfo  } from '@pnp/sp/webs';
-import * as strings from 'Pivottiles7WebPartStrings';
 
-import * as ErrorMessages from './ErrorMessages';
-import MyCommandBar from '../CommandBar/CommandBar';
-
-import { pivotOptionsGroup, } from '../../../../services/propPane';
-
-import * as myErrors from './ErrorMessages';
-import * as tileBuilders from './TileBuilder';
-
-import { saveTheTime, getTheCurrentTime, saveAnalytics } from '../../../../services/createAnalytics';
-
-import { doesObjectExistInArray } from '../../../../services/arrayServices';
-
+ 
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
-
-import { convertCategoryToIndex, fixURLs } from './UtilsNew';
-
-import { buildTileCategoriesFromResponse } from './BuildTileCategories';
-
-import {  buildTileCollectionFromAllResponse, defaultHubIcon, ifNotExistsReturnNull } from './BuildTileCollection';
-
-import { CustTime , custTimeOption, } from './QuickBuckets';
-
-import { getAssociatedSites , getHubSiteData, getHubSiteData2, allAvailableHubWebs } from './HubSiteFunctions';
 
 import { ISearchQuery, SearchResults, ISearchResult } from "@pnp/sp/search";
 
 import { IHubSiteWebData, IHubSiteInfo } from  "@pnp/sp/hubsites";
 
-import { getHelpfullError } from '../../../../services/ErrorHandler';
+import "@pnp/sp/webs";
+import "@pnp/sp/hubsites/web";
+import { WebPartContext } from '@microsoft/sp-webpart-base';
+
+/***
+ *    d888888b .88b  d88. d8888b.  .d88b.  d8888b. d888888b      d8b   db d8888b. .88b  d88.      d88888b db    db d8b   db  .o88b. d888888b d888888b  .d88b.  d8b   db .d8888. 
+ *      `88'   88'YbdP`88 88  `8D .8P  Y8. 88  `8D `~~88~~'      888o  88 88  `8D 88'YbdP`88      88'     88    88 888o  88 d8P  Y8 `~~88~~'   `88'   .8P  Y8. 888o  88 88'  YP 
+ *       88    88  88  88 88oodD' 88    88 88oobY'    88         88V8o 88 88oodD' 88  88  88      88ooo   88    88 88V8o 88 8P         88       88    88    88 88V8o 88 `8bo.   
+ *       88    88  88  88 88~~~   88    88 88`8b      88         88 V8o88 88~~~   88  88  88      88~~~   88    88 88 V8o88 8b         88       88    88    88 88 V8o88   `Y8b. 
+ *      .88.   88  88  88 88      `8b  d8' 88 `88.    88         88  V888 88      88  88  88      88      88b  d88 88  V888 Y8b  d8    88      .88.   `8b  d8' 88  V888 db   8D 
+ *    Y888888P YP  YP  YP 88       `Y88P'  88   YD    YP         VP   V8P 88      YP  YP  YP      YP      ~Y8888P' VP   V8P  `Y88P'    YP    Y888888P  `Y88P'  VP   V8P `8888Y' 
+ *                                                                                                                                                                              
+ *                                                                                                                                                                              
+ */
+
+import { SystemLists, TempSysLists, TempContLists, entityMaps, EntityMapsNames } from '@mikezimm/npmfunctions/dist/Constants';
+
+import { jiraIcon, defaultHubIcon, defaultHubIcon2 } from '@mikezimm/npmfunctions/dist/Icons';
+
+import { doesObjectExistInArray } from '@mikezimm/npmfunctions/dist/arrayServices';
+import { getHelpfullError } from '@mikezimm/npmfunctions/dist/ErrorHandler';
+
+import { encodeDecodeString } from '@mikezimm/npmfunctions/dist/stringServices';
+
+
+/***
+ *    d888888b .88b  d88. d8888b.  .d88b.  d8888b. d888888b      .d8888. d88888b d8888b. db    db d888888b  .o88b. d88888b .d8888. 
+ *      `88'   88'YbdP`88 88  `8D .8P  Y8. 88  `8D `~~88~~'      88'  YP 88'     88  `8D 88    88   `88'   d8P  Y8 88'     88'  YP 
+ *       88    88  88  88 88oodD' 88    88 88oobY'    88         `8bo.   88ooooo 88oobY' Y8    8P    88    8P      88ooooo `8bo.   
+ *       88    88  88  88 88~~~   88    88 88`8b      88           `Y8b. 88~~~~~ 88`8b   `8b  d8'    88    8b      88~~~~~   `Y8b. 
+ *      .88.   88  88  88 88      `8b  d8' 88 `88.    88         db   8D 88.     88 `88.  `8bd8'    .88.   Y8b  d8 88.     db   8D 
+ *    Y888888P YP  YP  YP 88       `Y88P'  88   YD    YP         `8888Y' Y88888P 88   YD    YP    Y888888P  `Y88P' Y88888P `8888Y' 
+ *                                                                                                                                 
+ *                                                                                                                                 
+ */
+
+import { pivotOptionsGroup, } from '../../../../services/propPane';
+
+import { saveTheTime, getTheCurrentTime, saveAnalytics } from '../../../../services/createAnalytics';
+
+
+ /***
+ *    d888888b .88b  d88. d8888b.  .d88b.  d8888b. d888888b      db   db d88888b db      d8888b. d88888b d8888b. .d8888. 
+ *      `88'   88'YbdP`88 88  `8D .8P  Y8. 88  `8D `~~88~~'      88   88 88'     88      88  `8D 88'     88  `8D 88'  YP 
+ *       88    88  88  88 88oodD' 88    88 88oobY'    88         88ooo88 88ooooo 88      88oodD' 88ooooo 88oobY' `8bo.   
+ *       88    88  88  88 88~~~   88    88 88`8b      88         88~~~88 88~~~~~ 88      88~~~   88~~~~~ 88`8b     `Y8b. 
+ *      .88.   88  88  88 88      `8b  d8' 88 `88.    88         88   88 88.     88booo. 88      88.     88 `88. db   8D 
+ *    Y888888P YP  YP  YP 88       `Y88P'  88   YD    YP         YP   YP Y88888P Y88888P 88      Y88888P 88   YD `8888Y' 
+ *                                                                                                                       
+ *                                                                                                                       
+ */
+
+import tUtils from './../TileItems/utilTiles';
+import InfoPage from '../HelpInfo/infoPages';
+import  EarlyAccess from '../HelpInfo/EarlyAccess';
+
+import * as links from '../HelpInfo/AllLinks';
+import MyCommandBar from '../CommandBar/CommandBar';
+
+import { convertCategoryToIndex, fixURLs } from './UtilsNew';
+
+import { buildTileCategoriesFromResponse } from './BuildTileCategories';
+
+import {  buildTileCollectionFromAllResponse, ifNotExistsReturnNull } from './BuildTileCollection';
+
+import { CustTime , custTimeOption, } from './QuickBuckets';
+
+import { getAssociatedSites , getHubSiteData, getHubSiteData2, allAvailableHubWebs } from './HubSiteFunctions';
 
 import { createIconButton , defCommandIconStyles} from "../createButtons/IconButton";
 
 //import DirectoryHook from '../Directory/DirectoryHook';
 
- import MyGroups from '../Groups/MyGroups';
+import MyGroups from '../Groups/MyGroups';
 
-import "@pnp/sp/webs";
-import "@pnp/sp/hubsites/web";
-import { WebPartContext } from '@microsoft/sp-webpart-base';
+import * as myErrors from './ErrorMessages';
+import * as tileBuilders from './TileBuilder';
 
-//2020-11-17:  Copied from genericSolution listsFunctions.ts
-//Usage:  if ( SystemLists.indexOf(theList.EntityTypeName) > -1 ) { ... }
-const SystemLists = ["WorkflowTasks", "Style Library",
-"SitePages", "SiteAssets", "ReusableContent", "Pages", "SearchConfigList", "OData__catalogs/masterpage", "OData__catalogs/design",
-"TeamSiteFooterQL1List", "TeamSiteFooterQL2List",
-"SiteCollectionImages", "SiteCollectionDocuments", "FormServerTemplates", "Reports List", "PublishingImages",
-"AEInspiredTilesItemsList", "AEInspiredTilesAssetsList", "PublishedFeedList", "Workflow TasksList", "AEGoalThermometerAssetsList", "AEMetroGridAssetsList", "AEMetroGridItemsList", "AEMetroGridPicLibList", "AESwipeGalleryAssetsList",
-"AESwipeGalleryDefaultImagesList", "Workflows", "Workflow HistoryList", "OData__catalogs/fpdatasources", "IWConvertedForms", "Access Requests", "Style Library",
-];
+ /***
+ *    d888888b .88b  d88. d8888b.  .d88b.  d8888b. d888888b       .o88b.  .d88b.  .88b  d88. d8888b.  .d88b.  d8b   db d88888b d8b   db d888888b 
+ *      `88'   88'YbdP`88 88  `8D .8P  Y8. 88  `8D `~~88~~'      d8P  Y8 .8P  Y8. 88'YbdP`88 88  `8D .8P  Y8. 888o  88 88'     888o  88 `~~88~~' 
+ *       88    88  88  88 88oodD' 88    88 88oobY'    88         8P      88    88 88  88  88 88oodD' 88    88 88V8o 88 88ooooo 88V8o 88    88    
+ *       88    88  88  88 88~~~   88    88 88`8b      88         8b      88    88 88  88  88 88~~~   88    88 88 V8o88 88~~~~~ 88 V8o88    88    
+ *      .88.   88  88  88 88      `8b  d8' 88 `88.    88         Y8b  d8 `8b  d8' 88  88  88 88      `8b  d8' 88  V888 88.     88  V888    88    
+ *    Y888888P YP  YP  YP 88       `Y88P'  88   YD    YP          `Y88P'  `Y88P'  YP  YP  YP 88       `Y88P'  VP   V8P Y88888P VP   V8P    YP    
+ *                                                                                                                                               
+ *                                                                                                                                               
+ */
+
+
+import { changeHubs, changeSubs, changeGroups, changeLists, changeFormats, changeItems, changeCats, changeFilters
+} from '../../IPivottiles7WebPartProps';
+
+import { IPivotTilesProps, ICustomCategories, ICustomLogic } from './IPivotTilesProps';
+import { IPivotTilesState } from './IPivotTilesState';
+import { IPivotTileItemProps } from './../TileItems/IPivotTileItemProps';
+import PivotTileItem from './../TileItems/PivotTileItem';
+
+import * as strings from 'Pivottiles7WebPartStrings';
+
+import tileStyles from './../TileItems/PivotTileItem.module.scss';
+
+import styles from './PivotTiles.module.scss';
+
+/***
+ *    d88888b db    db d8888b.  .d88b.  d8888b. d888888b      d888888b d8b   db d888888b d88888b d8888b. d88888b  .d8b.   .o88b. d88888b .d8888. 
+ *    88'     `8b  d8' 88  `8D .8P  Y8. 88  `8D `~~88~~'        `88'   888o  88 `~~88~~' 88'     88  `8D 88'     d8' `8b d8P  Y8 88'     88'  YP 
+ *    88ooooo  `8bd8'  88oodD' 88    88 88oobY'    88            88    88V8o 88    88    88ooooo 88oobY' 88ooo   88ooo88 8P      88ooooo `8bo.   
+ *    88~~~~~  .dPYb.  88~~~   88    88 88`8b      88            88    88 V8o88    88    88~~~~~ 88`8b   88~~~   88~~~88 8b      88~~~~~   `Y8b. 
+ *    88.     .8P  Y8. 88      `8b  d8' 88 `88.    88           .88.   88  V888    88    88.     88 `88. 88      88   88 Y8b  d8 88.     db   8D 
+ *    Y88888P YP    YP 88       `Y88P'  88   YD    YP         Y888888P VP   V8P    YP    Y88888P 88   YD YP      YP   YP  `Y88P' Y88888P `8888Y' 
+ *                                                                                                                                               
+ *                                                                                                                                               
+ */
+
+
 
 /*
                 title: this.properties.title,
@@ -93,6 +164,7 @@ const SystemLists = ["WorkflowTasks", "Style Library",
                 clearTextSearchProps: this.properties.clearTextSearchProps,
                 pageSize: this.properties.pageSize
 */
+
 
 export const LoadErrorIcon = 'ErrorBadge';
 
@@ -1340,20 +1412,71 @@ this.setState({
           listFilter += ' and BaseType eq 1';
         } 
 
+        /**
+         // 2021-03-01: This section was added due to SystemLists was to large for rest filter :(
+         */
+
+        let ignoreTheseSystemLists :string[] = [];
+
         if ( this.props.fetchInfo.listHideSystem === true ) {
           SystemLists.map( entityName => {
-            listFilter += ` and EntityTypeName ne \'${entityName}\'`;
+            //Had to add this list when adding Crow Canyon lists because it caused PivotTiles to stop working possibly because rest filter was to long.
+            if ( listFilter.length < 1300 ) {
+              listFilter += ` and EntityTypeName ne \'${entityName}\'`;
+            } else {
+              ignoreTheseSystemLists.push( entityName.toLowerCase() );
+            }
           });
+          ignoreTheseSystemLists.push( 'Content and Structure Reports'.toLowerCase() );
+          ignoreTheseSystemLists.push( 'Apps for SharePoint'.toLowerCase() );
+          ignoreTheseSystemLists.push( 'AppCatalog'.toLowerCase() );
           listFilter += ` and Title ne \'Style Library\'`; //For some reason had to hard-code filter this one out
         }
+        console.log('Need to ignore these lists in the response:', ignoreTheseSystemLists );
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
         let defaultType = this.props.fetchInfo.listCategory;
         web.lists.filter(listFilter).orderBy('Title',this.state.sortAsc).get()
         .then((listLibResponse) => {
+
+          let finalListLibResponse = [];
             listLibResponse.map( L => { 
               L.sourceType = L.BaseType === 0 ? this.props.fetchInfo.listCategory : this.props.fetchInfo.libsCategory;
               L.system = SystemLists.indexOf( L.EntityTypeName ) > -1 ? 'System' : '';
+
+              /**
+               // 2021-03-01: This section was added due to SystemLists was to large for rest filter :(
+               */
+              let thisListTrimmedEntityTypeName = L.EntityTypeName.toLowerCase();
+              let thisListTrimmedTitle = L.Title.toLowerCase();
+
+              if ( L.BaseTemplate === 100 ) { 
+                let lastFour = thisListTrimmedTitle.substr(thisListTrimmedTitle.length - 4);
+                if ( lastFour === 'list' ) {
+                  thisListTrimmedTitle = thisListTrimmedTitle.substr( 0, thisListTrimmedTitle.length - 4 );
+                }
+              }
+              if ( ignoreTheseSystemLists.indexOf( L.EntityTypeName.toLowerCase() ) > - 1 ) {
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+              } else if ( ignoreTheseSystemLists.indexOf( encodeDecodeString( L.EntityTypeName.toLowerCase(), 'encode') ) > - 1 ) {  //Sometimes this comes encoded
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+              } else if ( ignoreTheseSystemLists.indexOf( L.Title.toLowerCase() ) > - 1 ) {
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+              } else if ( ignoreTheseSystemLists.indexOf( encodeDecodeString( L.Title.toLowerCase(), 'encode') ) > - 1 ) {  //Sometimes this comes encoded
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+              } else if ( ignoreTheseSystemLists.indexOf( thisListTrimmedTitle.toLowerCase() ) > - 1 ) {
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+              } else if ( ignoreTheseSystemLists.indexOf( encodeDecodeString( thisListTrimmedTitle.toLowerCase(), 'encode') ) > - 1 ) {  //Sometimes this comes encoded
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+
+              } else { finalListLibResponse.push( L ) ; }
+
+              // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
             });
-            entireResponse.lists = listLibResponse;
+
+            entireResponse.lists = finalListLibResponse;
             this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
         }).catch((e) => {
             let errMessage = getHelpfullError(e, true, true);
@@ -1749,6 +1872,8 @@ this.setState({
 
       if ( newData === true ) { saveAnalytics(this.props,this.state); }
 
+      return true;
+      
       let reloadHubImages = this.props.lastPropChange === 'init' ||  this.props.lastPropChange === 'filters' || this.props.lastPropChange === 'hubs' ? true : false ;
 
       if ( reloadHubImages === true ) {
