@@ -26,6 +26,10 @@
 
 import { jiraIcon, defaultHubIcon, defaultHubIcon2 } from '@mikezimm/npmfunctions/dist/Icons';
 
+import { encodeDecodeString } from '@mikezimm/npmfunctions/dist/stringServices';
+
+import { getLocalMonths, ISO8601_week_no, makeSmallTimeObject, ITheTime, getQuarter } from '@mikezimm/npmfunctions/dist/dateServices';
+
 /***
  *    d888888b .88b  d88. d8888b.  .d88b.  d8888b. d888888b      .d8888. d88888b d8888b. db    db d888888b  .o88b. d88888b .d8888. 
  *      `88'   88'YbdP`88 88  `8D .8P  Y8. 88  `8D `~~88~~'      88'  YP 88'     88  `8D 88    88   `88'   d8P  Y8 88'     88'  YP 
@@ -37,9 +41,6 @@ import { jiraIcon, defaultHubIcon, defaultHubIcon2 } from '@mikezimm/npmfunction
  *                                                                                                                                 
  */
 import { getTheCurrentTime,} from '../../../../services/createAnalytics';
-
-import { getLocalMonths, ISO8601_week_no, makeSmallTimeObject, ITheTime } from '../../../../services/dateServices';
-import { encodeDecodeString } from '../../../../services/stringServices';
 
  /***
  *    d888888b .88b  d88. d8888b.  .d88b.  d8888b. d888888b      db   db d88888b db      d8888b. d88888b d8888b. .d8888. 
@@ -57,7 +58,6 @@ import { LoadErrorIcon } from './PivotTiles';
 
 import { convertLinks, parseMe } from './UtilsNew';
 
-import { getQuarter } from './QuickBuckets';
 
  /***
  *    d888888b .88b  d88. d8888b.  .d88b.  d8888b. d888888b       .o88b.  .d88b.  .88b  d88. d8888b.  .d88b.  d8b   db d88888b d8b   db d888888b 
