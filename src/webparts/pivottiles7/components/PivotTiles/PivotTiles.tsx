@@ -57,6 +57,8 @@ import { jiraIcon, defaultHubIcon, defaultHubIcon2 } from '@mikezimm/npmfunction
 import { doesObjectExistInArray } from '@mikezimm/npmfunctions/dist/arrayServices';
 import { getHelpfullError } from '@mikezimm/npmfunctions/dist/ErrorHandler';
 
+import { encodeDecodeString } from '@mikezimm/npmfunctions/dist/stringServices';
+
 
 /***
  *    d888888b .88b  d88. d8888b.  .d88b.  d8888b. d888888b      .d8888. d88888b d8888b. db    db d888888b  .o88b. d88888b .d8888. 
@@ -1410,20 +1412,71 @@ this.setState({
           listFilter += ' and BaseType eq 1';
         } 
 
+        /**
+         // 2021-03-01: This section was added due to SystemLists was to large for rest filter :(
+         */
+
+        let ignoreTheseSystemLists :string[] = [];
+
         if ( this.props.fetchInfo.listHideSystem === true ) {
           SystemLists.map( entityName => {
-            listFilter += ` and EntityTypeName ne \'${entityName}\'`;
+            //Had to add this list when adding Crow Canyon lists because it caused PivotTiles to stop working possibly because rest filter was to long.
+            if ( listFilter.length < 1300 ) {
+              listFilter += ` and EntityTypeName ne \'${entityName}\'`;
+            } else {
+              ignoreTheseSystemLists.push( entityName.toLowerCase() );
+            }
           });
+          ignoreTheseSystemLists.push( 'Content and Structure Reports'.toLowerCase() );
+          ignoreTheseSystemLists.push( 'Apps for SharePoint'.toLowerCase() );
+          ignoreTheseSystemLists.push( 'AppCatalog'.toLowerCase() );
           listFilter += ` and Title ne \'Style Library\'`; //For some reason had to hard-code filter this one out
         }
+        console.log('Need to ignore these lists in the response:', ignoreTheseSystemLists );
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
         let defaultType = this.props.fetchInfo.listCategory;
         web.lists.filter(listFilter).orderBy('Title',this.state.sortAsc).get()
         .then((listLibResponse) => {
+
+          let finalListLibResponse = [];
             listLibResponse.map( L => { 
               L.sourceType = L.BaseType === 0 ? this.props.fetchInfo.listCategory : this.props.fetchInfo.libsCategory;
               L.system = SystemLists.indexOf( L.EntityTypeName ) > -1 ? 'System' : '';
+
+              /**
+               // 2021-03-01: This section was added due to SystemLists was to large for rest filter :(
+               */
+              let thisListTrimmedEntityTypeName = L.EntityTypeName.toLowerCase();
+              let thisListTrimmedTitle = L.Title.toLowerCase();
+
+              if ( L.BaseTemplate === 100 ) { 
+                let lastFour = thisListTrimmedTitle.substr(thisListTrimmedTitle.length - 4);
+                if ( lastFour === 'list' ) {
+                  thisListTrimmedTitle = thisListTrimmedTitle.substr( 0, thisListTrimmedTitle.length - 4 );
+                }
+              }
+              if ( ignoreTheseSystemLists.indexOf( L.EntityTypeName.toLowerCase() ) > - 1 ) {
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+              } else if ( ignoreTheseSystemLists.indexOf( encodeDecodeString( L.EntityTypeName.toLowerCase(), 'encode') ) > - 1 ) {  //Sometimes this comes encoded
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+              } else if ( ignoreTheseSystemLists.indexOf( L.Title.toLowerCase() ) > - 1 ) {
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+              } else if ( ignoreTheseSystemLists.indexOf( encodeDecodeString( L.Title.toLowerCase(), 'encode') ) > - 1 ) {  //Sometimes this comes encoded
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+              } else if ( ignoreTheseSystemLists.indexOf( thisListTrimmedTitle.toLowerCase() ) > - 1 ) {
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+              } else if ( ignoreTheseSystemLists.indexOf( encodeDecodeString( thisListTrimmedTitle.toLowerCase(), 'encode') ) > - 1 ) {  //Sometimes this comes encoded
+                //Skip this list since it should have not been returned in the first place but was due to rest string length max.
+
+              } else { finalListLibResponse.push( L ) ; }
+
+              // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
             });
-            entireResponse.lists = listLibResponse;
+
+            entireResponse.lists = finalListLibResponse;
             this._getTileList( web, useTileList, selectCols, expandThese, restFilter, restSort, custCategories, newData, entireResponse );
         }).catch((e) => {
             let errMessage = getHelpfullError(e, true, true);

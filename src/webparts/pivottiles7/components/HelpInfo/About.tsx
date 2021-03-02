@@ -128,6 +128,7 @@ public constructor(props:IInfoAboutMeProps){
                 {/* 3 files to update version number:  package-solution.json, package-lock.json, package.json*/}
                 <table className={styles.infoTable} style={{ width: '100%' }}>
                     <tr><th>Date</th><th>Version</th><th>Focus</th><th>Notes</th></tr>
+                    <tr><td style={ noWrap }>2021-02-29</td><td>{'1.3.0.1'}</td><td>Load Hub site icons first time, massive npmFunctions overhaul</td></tr>
                     <tr><td style={ noWrap }>2020-12-17</td><td>{'1.2.2.10'}</td><td>Fix SiteAdmins for Visitors, sync zFunctions</td></tr>
                     <tr><td style={ noWrap }>2020-12-11</td><td>{'1.2.2.9'}</td><td>Add Site Admins tab in Groups</td></tr>
                     <tr><td style={ noWrap }>2020-12-10</td><td>{'1.2.2.6'}</td><td>Fix Subsites for visitors crash</td></tr>
